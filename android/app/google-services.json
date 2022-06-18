@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "317144950986",
+    "project_id": "betterme-c23fa",
+    "storage_bucket": "betterme-c23fa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:317144950986:android:2b5bf218b8f532ae84ac33",
+        "android_client_info": {
+          "package_name": "com.example.BetterMe"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "317144950986-n0pflohvgsu94a6uke74fo1vo06jqepr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.BetterMe",
+            "certificate_hash": "9fade0bfb70dadde7a38c4f6941d14bdf82f3221"
+          }
+        },
+        {
+          "client_id": "317144950986-q6d5qjfnpn3rg0h406n89lhj0102hl48.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWGmuZKBAcqawgqHtoUB_1XDBZ1SOZvsI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "317144950986-q6d5qjfnpn3rg0h406n89lhj0102hl48.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
