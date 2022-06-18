@@ -1,4 +1,7 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:ui';
+import 'package:devstack/pages/mainPage.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:devstack/api/local_auth_api.dart';
 //import 'package:signup_login/api/local_auth_api.dart';
@@ -9,7 +12,12 @@ import 'Backgrounds/backgroundSignIn.dart';
 
 import 'HomePage.dart';
 
-class FacePage extends StatelessWidget {
+class FacePage extends StatefulWidget {
+  @override
+  State<FacePage> createState() => _FacePageState();
+}
+
+class _FacePageState extends State<FacePage> {
   /* @override
   Widget build(BuildContext context) =>
       Scaffold(
@@ -114,7 +122,7 @@ class FacePage extends StatelessWidget {
           final isAuthenticated = await LocalAuthApi.authenticate();
           if (isAuthenticated) {
             Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => HomePage()),
+              MaterialPageRoute(builder: (context) => MainPage()),
             );
           }
         },

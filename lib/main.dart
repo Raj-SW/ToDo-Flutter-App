@@ -70,7 +70,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       theme: ThemeData(useMaterial3: false, primarySwatch: Colors.deepPurple),
       debugShowCheckedModeBanner: false,
-      home: MainPage(),
+      home: currentPage,
     );
   }
 

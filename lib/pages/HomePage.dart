@@ -45,6 +45,7 @@ class _HomePageState extends State<HomePage> {
     tz.initializeTimeZones();
     endWk = now.add(Duration(days: DateTime.daysPerWeek - now.weekday));
     strtWk = now.subtract(Duration(days: now.weekday - 1));
+    /*
     FirebaseFirestore.instance
         .collection("users")
         .doc(user!.uid)
@@ -53,6 +54,7 @@ class _HomePageState extends State<HomePage> {
       this.loggedInUser = UserModel.fromMap(value.data());
       setState(() {});
     });
+    */
   }
 
   List<String> itemList = ['Today', 'This Week', 'All', 'Deleted'];

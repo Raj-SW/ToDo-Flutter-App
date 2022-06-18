@@ -1,28 +1,21 @@
 // ignore_for_file: unnecessary_new, prefer_const_constructors
 
 import 'package:devstack/pages/Backgrounds/backgroundSignUp.dart';
+import 'package:devstack/pages/mainPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:devstack/Service/Auth_Service.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-//import 'package:signup_login/Service/Auth_Service.dart';
 import '../pages/face_page.dart';
-//import 'package:signup_login/pages/face_page.dart';
 import '../pages/HomePage.dart';
-//import 'package:signup_login/pages/HomePage.dart';
-//import 'package:signup_login/pages/Backgrounds/backgroundSignUp.dart';
-import 'Backgrounds/backgroundSignIn.dart';
-//import 'Backgrounds/backgroundSignUp.dart';
+
 import 'HomePage.dart';
 import '../pages/PhoneAuth.dart';
-//import 'package:signup_login/pages/PhoneAuth.dart';
 import '../pages/login_screen.dart';
-//import 'package:signup_login/pages/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-//import 'package:signup_login/model/user_model.dart';
 import '../model/user_model.dart';
 
 class RegistrationScreen extends StatefulWidget {
@@ -316,7 +309,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       body: SingleChildScrollView(
         child: Background2(
           child: Padding(
-            padding: const EdgeInsets.all(36.0),
+            padding: const EdgeInsets.all(5.0),
             child: Form(
               key: _formKey,
               child: Column(
@@ -332,10 +325,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 15),
+                  SizedBox(height: 10),
                   SvgPicture.asset(
                     "assets/signup.svg",
-                    height: size.height * 0.28,
+                    height: size.height * 0.25,
                   ),
                   SizedBox(height: 10.2),
                   textItem1(),
@@ -388,7 +381,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       child: Container(
                         height: 1,
                         color: Color(0xffd6d6e2),
-                        margin: EdgeInsets.symmetric(horizontal: 20),
+                        margin: EdgeInsets.symmetric(horizontal: 10),
                       ),
                     ),
                     Text(
@@ -413,11 +406,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         SizedBox(
                           width: 20,
                         ),
-                        Expanded(
+                        SizedBox(
                           child: buttonItem(
                             "assets/google1.svg",
                             "",
-                            45,
+                            30,
                             () async {
                               await authClass.googleSignIn(context);
                             },
@@ -425,7 +418,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         ),
                         Expanded(
                           child:
-                              buttonItem("assets/fingerprint.svg", "", 45, () {
+                              buttonItem("assets/fingerprint.svg", "", 30, () {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -433,7 +426,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           }),
                         ),
                         Expanded(
-                          child: buttonItem("assets/otp.svg", "", 45, () {
+                          child: buttonItem("assets/otp.svg", "", 30, () {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -526,6 +519,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     Fluttertoast.showToast(msg: "Account created successfully :) ");
 
     Navigator.pushAndRemoveUntil((context),
-        MaterialPageRoute(builder: (context) => HomePage()), (route) => false);
+        MaterialPageRoute(builder: (context) => MainPage()), (route) => false);
   }
 }
