@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously, prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_if_null_operators
 
+import 'package:alan_voice/alan_voice.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:devstack/Service/Auth_Service.dart';
 import 'package:devstack/Service/SoundSystem.dart';
@@ -23,6 +24,18 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  _HomePageState(){
+
+    AlanVoice.onCommand.add((command){
+      Map<String, dynamic> commandData = command.data;
+      if(commandData["command"]=="addTask"){
+        SoundSystem().playLocal();
+        Navigator.of(context).push(_createRoute());
+        print("maybe");
+      }
+
+    });
+  }
   AuthClass authClass = AuthClass();
   final FirebaseAuth auth = FirebaseAuth.instance;
 

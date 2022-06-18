@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unnecessary_null_comparison, prefer_final_fields
 
+import 'package:alan_voice/alan_voice.dart';
 import 'package:devstack/assets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
@@ -22,6 +23,80 @@ class _AddToDoPageState extends State<AddToDoPage> {
   DateTime? mydateTime;
   TimeOfDay _timePicked = TimeOfDay.now();
   DateTime? finalDateTime;
+  _AddToDoPageState(){
+
+    AlanVoice.onCommand.add((command){
+
+      Map<String, dynamic> commandData = command.data;
+      if(commandData["command"]=="cancelTask"){
+        Navigator.pop(context);
+        print("yes I am here");
+      }
+      if(commandData["command"]=="getTitle"){
+        _titleController.text = commandData['text'];
+        print("aight");
+      }
+      if(commandData["command"]=="getDescription"){
+        _descriptionController.text = commandData['text'];
+        print("wow");
+      }
+      if(commandData["command"]=="getDate"){
+        print("olala");
+        setState(() {
+          print(commandData["text"]);
+          print("******");
+          mydateTime = DateTime.parse(commandData["text"]);
+          // mydateTime = DateTime.parse(commandData["text"]);
+          print(mydateTime);
+        });
+      }
+      if(commandData["command"]=="saveTask"){
+        print("olala");
+        //final date time declaration and initialisation
+        finalDateTime = DateTime(mydateTime!.year, mydateTime!.month,
+            mydateTime!.day, _timePicked.hour, _timePicked.minute);
+        print("final date and time");
+        print(finalDateTime);
+
+        //writing instance on firebase
+        FirebaseFirestore.instance
+            .collection("collect2")
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .collection("Todo")
+            .add(
+          {
+            "title": _titleController.text,
+            "description": _descriptionController.text,
+            "scheduledTime": finalDateTime
+          },
+        );
+
+        //calling on notification
+        NotificationService.showScheduledNotification(
+            title: _titleController.text,
+            body: _descriptionController.text,
+            payload: 'HomePage',
+            scheduledDate: finalDateTime!);
+        Navigator.pop(context);
+        showToast();
+
+      }
+      /*
+      if(commandData["command"]=="getTime"){
+        print('yesyesyesys');
+        print(commandData["text"].toString());
+        int seconds = int.parse(commandData["text"].toString());
+        double hours = seconds.toDouble()/3600.0;
+        double wholeHours1 = hours.floor() as double;
+        int wholeHours = wholeHours1.toInt();
+        print(wholeHours.toString());
+        int minutes = ((seconds % 3600)/60) as int;
+
+        print(minutes.toString());
+      }
+*/
+    });
+  }
   @override
   void initState() {
     super.initState();
