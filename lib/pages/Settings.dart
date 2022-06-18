@@ -18,15 +18,17 @@ class _SettingsState extends State<Settings> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.menu),
-          onPressed: () {
-            SoundSystem().playLocal();
-            ZoomDrawer.of(context)!.toggle();
-          },
-          //menu widget can used instead of icon button
-          //MenuWidget(),
-        ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.menu),
+            onPressed: () {
+              SoundSystem().playLocal();
+              //  ZoomDrawer.of(context)!.toggle();
+            },
+            //menu widget can used instead of icon button
+            //MenuWidget(),
+          ),
+        ],
         title: Text("Settings"),
       ),
     );

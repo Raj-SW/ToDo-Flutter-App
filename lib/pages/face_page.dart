@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'dart:ui';
-import 'package:devstack/pages/mainPage.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:devstack/api/local_auth_api.dart';
 //import 'package:signup_login/api/local_auth_api.dart';
@@ -122,7 +121,7 @@ class _FacePageState extends State<FacePage> {
           final isAuthenticated = await LocalAuthApi.authenticate();
           if (isAuthenticated) {
             Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => MainPage()),
+              MaterialPageRoute(builder: (context) => HomePage()),
             );
           }
         },

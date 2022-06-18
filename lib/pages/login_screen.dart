@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors, unnecessary_new, prefer_final_fields
 
+import 'package:devstack/pages/mainPage.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:devstack/pages/Backgrounds/backgroundSignIn.dart';
 //import 'package:signup_login/pages/Backgrounds/backgroundSignIn.dart';
@@ -30,6 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
   // firebase
   FirebaseAuth _auth = FirebaseAuth.instance;
   //FirebaseAuth firebaseAuth =  FirebaseAuth.instance;
+  final storage = new FlutterSecureStorage();
 
   // string for displaying the error Message
   String? errorMessage;
@@ -255,7 +258,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Fluttertoast.showToast(msg: "Login Successful"),
                 Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (builder) => HomePage()),
+                    MaterialPageRoute(builder: (builder) => MainPage()),
                     (route) => false)
               });
     } on FirebaseAuthException catch (error) {
@@ -285,6 +288,18 @@ class _LoginScreenState extends State<LoginScreen> {
       Fluttertoast.showToast(msg: errorMessage!);
       print(error.code);
     }
+  }
+
+  void storeTokenAndData(UserCredential userCredential) async {
+    print("storing token and data");
+    await storage.write(
+        key: "token", value: userCredential.credential!.token.toString());
+    await storage.write(
+        key: "usercredential", value: userCredential.toString());
+  }
+
+  Future<String?> getToken() async {
+    return await storage.read(key: "token");
   }
 }
 //}
