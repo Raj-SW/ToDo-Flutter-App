@@ -80,20 +80,18 @@ class _AddToDoPageState extends State<AddToDoPage> {
         Navigator.pop(context);
         showToast();
       }
-      /*
-      if(commandData["command"]=="getTime"){
-        print('yesyesyesys');
-        print(commandData["text"].toString());
-        int seconds = int.parse(commandData["text"].toString());
-        double hours = seconds.toDouble()/3600.0;
-        double wholeHours1 = hours.floor() as double;
-        int wholeHours = wholeHours1.toInt();
-        print(wholeHours.toString());
-        int minutes = ((seconds % 3600)/60) as int;
 
-        print(minutes.toString());
+      if (commandData["command"] == "getTime") {
+        String number = commandData["text"].toString();
+        num seconds = num.parse(number);
+        num hours;
+        num minutes;
+        hours = seconds / 3600;
+        minutes = (seconds % 3600) / 60;
+        int numHours = hours.floor();
+        int numMinutes = minutes.floor();
+        _timePicked = TimeOfDay(hour: numHours, minute: numMinutes);
       }
-      */
     });
   }
 
