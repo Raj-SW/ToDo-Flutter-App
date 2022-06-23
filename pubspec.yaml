@@ -54,7 +54,6 @@ dependencies:
   alan_voice: 3.0.0
   image_picker: ^0.8.5+3
   google_ml_kit: ^0.11.0
-  curved_navigation_bar: ^1.0.3
 
 dev_dependencies:
   flutter_test:
