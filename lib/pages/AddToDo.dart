@@ -90,7 +90,9 @@ class _AddToDoPageState extends State<AddToDoPage> {
         minutes = (seconds % 3600) / 60;
         int numHours = hours.floor();
         int numMinutes = minutes.floor();
-        _timePicked = TimeOfDay(hour: numHours, minute: numMinutes);
+        setState(() {
+          _timePicked = TimeOfDay(hour: numHours, minute: numMinutes);
+        });
       }
     });
   }
