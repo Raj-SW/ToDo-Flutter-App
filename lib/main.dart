@@ -39,7 +39,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  _MyAppState(){
+  _MyAppState() {
     AlanVoice.addButton(
         "78940e6b9b106789ef7fc772c11b89892e956eca572e1d8b807a3e2338fdd0dc/stage");
   }
