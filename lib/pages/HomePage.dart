@@ -24,16 +24,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  _HomePageState(){
-
-    AlanVoice.onCommand.add((command){
+  _HomePageState() {
+    AlanVoice.onCommand.add((command) {
       Map<String, dynamic> commandData = command.data;
-      if(commandData["command"]=="addTask"){
+      if (commandData["command"] == "addTask") {
         SoundSystem().playLocal();
         Navigator.of(context).push(_createRoute());
         print("maybe");
       }
-
     });
   }
   AuthClass authClass = AuthClass();
