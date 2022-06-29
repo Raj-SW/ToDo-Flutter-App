@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors, unnecessary_new, prefer_final_fields, use_build_context_synchronously, avoid_print
 
+import 'dart:math';
+
 import 'package:devstack/Service/Auth_Service.dart';
 import 'package:devstack/pages/mainPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -32,13 +34,11 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController passwordController = new TextEditingController();
 
   // firebase
-  //FirebaseAuth _auth = FirebaseAuth.instance;
+  FirebaseAuth _auth = FirebaseAuth.instance;
   final storage = new FlutterSecureStorage();
   AuthClass authClass = new AuthClass();
   // string for displaying the error Message
   String? errorMessage;
-
-  final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -255,23 +255,32 @@ class _LoginScreenState extends State<LoginScreen> {
   void signIn(String email, String password) async {
     //if (_formKey.currentState!.validate()) {
     try {
-      /* await _auth
+      /*
+      await _auth
           .signInWithEmailAndPassword(email: email, password: password)
           .then((uid) => {
-
                 Fluttertoast.showToast(msg: "Login Successful"),
-                Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (builder) => MainPage()),
-                    (route) => false)
-              });*/
+                Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context) => MainPage()))
+              });
+*/
 
-      UserCredential userCredential = await firebaseAuth
-          .signInWithEmailAndPassword(email: email, password: password);
+      /*AuthCredential credential =
+          EmailAuthProvider.credential(email: email, password: password);
+
+      UserCredential userCredential =
+          await _auth.signInWithCredential(credential);*/
+
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
+      print('');
+      print('');
       print("user credentials by typed login");
-
       print(userCredential);
-      authClass.storeTokenAndData(userCredential);
+      print(userCredential.user?.uid);
+      print('');
+      print('');
+      storeTokenAndDataForEmailAuth(userCredential);
 
       Navigator.pushAndRemoveUntil(
           context,
@@ -304,6 +313,12 @@ class _LoginScreenState extends State<LoginScreen> {
       Fluttertoast.showToast(msg: errorMessage!);
       print(error.code);
     }
+  }
+
+  Future<void> storeTokenAndDataForEmailAuth(
+      UserCredential userCredential) async {
+    print("storing token and data");
+    await storage.write(key: "uid", value: userCredential.user?.uid);
   }
 }
 //}
