@@ -32,7 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController passwordController = new TextEditingController();
 
   // firebase
-  //FirebaseAuth _auth = FirebaseAuth.instance;
+  FirebaseAuth _auth = FirebaseAuth.instance;
   final storage = new FlutterSecureStorage();
   AuthClass authClass = new AuthClass();
   // string for displaying the error Message
@@ -255,18 +255,15 @@ class _LoginScreenState extends State<LoginScreen> {
   void signIn(String email, String password) async {
     //if (_formKey.currentState!.validate()) {
     try {
-      /* await _auth
+      await _auth
           .signInWithEmailAndPassword(email: email, password: password)
           .then((uid) => {
-
                 Fluttertoast.showToast(msg: "Login Successful"),
-                Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (builder) => MainPage()),
-                    (route) => false)
-              });*/
+                Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context) => MainPage()))
+              });
 
-      UserCredential userCredential = await firebaseAuth
+      /*   UserCredential userCredential = await firebaseAuth
           .signInWithEmailAndPassword(email: email, password: password);
       print("user credentials by typed login");
 
@@ -276,7 +273,7 @@ class _LoginScreenState extends State<LoginScreen> {
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (builder) => MainPage()),
-          (route) => false);
+          (route) => false);*/
     } on FirebaseAuthException catch (error) {
       switch (error.code) {
         case "invalid-email":
@@ -304,6 +301,18 @@ class _LoginScreenState extends State<LoginScreen> {
       Fluttertoast.showToast(msg: errorMessage!);
       print(error.code);
     }
+  }
+
+  void storeTokenAndData(UserCredential userCredential) async {
+    print("storing token and data");
+    await storage.write(
+        key: "token", value: userCredential.credential!.token.toString());
+    await storage.write(
+        key: "usercredential", value: userCredential.toString());
+  }
+
+  Future<String?> getToken() async {
+    return await storage.read(key: "token");
   }
 }
 //}

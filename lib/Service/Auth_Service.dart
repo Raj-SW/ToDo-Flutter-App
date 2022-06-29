@@ -22,6 +22,7 @@ class AuthClass {
       GoogleSignInAccount? googleSignInAccount = await _googleSignIn.signIn();
       GoogleSignInAuthentication googleSignInAuthentication =
           await googleSignInAccount!.authentication;
+
       AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleSignInAuthentication.accessToken,
         idToken: googleSignInAuthentication.idToken,
@@ -29,7 +30,9 @@ class AuthClass {
       if (googleSignInAccount != null) {
         UserCredential userCredential =
             await _auth.signInWithCredential(credential);
+
         storeTokenAndData(userCredential);
+
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (builder) => MainPage()),
