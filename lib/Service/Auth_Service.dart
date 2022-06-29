@@ -54,6 +54,9 @@ class AuthClass {
       await _googleSignIn.signOut();
       await _auth.signOut();
       await storage.delete(key: "token");
+      if (await storage.containsKey(key: "uid")) {
+        await storage.delete(key: "uid");
+      }
     } catch (e) {
       final snackBar = SnackBar(content: Text(e.toString()));
       ScaffoldMessenger.of(context!).showSnackBar(snackBar);
@@ -134,5 +137,15 @@ class AuthClass {
     await FirebaseAuth.instance.signOut();
     Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => WelcomeScreen()));
+  }
+
+  Future<void> storeTokenAndDataForEmailAuth(
+      UserCredential userCredential) async {
+    print("storing token and data");
+    await storage.write(key: "uid", value: userCredential.user?.uid);
+  }
+
+  Future<String?> getTokenForEmailAuth() async {
+    return await storage.read(key: "uid");
   }
 }

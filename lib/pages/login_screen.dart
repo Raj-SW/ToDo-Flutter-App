@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors, unnecessary_new, prefer_final_fields, use_build_context_synchronously, avoid_print
 
+import 'dart:math';
+
 import 'package:devstack/Service/Auth_Service.dart';
 import 'package:devstack/pages/mainPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -263,19 +265,22 @@ class _LoginScreenState extends State<LoginScreen> {
               });
 */
 
-      AuthCredential credential =
+      /*AuthCredential credential =
           EmailAuthProvider.credential(email: email, password: password);
 
       UserCredential userCredential =
-          await _auth.signInWithCredential(credential);
+          await _auth.signInWithCredential(credential);*/
+
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
       print('');
       print('');
       print("user credentials by typed login");
-      print(userCredential.credential);
-      print(userCredential.credential?.token);
+      print(userCredential);
+      print(userCredential.user?.uid);
       print('');
       print('');
-      storeTokenAndData(userCredential);
+      storeTokenAndDataForEmailAuth(userCredential);
 
       Navigator.pushAndRemoveUntil(
           context,
@@ -310,12 +315,10 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  Future<void> storeTokenAndData(UserCredential userCredential) async {
+  Future<void> storeTokenAndDataForEmailAuth(
+      UserCredential userCredential) async {
     print("storing token and data");
-    await storage.write(
-        key: "token", value: userCredential.credential?.token.toString());
-    await storage.write(
-        key: "usercredential", value: userCredential.toString());
+    await storage.write(key: "uid", value: userCredential.user?.uid);
   }
 }
 //}

@@ -64,10 +64,18 @@ class _MyAppState extends State<MyApp> {
         currentPage = MainPage();
         //currentPage = HiddenDrawer();
         //  currentPage = zoomDrawer();
-        print('hello from main check login-main.dart');
+        print('Token not null-main.dart');
       });
     } else {
-      print("token is null-main.dart");
+      print("EmailAuth token token check-main.dart");
+      String? token2 = await authClass.getTokenForEmailAuth();
+      if (token2 == null) {
+        print("Email token null");
+      } else {
+        setState(() {
+          currentPage = MainPage();
+        });
+      }
     }
   }
 
