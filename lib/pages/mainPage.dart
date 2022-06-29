@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unnecessary_this
 
 import 'package:alan_voice/alan_voice.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';

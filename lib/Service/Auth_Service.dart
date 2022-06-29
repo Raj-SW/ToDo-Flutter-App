@@ -1,7 +1,7 @@
-// ignore_for_file: prefer_function_declarations_over_variables, prefer_const_constructors, use_build_context_synchronously
+// ignore_for_file: prefer_function_declarations_over_variables, prefer_const_constructors, use_build_context_synchronously, unnecessary_new
 //nevaj
 import 'package:devstack/pages/Welcome/welcome_screen.dart';
-import '../pages/HomePage.dart';
+import 'package:devstack/pages/mainPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -15,7 +15,6 @@ class AuthClass {
       'https://www.googleapis.com/auth/contacts.readonly',
     ],
   );
-  FirebaseAuth auth = FirebaseAuth.instance;
   final storage = new FlutterSecureStorage();
 
   Future<void> googleSignIn(BuildContext context) async {
@@ -33,7 +32,7 @@ class AuthClass {
         storeTokenAndData(userCredential);
         Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (builder) => HomePage()),
+            MaterialPageRoute(builder: (builder) => MainPage()),
             (route) => false);
 
         final snackBar =
@@ -58,10 +57,10 @@ class AuthClass {
     }
   }
 
-  void storeTokenAndData(UserCredential userCredential) async {
-    print("storing token and data");
+  Future<void> storeTokenAndData(UserCredential userCredential) async {
+    print("storing token and data-AuthServices");
     await storage.write(
-        key: "token", value: userCredential.credential!.token.toString());
+        key: "token", value: userCredential.credential?.token.toString());
     await storage.write(
         key: "usercredential", value: userCredential.toString());
   }
@@ -114,7 +113,7 @@ class AuthClass {
       storeTokenAndData(userCredential);
       Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (builder) => HomePage()),
+          MaterialPageRoute(builder: (builder) => MainPage()),
           (route) => false);
 
       showSnackBar(context, "logged In");

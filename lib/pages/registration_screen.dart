@@ -1,21 +1,18 @@
-// ignore_for_file: unnecessary_new, prefer_const_constructors
+// ignore_for_file: unnecessary_new, prefer_const_constructors, use_build_context_synchronously
 
 import 'package:devstack/pages/Backgrounds/backgroundSignUp.dart';
+import 'package:devstack/pages/mainPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:devstack/Service/Auth_Service.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import '../pages/face_page.dart';
-import '../pages/HomePage.dart';
-
-import 'HomePage.dart';
 import '../pages/PhoneAuth.dart';
 import '../pages/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import '../model/user_model.dart';
+//import '../model/user_model.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({Key? key}) : super(key: key);
@@ -25,7 +22,8 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
-  final _auth = FirebaseAuth.instance;
+  //final _auth = FirebaseAuth.instance;
+  final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
   // string for displaying the error Message
   String? errorMessage;
@@ -445,15 +443,25 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     );
   }
 
-  void signUp(String email, String password) async {
+  Future<void> signUp(String email, String password) async {
     if (_formKey.currentState!.validate()) {
       try {
+        /*
         await _auth
             .createUserWithEmailAndPassword(email: email, password: password)
-            .then((value) => {postDetailsToFirestore()})
+            .then((value) => {
+                  postDetailsToFirestore(),
+                })
             .catchError((e) {
-          Fluttertoast.showToast(msg: e!.message);
-        });
+          Fluttertoast.showToast(msg: e!.message);*/
+        UserCredential userCredential = await firebaseAuth
+            .signInWithEmailAndPassword(email: email, password: password);
+
+        authClass.storeTokenAndData(userCredential);
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (builder) => MainPage()),
+            (route) => false);
       } on FirebaseAuthException catch (error) {
         switch (error.code) {
           case "invalid-email":
@@ -483,25 +491,16 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     }
   }
 
-  void storeTokenAndData(UserCredential userCredential) async {
-    print("storing token and data");
-    await storage.write(
-        key: "token", value: userCredential.credential!.token.toString());
-    await storage.write(
-        key: "usercredential", value: userCredential.toString());
-  }
-
-  Future<String?> getToken() async {
-    return await storage.read(key: "token");
-  }
-
   postDetailsToFirestore() async {
     // calling our firestore
     // calling our user model
     // sedning these values
 
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-    User? user = _auth.currentUser;
+    //User? user = _auth
+    //  .currentUser!;
+    /*
+        
 
     UserModel userModel = UserModel();
 
@@ -514,10 +513,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     await firebaseFirestore
         .collection("users")
         .doc(user.uid)
-        .set(userModel.toMap());
-    Fluttertoast.showToast(msg: "Account created successfully :) ");
+        .set(userModel.toMap());*/
 
+    /*Fluttertoast.showToast(msg: "Account created successfully :) ");
     Navigator.pushAndRemoveUntil((context),
-        MaterialPageRoute(builder: (context) => HomePage()), (route) => false);
+        MaterialPageRoute(builder: (context) => MainPage()), (route) => false);
+  */
   }
 }

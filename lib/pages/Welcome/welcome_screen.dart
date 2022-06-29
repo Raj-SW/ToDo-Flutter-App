@@ -21,20 +21,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    checkLogin();
     NotificationService.init();
     listenNotification();
-  }
-
-  void checkLogin() async {
-    String? token = await authClass.getToken();
-    if (token != null) {
-      setState(() {
-        //currentPage = HomePage();
-        //currentPage = HiddenDrawer();
-        currentPage = zoomDrawer();
-      });
-    }
   }
 
   @override

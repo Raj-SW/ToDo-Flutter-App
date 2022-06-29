@@ -1,6 +1,8 @@
-// ignore_for_file: prefer_const_constructors, unnecessary_new, prefer_final_fields
+// ignore_for_file: prefer_const_constructors, unnecessary_new, prefer_final_fields, use_build_context_synchronously, avoid_print
 
+import 'package:devstack/Service/Auth_Service.dart';
 import 'package:devstack/pages/mainPage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:devstack/pages/Backgrounds/backgroundSignIn.dart';
@@ -10,7 +12,7 @@ import 'HomePage.dart';
 //import 'HomePage.dart';
 import '../pages/registration_screen.dart';
 //import 'package:signup_login/pages/registration_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -30,12 +32,13 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController passwordController = new TextEditingController();
 
   // firebase
-  FirebaseAuth _auth = FirebaseAuth.instance;
-  //FirebaseAuth firebaseAuth =  FirebaseAuth.instance;
+  //FirebaseAuth _auth = FirebaseAuth.instance;
   final storage = new FlutterSecureStorage();
-
+  AuthClass authClass = new AuthClass();
   // string for displaying the error Message
   String? errorMessage;
+
+  final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -252,15 +255,28 @@ class _LoginScreenState extends State<LoginScreen> {
   void signIn(String email, String password) async {
     //if (_formKey.currentState!.validate()) {
     try {
-      await _auth
+      /* await _auth
           .signInWithEmailAndPassword(email: email, password: password)
           .then((uid) => {
+
                 Fluttertoast.showToast(msg: "Login Successful"),
                 Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(builder: (builder) => MainPage()),
                     (route) => false)
-              });
+              });*/
+
+      UserCredential userCredential = await firebaseAuth
+          .signInWithEmailAndPassword(email: email, password: password);
+      print("user credentials by typed login");
+
+      print(userCredential);
+      authClass.storeTokenAndData(userCredential);
+
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (builder) => MainPage()),
+          (route) => false);
     } on FirebaseAuthException catch (error) {
       switch (error.code) {
         case "invalid-email":
@@ -288,18 +304,6 @@ class _LoginScreenState extends State<LoginScreen> {
       Fluttertoast.showToast(msg: errorMessage!);
       print(error.code);
     }
-  }
-
-  void storeTokenAndData(UserCredential userCredential) async {
-    print("storing token and data");
-    await storage.write(
-        key: "token", value: userCredential.credential!.token.toString());
-    await storage.write(
-        key: "usercredential", value: userCredential.toString());
-  }
-
-  Future<String?> getToken() async {
-    return await storage.read(key: "token");
   }
 }
 //}
