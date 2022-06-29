@@ -38,8 +38,6 @@ class _LoginScreenState extends State<LoginScreen> {
   // string for displaying the error Message
   String? errorMessage;
 
-  final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -255,6 +253,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void signIn(String email, String password) async {
     //if (_formKey.currentState!.validate()) {
     try {
+      /*
       await _auth
           .signInWithEmailAndPassword(email: email, password: password)
           .then((uid) => {
@@ -262,18 +261,26 @@ class _LoginScreenState extends State<LoginScreen> {
                 Navigator.of(context).pushReplacement(
                     MaterialPageRoute(builder: (context) => MainPage()))
               });
+*/
 
-      /*   UserCredential userCredential = await firebaseAuth
-          .signInWithEmailAndPassword(email: email, password: password);
+      AuthCredential credential =
+          EmailAuthProvider.credential(email: email, password: password);
+
+      UserCredential userCredential =
+          await _auth.signInWithCredential(credential);
+      print('');
+      print('');
       print("user credentials by typed login");
-
-      print(userCredential);
-      authClass.storeTokenAndData(userCredential);
+      print(userCredential.credential);
+      print(userCredential.credential?.token);
+      print('');
+      print('');
+      storeTokenAndData(userCredential);
 
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (builder) => MainPage()),
-          (route) => false);*/
+          (route) => false);
     } on FirebaseAuthException catch (error) {
       switch (error.code) {
         case "invalid-email":
@@ -303,16 +310,12 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  void storeTokenAndData(UserCredential userCredential) async {
+  Future<void> storeTokenAndData(UserCredential userCredential) async {
     print("storing token and data");
     await storage.write(
-        key: "token", value: userCredential.credential!.token.toString());
+        key: "token", value: userCredential.credential?.token.toString());
     await storage.write(
         key: "usercredential", value: userCredential.toString());
-  }
-
-  Future<String?> getToken() async {
-    return await storage.read(key: "token");
   }
 }
 //}

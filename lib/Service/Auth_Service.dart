@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_function_declarations_over_variables, prefer_const_constructors, use_build_context_synchronously, unnecessary_new
+// ignore_for_file: prefer_function_declarations_over_variables, prefer_const_constructors, use_build_context_synchronously, unnecessary_new, unnecessary_null_comparison
 //nevaj
 import 'package:devstack/pages/Welcome/welcome_screen.dart';
 import 'package:devstack/pages/mainPage.dart';
@@ -63,7 +63,7 @@ class AuthClass {
   Future<void> storeTokenAndData(UserCredential userCredential) async {
     print("storing token and data-AuthServices");
     await storage.write(
-        key: "token", value: userCredential.credential?.token.toString());
+        key: "token", value: userCredential.credential!.token.toString());
     await storage.write(
         key: "usercredential", value: userCredential.toString());
   }
