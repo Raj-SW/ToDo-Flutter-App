@@ -3,6 +3,8 @@
 import 'package:alan_voice/alan_voice.dart';
 import 'package:devstack/assets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_ml_kit/google_ml_kit.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import '../Service/Notif_services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -65,7 +67,8 @@ class _AddToDoPageState extends State<AddToDoPage> {
           {
             "title": _titleController.text,
             "description": _descriptionController.text,
-            "scheduledTime": finalDateTime
+            "scheduledTime": finalDateTime,
+            "isDone": false
           },
         );
 
@@ -100,6 +103,10 @@ class _AddToDoPageState extends State<AddToDoPage> {
     tz.initializeTimeZones();
   }
 
+  bool textScanning = false;
+  XFile? imageFile;
+  String scannedText = "";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -114,7 +121,7 @@ class _AddToDoPageState extends State<AddToDoPage> {
               height: 30,
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 IconButton(
                   onPressed: () {
@@ -129,8 +136,11 @@ class _AddToDoPageState extends State<AddToDoPage> {
                 ),
                 label('Add New Task', PrimaryColor, 25),
                 SizedBox(
-                  width: 50,
-                )
+                  width: 40,
+                ),
+                InkWell(
+                    onTap: () => openDialog(),
+                    child: Icon(Icons.image_search_sharp)),
               ],
             ),
             Padding(
@@ -401,4 +411,81 @@ class _AddToDoPageState extends State<AddToDoPage> {
         textColor: Colors.white,
         gravity: ToastGravity.BOTTOM);
   }
+
+  void getImage(ImageSource source) async {
+    try {
+      final pickedImage = await ImagePicker().pickImage(source: source);
+      if (pickedImage != null) {
+        textScanning = true;
+        imageFile = pickedImage;
+        setState(() {});
+        getRecognisedText(pickedImage);
+      }
+    } catch (e) {
+      textScanning = false;
+      imageFile = null;
+      setState(() {});
+      scannedText = "Error";
+    }
+  }
+
+  void getRecognisedText(XFile image) async {
+    final inputImage = InputImage.fromFilePath(image.path);
+    final textDetector = GoogleMlKit.vision.textRecognizer();
+    RecognizedText recognizedText = await textDetector.processImage(inputImage);
+    await textDetector.close();
+    scannedText = "";
+    for (TextBlock block in recognizedText.blocks) {
+      for (TextLine line in block.lines) {
+        scannedText = scannedText + line.text + "\n";
+      }
+    }
+    textScanning = false;
+    _descriptionController.text = scannedText;
+    setState(() {});
+    Navigator.of(context).pop();
+  }
+
+  Future openDialog() => showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+            title: Text("Add description from gallery or camera"),
+            actions: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton(
+
+                        ///Choose from Gallery
+                        onPressed: () {
+                          getImage(ImageSource.gallery);
+                        },
+                        child: Column(
+                          children: <Widget>[
+                            Icon(Icons.image),
+                            Text("Gallery")
+                          ],
+                        )),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton(
+
+                        ///Choose from camera
+                        onPressed: () {
+                          getImage(ImageSource.camera);
+                        },
+                        child: Column(
+                          children: <Widget>[
+                            Icon(Icons.camera),
+                            Text("Camera")
+                          ],
+                        )),
+                  )
+                ],
+              ),
+            ],
+          ));
 }
