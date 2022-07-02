@@ -3,6 +3,8 @@
 import 'package:alan_voice/alan_voice.dart';
 import 'package:devstack/assets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_ml_kit/google_ml_kit.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import '../Service/Notif_services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -107,6 +109,7 @@ class _AddToDoPageState extends State<AddToDoPage> {
   bool textScanning = false;
   XFile? imageFile;
   String scannedText = "";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -121,7 +124,7 @@ class _AddToDoPageState extends State<AddToDoPage> {
               height: 30,
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 IconButton(
                   onPressed: () {
