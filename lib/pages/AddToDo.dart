@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unnecessary_null_comparison, prefer_final_fields
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unnecessary_null_comparison, prefer_final_fields, prefer_interpolation_to_compose_strings
 
 import 'package:alan_voice/alan_voice.dart';
 import 'package:devstack/assets.dart';
@@ -9,6 +9,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:timezone/data/latest.dart' as tz;
+import 'package:google_ml_kit/google_ml_kit.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddToDoPage extends StatefulWidget {
   const AddToDoPage({Key? key}) : super(key: key);
@@ -65,7 +67,8 @@ class _AddToDoPageState extends State<AddToDoPage> {
           {
             "title": _titleController.text,
             "description": _descriptionController.text,
-            "scheduledTime": finalDateTime
+            "scheduledTime": finalDateTime,
+            "isDone": false,
           },
         );
 
@@ -78,28 +81,32 @@ class _AddToDoPageState extends State<AddToDoPage> {
         Navigator.pop(context);
         showToast();
       }
-      /*
-      if(commandData["command"]=="getTime"){
-        print('yesyesyesys');
-        print(commandData["text"].toString());
-        int seconds = int.parse(commandData["text"].toString());
-        double hours = seconds.toDouble()/3600.0;
-        double wholeHours1 = hours.floor() as double;
-        int wholeHours = wholeHours1.toInt();
-        print(wholeHours.toString());
-        int minutes = ((seconds % 3600)/60) as int;
 
-        print(minutes.toString());
+      if (commandData["command"] == "getTime") {
+        String number = commandData["text"].toString();
+        num seconds = num.parse(number);
+        num hours;
+        num minutes;
+        hours = seconds / 3600;
+        minutes = (seconds % 3600) / 60;
+        int numHours = hours.floor();
+        int numMinutes = minutes.floor();
+        setState(() {
+          _timePicked = TimeOfDay(hour: numHours, minute: numMinutes);
+        });
       }
-*/
     });
   }
+
   @override
   void initState() {
     super.initState();
     tz.initializeTimeZones();
   }
 
+  bool textScanning = false;
+  XFile? imageFile;
+  String scannedText = "";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -130,7 +137,11 @@ class _AddToDoPageState extends State<AddToDoPage> {
                 label('Add New Task', PrimaryColor, 25),
                 SizedBox(
                   width: 50,
-                )
+                ),
+                InkWell(
+                    onTap: () => openDialog(),
+                    child: Icon(Icons.image_search_sharp)),
+                SizedBox(),
               ],
             ),
             Padding(
@@ -401,4 +412,81 @@ class _AddToDoPageState extends State<AddToDoPage> {
         textColor: Colors.white,
         gravity: ToastGravity.BOTTOM);
   }
+
+  void getImage(ImageSource source) async {
+    try {
+      final pickedImage = await ImagePicker().pickImage(source: source);
+      if (pickedImage != null) {
+        textScanning = true;
+        imageFile = pickedImage;
+        setState(() {});
+        getRecognisedText(pickedImage);
+      }
+    } catch (e) {
+      textScanning = false;
+      imageFile = null;
+      setState(() {});
+      scannedText = "Error";
+    }
+  }
+
+  void getRecognisedText(XFile image) async {
+    final inputImage = InputImage.fromFilePath(image.path);
+    final textDetector = GoogleMlKit.vision.textRecognizer();
+    RecognizedText recognizedText = await textDetector.processImage(inputImage);
+    await textDetector.close();
+    scannedText = "";
+    for (TextBlock block in recognizedText.blocks) {
+      for (TextLine line in block.lines) {
+        scannedText = scannedText + line.text + "\n";
+      }
+    }
+    textScanning = false;
+    _descriptionController.text = scannedText;
+    setState(() {});
+    Navigator.of(context).pop();
+  }
+
+  Future openDialog() => showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+            title: Text("Add description from gallery or camera"),
+            actions: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton(
+
+                        ///Choose from Gallery
+                        onPressed: () {
+                          getImage(ImageSource.gallery);
+                        },
+                        child: Column(
+                          children: <Widget>[
+                            Icon(Icons.image),
+                            Text("Gallery")
+                          ],
+                        )),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton(
+
+                        ///Choose from camera
+                        onPressed: () {
+                          getImage(ImageSource.camera);
+                        },
+                        child: Column(
+                          children: <Widget>[
+                            Icon(Icons.camera),
+                            Text("Camera")
+                          ],
+                        )),
+                  )
+                ],
+              ),
+            ],
+          ));
 }
