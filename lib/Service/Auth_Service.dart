@@ -70,6 +70,20 @@ class AuthClass {
     return await storage.read(key: "token");
   }
 
+////////////////////////////////////////////////
+  void storeTokenAndData2(UserCredential userCredential) async {
+    print("storing token and data");
+    await storage.write(
+        key: "token", value: userCredential.credential!.token.toString());
+    await storage.write(
+        key: "usercredential", value: userCredential.toString());
+  }
+
+  Future<String?> getToken2() async {
+    return await storage.read(key: "token2");
+  }
+
+///////////////////////////////////////////
   Future<void> verifyPhoneNumber(
       String phoneNumber, BuildContext context, Function setData) async {
     PhoneVerificationCompleted verificationCompleted =

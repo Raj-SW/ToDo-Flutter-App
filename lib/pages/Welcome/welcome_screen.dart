@@ -10,6 +10,8 @@ import '../../Service/Notif_services.dart';
 import '../../zoomDrawer.dart';
 
 class WelcomeScreen extends StatefulWidget {
+  const WelcomeScreen({Key? key}) : super(key: key);
+
   @override
   State<WelcomeScreen> createState() => _WelcomeScreenState();
 }
@@ -22,20 +24,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    checkLogin();
     NotificationService.init();
     listenNotification();
-  }
-
-  void checkLogin() async {
-    String? token = await authClass.getToken();
-    if (token != null) {
-      setState(() {
-        //currentPage = HomePage();
-        //currentPage = HiddenDrawer();
-        currentPage = MainPage();
-      });
-    }
   }
 
   @override

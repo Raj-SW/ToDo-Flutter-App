@@ -58,13 +58,17 @@ class _MyAppState extends State<MyApp> {
 
   void checkLogin() async {
     String? token = await authClass.getToken();
+    String? token2 = await authClass.getToken();
     if (token != null) {
       setState(() {
         currentPage = MainPage();
         //currentPage = HiddenDrawer();
         //  currentPage = zoomDrawer();
-        print('hello from main check login');
+        print('aaa-main-hello from main check login');
       });
+    }
+    if (token == null) {
+      print('aaa-main-hello from main check login-token is null');
     }
   }
 
