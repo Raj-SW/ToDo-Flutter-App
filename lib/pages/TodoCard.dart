@@ -19,7 +19,6 @@ class TodoCard extends StatefulWidget {
       required this.index,
       required this.description,
       required this.document,
-      required this.isDone,
       required this.id})
       : super(key: key);
   //we need to assign all value dynamically
@@ -32,7 +31,6 @@ class TodoCard extends StatefulWidget {
   final bool isDone;
   final Map<String, dynamic> document;
   final String id;
-  final bool isDone;
   @override
   State<TodoCard> createState() => _TodoCardState();
 }
@@ -140,7 +138,6 @@ class _TodoCardState extends State<TodoCard> {
                           'Mark as done',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         )),
-
                   ],
                 )
               ],
@@ -168,7 +165,6 @@ class _TodoCardState extends State<TodoCard> {
     return Text(overdue == false
         ? "is overdue by $daysLeftAbs days"
         : "$daysLeftAbs days left");
-
   }
 
   Color isoverdue(DateTime time, bool isdone) {

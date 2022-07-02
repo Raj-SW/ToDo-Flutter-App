@@ -137,7 +137,7 @@ class _HomePageState extends State<HomePage> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(right: 30, bottom: 15),
-    child: DropdownButton<String>(
+                  child: DropdownButton<String>(
                     iconEnabledColor: Colors.deepPurple,
                     focusColor: Colors.deepPurple,
                     value: selectedItem,
@@ -168,7 +168,6 @@ class _HomePageState extends State<HomePage> {
                   return ListView.builder(
                       primary: false,
                       shrinkWrap: true,
-                      primary: false,
                       itemCount: snapshot.data.docs.length,
                       itemBuilder: (context, index) {
                         Map<String, dynamic> document =
@@ -194,7 +193,6 @@ class _HomePageState extends State<HomePage> {
                               document: document,
                               id: snapshot.data.docs[index].id,
                               onChange: onChange,
-                              isDone: document["isDone"],
                             );
                           } else {
                             return Container();
@@ -233,7 +231,6 @@ class _HomePageState extends State<HomePage> {
                               document: document,
                               id: snapshot.data.docs[index].id,
                               onChange: onChange,
-                              isDone: document["isDone"],
                             );
                           } else {
                             return Container();
@@ -252,7 +249,6 @@ class _HomePageState extends State<HomePage> {
                             document: document,
                             id: snapshot.data.docs[index].id,
                             onChange: onChange,
-                            isDone: document["isDone"],
                           );
                         }
                         if (selectedItem == "Done") {
@@ -276,7 +272,6 @@ class _HomePageState extends State<HomePage> {
                       });
                 }),
             //),
-
           ],
         ),
       ),
