@@ -54,9 +54,8 @@ class AuthClass {
       await _googleSignIn.signOut();
       await _auth.signOut();
       await storage.delete(key: "token");
-      if (await storage.containsKey(key: "uid")) {
-        await storage.delete(key: "uid");
-      }
+      await storage.delete(key: "uid");
+
     } catch (e) {
       final snackBar = SnackBar(content: Text(e.toString()));
       ScaffoldMessenger.of(context!).showSnackBar(snackBar);
@@ -75,6 +74,17 @@ class AuthClass {
     return await storage.read(key: "token");
   }
 
+////////////////////////////////////////////////
+  void storeTokenAndData2(UserCredential userCredential) async {
+    print("aaa-Authclass-storing token and data");
+    await storage.write(key: "uid", value: userCredential.user!.uid);
+  }
+
+  Future<String?> getToken2() async {
+    return await storage.read(key: "uid");
+  }
+
+///////////////////////////////////////////
   Future<void> verifyPhoneNumber(
       String phoneNumber, BuildContext context, Function setData) async {
     PhoneVerificationCompleted verificationCompleted =

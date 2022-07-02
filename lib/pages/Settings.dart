@@ -1,3 +1,4 @@
+import 'package:devstack/assets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -18,17 +19,10 @@ class _SettingsState extends State<Settings> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        actions: [
-          IconButton(
-            icon: Icon(Icons.menu),
-            onPressed: () {
-              SoundSystem().playLocal();
-              //  ZoomDrawer.of(context)!.toggle();
-            },
-            //menu widget can used instead of icon button
-            //MenuWidget(),
-          ),
-        ],
+        backgroundColor: Color.fromARGB(255, 255, 255, 255),
+        elevation: 0,
+        foregroundColor: PrimaryColor,
+        actions: [],
         title: Text("Settings"),
       ),
     );

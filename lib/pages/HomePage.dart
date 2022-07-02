@@ -78,6 +78,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     var _selectedValue;
     return Scaffold(
+      extendBody: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         //   backgroundColor: Color.fromARGB(0, 255, 255, 255), centerTitle: true,
@@ -135,8 +136,8 @@ class _HomePageState extends State<HomePage> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(right: 30, bottom: 0),
-                  child: DropdownButton<String>(
+                  padding: const EdgeInsets.only(right: 30, bottom: 15),
+    child: DropdownButton<String>(
                     iconEnabledColor: Colors.deepPurple,
                     focusColor: Colors.deepPurple,
                     value: selectedItem,
@@ -153,8 +154,10 @@ class _HomePageState extends State<HomePage> {
                 ),
               ],
             ),
-            /*  SizedBox(
-              height: MediaQuery.of(context).size.height - 202,
+
+            /* SizedBox(
+              height: MediaQuery.of(context).size.height - 196,
+
               child: */
             StreamBuilder(
                 stream: _stream,
@@ -165,6 +168,7 @@ class _HomePageState extends State<HomePage> {
                   return ListView.builder(
                       primary: false,
                       shrinkWrap: true,
+                      primary: false,
                       itemCount: snapshot.data.docs.length,
                       itemBuilder: (context, index) {
                         Map<String, dynamic> document =
@@ -174,8 +178,9 @@ class _HomePageState extends State<HomePage> {
                             id: snapshot.data.docs[index].id,
                             checkValue: false));
                         DateTime time = date(document);
+                        bool isDone = document["isDone"];
 
-                        if (selectedItem == "Today") {
+                        if (selectedItem == "Today" && isDone == false) {
                           if (time.day == DateTime.now().day) {
                             return TodoCard(
                               isDone: document["isDone"],
@@ -189,12 +194,13 @@ class _HomePageState extends State<HomePage> {
                               document: document,
                               id: snapshot.data.docs[index].id,
                               onChange: onChange,
+                              isDone: document["isDone"],
                             );
                           } else {
                             return Container();
                           }
                         }
-                        if (selectedItem == "This Week") {
+                        if (selectedItem == "This Week" && isDone == false) {
                           if (time.day >= strtWk.day && time.day <= endWk.day) {
                             return TodoCard(
                               isDone: document["isDone"],
@@ -227,12 +233,13 @@ class _HomePageState extends State<HomePage> {
                               document: document,
                               id: snapshot.data.docs[index].id,
                               onChange: onChange,
+                              isDone: document["isDone"],
                             );
                           } else {
                             return Container();
                           }
                         }
-                        if (selectedItem == "All") {
+                        if (selectedItem == "All" && isDone == false) {
                           return TodoCard(
                             isDone: document["isDone"],
                             check: selected[index].checkValue,
@@ -245,28 +252,31 @@ class _HomePageState extends State<HomePage> {
                             document: document,
                             id: snapshot.data.docs[index].id,
                             onChange: onChange,
+                            isDone: document["isDone"],
                           );
                         }
+                        if (selectedItem == "Done") {
+                          if (isDone == true) {
+                            return TodoCard(
+                              check: selected[index].checkValue,
+                              isDone: document["isDone"],
+                              time: date(document),
+                              title: document["title"] == null
+                                  ? "Add your tasks"
+                                  : document["title"],
+                              description: document["description"],
+                              index: index,
+                              document: document,
+                              id: snapshot.data.docs[index].id,
+                              onChange: onChange,
+                            );
+                          }
+                        }
                         return Container();
-                        //if (time.day >= strtWk.day && time.day <= endWk.day) {
-                        /* return TodoCard(
-                            check: selected[index].checkValue,
-                            time: date(document),
-                            title: document["title"] == null
-                                ? "Add your tasks"
-                                : document["title"],
-                            description: document["description"],
-                            index: index,
-                            document: document,
-                            id: snapshot.data.docs[index].id,
-                            onChange: onChange,
-                          );
-                          } else {
-                                  return Container();
-                                }*/
                       });
                 }),
-            // ),
+            //),
+
           ],
         ),
       ),
@@ -324,27 +334,3 @@ class Select {
   bool checkValue = false;
   Select({required this.id, required this.checkValue});
 }
-/* 
-//for logout
-onPressed: () async {
-                  await authClass.logout();
-                  Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(builder: (builder) => SignUpPage()),
-                      (route) => false);
-                },*/
-
-                /* DropdownButton<String>(
-                      iconEnabledColor: Colors.deepPurple,
-                      focusColor: Colors.deepPurple,
-                      value: selectedItem,
-                      items: itemList
-                          .map((item) => DropdownMenuItem<String>(
-                              value: item,
-                              child: Text(
-                                item,
-                                style: TextStyle(fontSize: 18),
-                              )))
-                          .toList(),
-                      onChanged: (item) => setState(() => selectedItem = item),
-                    ),*/

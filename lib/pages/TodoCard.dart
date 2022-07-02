@@ -19,6 +19,7 @@ class TodoCard extends StatefulWidget {
       required this.index,
       required this.description,
       required this.document,
+      required this.isDone,
       required this.id})
       : super(key: key);
   //we need to assign all value dynamically
@@ -31,6 +32,7 @@ class TodoCard extends StatefulWidget {
   final bool isDone;
   final Map<String, dynamic> document;
   final String id;
+  final bool isDone;
   @override
   State<TodoCard> createState() => _TodoCardState();
 }
@@ -125,23 +127,20 @@ class _TodoCardState extends State<TodoCard> {
                     SizedBox(
                       width: 15,
                     ),
-                    if (widget.isDone ==
-                        false) //if isdone is false, no need to show mark as done
-                      InkWell(
-                          onTap: () {
-                            //update task as done
-                            FirebaseFirestore.instance
-                                .collection("collect2")
-                                .doc(FirebaseAuth.instance.currentUser!.uid)
-                                .collection("Todo")
-                                .doc(widget.id)
-                                .update({"isDone": true});
-                            setState(() {});
-                          },
-                          child: Text(
-                            'Mark as done',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          )),
+                    InkWell(
+                        onTap: () {
+                          FirebaseFirestore.instance
+                              .collection("collect2")
+                              .doc(FirebaseAuth.instance.currentUser!.uid)
+                              .collection("Todo")
+                              .doc(widget.id)
+                              .update({"isDone": true});
+                        },
+                        child: Text(
+                          'Mark as done',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        )),
+
                   ],
                 )
               ],
@@ -165,13 +164,11 @@ class _TodoCardState extends State<TodoCard> {
         overdue = false;
       });
     }
-    if (isDone == true) {
-      return Text("Task Done");
-    } else {
-      return Text(overdue == false
-          ? "Task overdue by $daysLeftAbs days"
-          : "$daysLeftAbs day(s) left");
-    }
+
+    return Text(overdue == false
+        ? "is overdue by $daysLeftAbs days"
+        : "$daysLeftAbs days left");
+
   }
 
   Color isoverdue(DateTime time, bool isdone) {

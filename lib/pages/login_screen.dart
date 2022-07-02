@@ -1,6 +1,6 @@
-// ignore_for_file: prefer_const_constructors, unnecessary_new, prefer_final_fields, use_build_context_synchronously, avoid_print
 
-import 'dart:math';
+// ignore_for_file: prefer_const_constructors, unnecessary_new, prefer_final_fields, use_build_context_synchronously, unused_local_variable
+
 
 import 'package:devstack/Service/Auth_Service.dart';
 import 'package:devstack/pages/mainPage.dart';
@@ -35,8 +35,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
   // firebase
   FirebaseAuth _auth = FirebaseAuth.instance;
+
+  AuthClass _authClass = AuthClass();
+  //FirebaseAuth firebaseAuth =  FirebaseAuth.instance;
+
   final storage = new FlutterSecureStorage();
-  AuthClass authClass = new AuthClass();
+
   // string for displaying the error Message
   String? errorMessage;
 
@@ -255,33 +259,14 @@ class _LoginScreenState extends State<LoginScreen> {
   void signIn(String email, String password) async {
     //if (_formKey.currentState!.validate()) {
     try {
-      /*
-      await _auth
+      /* await _auth
           .signInWithEmailAndPassword(email: email, password: password)
           .then((uid) => {
                 Fluttertoast.showToast(msg: "Login Successful"),
-                Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => MainPage()))
-              });
-*/
-
-      /*AuthCredential credential =
-          EmailAuthProvider.credential(email: email, password: password);
-
-      UserCredential userCredential =
-          await _auth.signInWithCredential(credential);*/
-
+              });*/
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
-      print('');
-      print('');
-      print("user credentials by typed login");
-      print(userCredential);
-      print(userCredential.user?.uid);
-      print('');
-      print('');
-      storeTokenAndDataForEmailAuth(userCredential);
-
+      _authClass.storeTokenAndData2(userCredential);
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (builder) => MainPage()),
@@ -313,12 +298,6 @@ class _LoginScreenState extends State<LoginScreen> {
       Fluttertoast.showToast(msg: errorMessage!);
       print(error.code);
     }
-  }
-
-  Future<void> storeTokenAndDataForEmailAuth(
-      UserCredential userCredential) async {
-    print("storing token and data");
-    await storage.write(key: "uid", value: userCredential.user?.uid);
   }
 }
 //}

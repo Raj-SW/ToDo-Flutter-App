@@ -59,12 +59,15 @@ class _MyAppState extends State<MyApp> {
 
   void checkLogin() async {
     String? token = await authClass.getToken();
+    String? token2 = await authClass.getToken2();
     if (token != null) {
       setState(() {
         currentPage = MainPage();
         //currentPage = HiddenDrawer();
         //  currentPage = zoomDrawer();
-        print('Token not null-main.dart');
+
+        print('aaa-main-hello from main check login');
+
       });
     } else {
       print("EmailAuth token token check-main.dart");
@@ -72,6 +75,15 @@ class _MyAppState extends State<MyApp> {
       if (token2 == null) {
         print("Email token null");
       } else {
+        setState(() {
+          currentPage = MainPage();
+        });
+      }
+    }
+    if (token == null) {
+      print('aaa-main-hello from main check login-token is null');
+      if (token2 != null) {
+        print('aaa-main-hello from main check login-token2 is null');
         setState(() {
           currentPage = MainPage();
         });

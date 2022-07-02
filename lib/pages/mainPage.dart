@@ -2,6 +2,7 @@
 
 import 'package:alan_voice/alan_voice.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:devstack/assets.dart';
 import 'package:devstack/pages/HomePage.dart';
 import 'package:devstack/pages/Settings.dart';
 import 'package:flutter/material.dart';
@@ -16,14 +17,6 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  final items = <Widget>[
-    Icon(
-      Icons.home,
-      color: Colors.white,
-    ),
-    Icon(Icons.settings, color: Colors.white)
-  ];
-
   int currentIndex = 0;
   _MainPageState() {
     AlanVoice.onCommand.add((command) {
@@ -46,16 +39,8 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBody: false,
-      bottomNavigationBar: CurvedNavigationBar(
-          backgroundColor: Color.fromARGB(0, 255, 255, 255),
-          color: Colors.deepPurple,
-          items: items,
-          height: 56,
-          index: currentIndex,
-          onTap: (index) => setState(() => this.currentIndex = index))
 
-      /*BottomNavigationBar(
+      bottomNavigationBar: /* BottomNavigationBar(
           currentIndex: currentIndex,
           onTap: (index) => setState(() {
                 currentIndex = index;
@@ -64,8 +49,25 @@ class _MainPageState extends State<MainPage> {
             BottomNavigationBarItem(icon: Icon(Icons.home), label: "To-Dos"),
             BottomNavigationBarItem(
                 icon: Icon(Icons.settings_input_component), label: "Settings")
-          ])*/
-      ,
+
+          ]),*/
+          CurvedNavigationBar(
+        backgroundColor: Colors.transparent,
+        color: PrimaryColor,
+        items: [
+          Icon(
+            Icons.home,
+            color: Colors.white,
+          ),
+          Icon(
+            Icons.settings,
+            color: Colors.white,
+          )
+        ],
+        height: 50,
+        index: currentIndex,
+        onTap: (index) => setState(() => currentIndex = index),
+      ),
       body: screens[currentIndex],
     );
   }
