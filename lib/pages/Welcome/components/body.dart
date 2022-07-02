@@ -1,7 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:devstack/assets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'background.dart';
 import 'rounded_button.dart';
 import 'package:devstack/constants.dart';
@@ -43,11 +45,10 @@ class _BodyState extends State<Body> {
             ),
             Text(
               "Better.me",
-              style: TextStyle(
-                  fontFamily: 'Pacifico',
-                  fontWeight: FontWeight.w900,
-                  fontSize: 55,
-                  color: Colors.blue),
+              style: GoogleFonts.pacifico(
+                  fontWeight: FontWeight.normal,
+                  fontSize: 70,
+                  color: Color.fromRGBO(93, 95, 239, 1)),
             ),
             SizedBox(height: size.height * 0.05),
             SvgPicture.asset(

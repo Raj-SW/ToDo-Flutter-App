@@ -67,7 +67,8 @@ class _AddToDoPageState extends State<AddToDoPage> {
           {
             "title": _titleController.text,
             "description": _descriptionController.text,
-            "scheduledTime": finalDateTime
+            "scheduledTime": finalDateTime,
+            "isDone": false,
           },
         );
 
@@ -240,7 +241,8 @@ class _AddToDoPageState extends State<AddToDoPage> {
             {
               "title": _titleController.text,
               "description": _descriptionController.text,
-              "scheduledTime": finalDateTime
+              "scheduledTime": finalDateTime,
+              "isDone": false
             },
           );
 
