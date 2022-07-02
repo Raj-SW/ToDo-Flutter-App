@@ -1,22 +1,18 @@
-// ignore_for_file: unnecessary_new, prefer_const_constructors
+// ignore_for_file: unnecessary_new, prefer_const_constructors, use_build_context_synchronously
 
 import 'package:devstack/pages/Backgrounds/backgroundSignUp.dart';
 import 'package:devstack/pages/mainPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:devstack/Service/Auth_Service.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import '../pages/face_page.dart';
-import '../pages/HomePage.dart';
-
-import 'HomePage.dart';
 import '../pages/PhoneAuth.dart';
 import '../pages/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import '../model/user_model.dart';
+//import '../model/user_model.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({Key? key}) : super(key: key);
@@ -27,6 +23,7 @@ class RegistrationScreen extends StatefulWidget {
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
   final _auth = FirebaseAuth.instance;
+  final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
   // string for displaying the error Message
   String? errorMessage;
@@ -446,6 +443,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     );
   }
 
+
   void signUp(String email, String password) async {
     if (_formKey.currentState!.validate()) {
       try {
@@ -491,3 +489,4 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     }
   }
 }
+

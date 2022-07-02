@@ -1,7 +1,10 @@
+
 // ignore_for_file: prefer_const_constructors, unnecessary_new, prefer_final_fields, use_build_context_synchronously, unused_local_variable
+
 
 import 'package:devstack/Service/Auth_Service.dart';
 import 'package:devstack/pages/mainPage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:devstack/pages/Backgrounds/backgroundSignIn.dart';
@@ -11,7 +14,7 @@ import 'HomePage.dart';
 //import 'HomePage.dart';
 import '../pages/registration_screen.dart';
 //import 'package:signup_login/pages/registration_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -32,8 +35,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
   // firebase
   FirebaseAuth _auth = FirebaseAuth.instance;
+
   AuthClass _authClass = AuthClass();
   //FirebaseAuth firebaseAuth =  FirebaseAuth.instance;
+
   final storage = new FlutterSecureStorage();
 
   // string for displaying the error Message

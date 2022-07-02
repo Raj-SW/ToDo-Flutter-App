@@ -1,7 +1,7 @@
-// ignore_for_file: prefer_function_declarations_over_variables, prefer_const_constructors, use_build_context_synchronously
+// ignore_for_file: prefer_function_declarations_over_variables, prefer_const_constructors, use_build_context_synchronously, unnecessary_new, unnecessary_null_comparison
 //nevaj
 import 'package:devstack/pages/Welcome/welcome_screen.dart';
-import '../pages/HomePage.dart';
+import 'package:devstack/pages/mainPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -15,7 +15,6 @@ class AuthClass {
       'https://www.googleapis.com/auth/contacts.readonly',
     ],
   );
-  FirebaseAuth auth = FirebaseAuth.instance;
   final storage = new FlutterSecureStorage();
 
   Future<void> googleSignIn(BuildContext context) async {
@@ -23,6 +22,7 @@ class AuthClass {
       GoogleSignInAccount? googleSignInAccount = await _googleSignIn.signIn();
       GoogleSignInAuthentication googleSignInAuthentication =
           await googleSignInAccount!.authentication;
+
       AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleSignInAuthentication.accessToken,
         idToken: googleSignInAuthentication.idToken,
@@ -30,10 +30,12 @@ class AuthClass {
       if (googleSignInAccount != null) {
         UserCredential userCredential =
             await _auth.signInWithCredential(credential);
+
         storeTokenAndData(userCredential);
+
         Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (builder) => HomePage()),
+            MaterialPageRoute(builder: (builder) => MainPage()),
             (route) => false);
 
         final snackBar =
@@ -53,14 +55,15 @@ class AuthClass {
       await _auth.signOut();
       await storage.delete(key: "token");
       await storage.delete(key: "uid");
+
     } catch (e) {
       final snackBar = SnackBar(content: Text(e.toString()));
       ScaffoldMessenger.of(context!).showSnackBar(snackBar);
     }
   }
 
-  void storeTokenAndData(UserCredential userCredential) async {
-    print("storing token and data");
+  Future<void> storeTokenAndData(UserCredential userCredential) async {
+    print("storing token and data-AuthServices");
     await storage.write(
         key: "token", value: userCredential.credential!.token.toString());
     await storage.write(
@@ -126,7 +129,7 @@ class AuthClass {
       storeTokenAndData(userCredential);
       Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (builder) => HomePage()),
+          MaterialPageRoute(builder: (builder) => MainPage()),
           (route) => false);
 
       showSnackBar(context, "logged In");
@@ -144,5 +147,15 @@ class AuthClass {
     await FirebaseAuth.instance.signOut();
     Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => WelcomeScreen()));
+  }
+
+  Future<void> storeTokenAndDataForEmailAuth(
+      UserCredential userCredential) async {
+    print("storing token and data");
+    await storage.write(key: "uid", value: userCredential.user?.uid);
+  }
+
+  Future<String?> getTokenForEmailAuth() async {
+    return await storage.read(key: "uid");
   }
 }

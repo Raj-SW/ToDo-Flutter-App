@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unnecessary_null_comparison, prefer_final_fields
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unnecessary_null_comparison, prefer_final_fields, prefer_interpolation_to_compose_strings
 
 import 'package:alan_voice/alan_voice.dart';
 import 'package:devstack/assets.dart';
@@ -11,6 +11,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:timezone/data/latest.dart' as tz;
+import 'package:google_ml_kit/google_ml_kit.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddToDoPage extends StatefulWidget {
   const AddToDoPage({Key? key}) : super(key: key);
@@ -68,7 +70,7 @@ class _AddToDoPageState extends State<AddToDoPage> {
             "title": _titleController.text,
             "description": _descriptionController.text,
             "scheduledTime": finalDateTime,
-            "isDone": false
+            "isDone": false,
           },
         );
 
@@ -81,22 +83,23 @@ class _AddToDoPageState extends State<AddToDoPage> {
         Navigator.pop(context);
         showToast();
       }
-      /*
-      if(commandData["command"]=="getTime"){
-        print('yesyesyesys');
-        print(commandData["text"].toString());
-        int seconds = int.parse(commandData["text"].toString());
-        double hours = seconds.toDouble()/3600.0;
-        double wholeHours1 = hours.floor() as double;
-        int wholeHours = wholeHours1.toInt();
-        print(wholeHours.toString());
-        int minutes = ((seconds % 3600)/60) as int;
 
-        print(minutes.toString());
+      if (commandData["command"] == "getTime") {
+        String number = commandData["text"].toString();
+        num seconds = num.parse(number);
+        num hours;
+        num minutes;
+        hours = seconds / 3600;
+        minutes = (seconds % 3600) / 60;
+        int numHours = hours.floor();
+        int numMinutes = minutes.floor();
+        setState(() {
+          _timePicked = TimeOfDay(hour: numHours, minute: numMinutes);
+        });
       }
-*/
     });
   }
+
   @override
   void initState() {
     super.initState();
@@ -136,11 +139,12 @@ class _AddToDoPageState extends State<AddToDoPage> {
                 ),
                 label('Add New Task', PrimaryColor, 25),
                 SizedBox(
-                  width: 40,
+                  width: 50,
                 ),
                 InkWell(
                     onTap: () => openDialog(),
                     child: Icon(Icons.image_search_sharp)),
+                SizedBox(),
               ],
             ),
             Padding(

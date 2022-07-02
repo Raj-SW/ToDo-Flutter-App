@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unnecessary_this
 
 import 'package:alan_voice/alan_voice.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
@@ -39,6 +39,7 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       bottomNavigationBar: /* BottomNavigationBar(
           currentIndex: currentIndex,
           onTap: (index) => setState(() {
@@ -48,6 +49,7 @@ class _MainPageState extends State<MainPage> {
             BottomNavigationBarItem(icon: Icon(Icons.home), label: "To-Dos"),
             BottomNavigationBarItem(
                 icon: Icon(Icons.settings_input_component), label: "Settings")
+
           ]),*/
           CurvedNavigationBar(
         backgroundColor: Colors.transparent,
