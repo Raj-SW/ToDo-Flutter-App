@@ -24,16 +24,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  _HomePageState(){
-
-    AlanVoice.onCommand.add((command){
+  _HomePageState() {
+    AlanVoice.onCommand.add((command) {
       Map<String, dynamic> commandData = command.data;
-      if(commandData["command"]=="addTask"){
+      if (commandData["command"] == "addTask") {
         SoundSystem().playLocal();
         Navigator.of(context).push(_createRoute());
         print("maybe");
       }
-
     });
   }
   AuthClass authClass = AuthClass();
@@ -70,7 +68,7 @@ class _HomePageState extends State<HomePage> {
     */
   }
 
-  List<String> itemList = ['Today', 'This Week', 'All', 'Deleted'];
+  List<String> itemList = ['Today', 'This Week', 'All', 'Done'];
   String? selectedItem = 'Today';
 
   @override
@@ -160,8 +158,9 @@ class _HomePageState extends State<HomePage> {
                             id: snapshot.data.docs[index].id,
                             checkValue: false));
                         DateTime time = date(document);
+                        bool isDone = document["isDone"];
 
-                        if (selectedItem == "Today") {
+                        if (selectedItem == "Today" && isDone == false) {
                           if (time.day == DateTime.now().day) {
                             return TodoCard(
                               check: selected[index].checkValue,
@@ -174,12 +173,13 @@ class _HomePageState extends State<HomePage> {
                               document: document,
                               id: snapshot.data.docs[index].id,
                               onChange: onChange,
+                              isDone: document["isDone"],
                             );
                           } else {
                             return Container();
                           }
                         }
-                        if (selectedItem == "This Week") {
+                        if (selectedItem == "This Week" && isDone == false) {
                           if (time.day >= strtWk.day && time.day <= endWk.day) {
                             return TodoCard(
                               check: selected[index].checkValue,
@@ -192,12 +192,13 @@ class _HomePageState extends State<HomePage> {
                               document: document,
                               id: snapshot.data.docs[index].id,
                               onChange: onChange,
+                              isDone: document["isDone"],
                             );
                           } else {
                             return Container();
                           }
                         }
-                        if (selectedItem == "All") {
+                        if (selectedItem == "All" && isDone == false) {
                           return TodoCard(
                             check: selected[index].checkValue,
                             time: date(document),
@@ -209,7 +210,25 @@ class _HomePageState extends State<HomePage> {
                             document: document,
                             id: snapshot.data.docs[index].id,
                             onChange: onChange,
+                            isDone: document["isDone"],
                           );
+                        }
+                        if (selectedItem == "Done") {
+                          if (isDone == true) {
+                            return TodoCard(
+                              check: selected[index].checkValue,
+                              isDone: document["isDone"],
+                              time: date(document),
+                              title: document["title"] == null
+                                  ? "Add your tasks"
+                                  : document["title"],
+                              description: document["description"],
+                              index: index,
+                              document: document,
+                              id: snapshot.data.docs[index].id,
+                              onChange: onChange,
+                            );
+                          }
                         }
                         return Container();
                         //if (time.day >= strtWk.day && time.day <= endWk.day) {

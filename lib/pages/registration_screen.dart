@@ -1,6 +1,7 @@
 // ignore_for_file: unnecessary_new, prefer_const_constructors
 
 import 'package:devstack/pages/Backgrounds/backgroundSignUp.dart';
+import 'package:devstack/pages/mainPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:devstack/Service/Auth_Service.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -496,28 +497,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   }
 
   postDetailsToFirestore() async {
-    // calling our firestore
-    // calling our user model
-    // sedning these values
-
-    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-    User? user = _auth.currentUser;
-
-    UserModel userModel = UserModel();
-
-    // writing all the values
-    userModel.email = user!.email;
-    userModel.uid = user.uid;
-    userModel.name = nameEditingController.text;
-    //userModel.secondName = secondNameEditingController.text;
-
-    await firebaseFirestore
-        .collection("users")
-        .doc(user.uid)
-        .set(userModel.toMap());
-    Fluttertoast.showToast(msg: "Account created successfully :) ");
-
     Navigator.pushAndRemoveUntil((context),
-        MaterialPageRoute(builder: (context) => HomePage()), (route) => false);
+        MaterialPageRoute(builder: (context) => MainPage()), (route) => false);
   }
 }

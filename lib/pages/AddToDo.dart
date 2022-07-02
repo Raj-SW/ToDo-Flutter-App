@@ -23,24 +23,22 @@ class _AddToDoPageState extends State<AddToDoPage> {
   DateTime? mydateTime;
   TimeOfDay _timePicked = TimeOfDay.now();
   DateTime? finalDateTime;
-  _AddToDoPageState(){
-
-    AlanVoice.onCommand.add((command){
-
+  _AddToDoPageState() {
+    AlanVoice.onCommand.add((command) {
       Map<String, dynamic> commandData = command.data;
-      if(commandData["command"]=="cancelTask"){
+      if (commandData["command"] == "cancelTask") {
         Navigator.pop(context);
         print("yes I am here");
       }
-      if(commandData["command"]=="getTitle"){
+      if (commandData["command"] == "getTitle") {
         _titleController.text = commandData['text'];
         print("aight");
       }
-      if(commandData["command"]=="getDescription"){
+      if (commandData["command"] == "getDescription") {
         _descriptionController.text = commandData['text'];
         print("wow");
       }
-      if(commandData["command"]=="getDate"){
+      if (commandData["command"] == "getDate") {
         print("olala");
         setState(() {
           print(commandData["text"]);
@@ -50,7 +48,7 @@ class _AddToDoPageState extends State<AddToDoPage> {
           print(mydateTime);
         });
       }
-      if(commandData["command"]=="saveTask"){
+      if (commandData["command"] == "saveTask") {
         print("olala");
         //final date time declaration and initialisation
         finalDateTime = DateTime(mydateTime!.year, mydateTime!.month,
@@ -79,7 +77,6 @@ class _AddToDoPageState extends State<AddToDoPage> {
             scheduledDate: finalDateTime!);
         Navigator.pop(context);
         showToast();
-
       }
       /*
       if(commandData["command"]=="getTime"){
@@ -233,7 +230,8 @@ class _AddToDoPageState extends State<AddToDoPage> {
             {
               "title": _titleController.text,
               "description": _descriptionController.text,
-              "scheduledTime": finalDateTime
+              "scheduledTime": finalDateTime,
+              "isDone": false
             },
           );
 

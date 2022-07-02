@@ -20,6 +20,7 @@ class TodoCard extends StatefulWidget {
       required this.index,
       required this.description,
       required this.document,
+      required this.isDone,
       required this.id})
       : super(key: key);
   //we need to assign all value dynamically
@@ -31,6 +32,7 @@ class TodoCard extends StatefulWidget {
   final description;
   final Map<String, dynamic> document;
   final String id;
+  final bool isDone;
   @override
   State<TodoCard> createState() => _TodoCardState();
 }
@@ -131,12 +133,12 @@ class _TodoCardState extends State<TodoCard> {
                     ),
                     InkWell(
                         onTap: () {
-                          /*    FirebaseFirestore.instance
+                          FirebaseFirestore.instance
                               .collection("collect2")
                               .doc(FirebaseAuth.instance.currentUser!.uid)
                               .collection("Todo")
                               .doc(widget.id)
-                              .delete();*/
+                              .update({"isDone": true});
                         },
                         child: Text(
                           'Mark as done',
@@ -166,7 +168,7 @@ class _TodoCardState extends State<TodoCard> {
       });
     }
     return Text(overdue == false
-        ? "Task overdue by $daysLeftAbs days"
+        ? "is overdue by $daysLeftAbs days"
         : "$daysLeftAbs days left");
   }
 

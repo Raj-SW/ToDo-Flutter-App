@@ -15,21 +15,20 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-
   int currentIndex = 0;
-  _MainPageState(){
-    AlanVoice.onCommand.add((command){
+  _MainPageState() {
+    AlanVoice.onCommand.add((command) {
       Map<String, dynamic> commandData = command.data;
-      if(commandData["command"]=="settingsPage"){
-      setState(() {
-        print('load settings');
-        currentIndex =1;
-      });
+      if (commandData["command"] == "settingsPage") {
+        setState(() {
+          print('load settings');
+          currentIndex = 1;
+        });
       }
-      if(commandData["command"]=="todoPage"){
+      if (commandData["command"] == "todoPage") {
         setState(() {
           print('load todo');
-          currentIndex =0;
+          currentIndex = 0;
         });
       }
     });
