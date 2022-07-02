@@ -76,6 +76,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     var _selectedValue;
     return Scaffold(
+      extendBody: true,
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: Text(
@@ -121,33 +122,35 @@ class _HomePageState extends State<HomePage> {
           size: 50,
         ),
       ),
-      body: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(right: 30, bottom: 15),
-                child: DropdownButton<String>(
-                  iconEnabledColor: Colors.deepPurple,
-                  focusColor: Colors.deepPurple,
-                  value: selectedItem,
-                  items: itemList
-                      .map((item) => DropdownMenuItem<String>(
-                          value: item,
-                          child: Text(
-                            item,
-                            style: TextStyle(fontSize: 18),
-                          )))
-                      .toList(),
-                  onChanged: (item) => setState(() => selectedItem = item),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 30, bottom: 15),
+                  child: DropdownButton<String>(
+                    iconEnabledColor: Colors.deepPurple,
+                    focusColor: Colors.deepPurple,
+                    value: selectedItem,
+                    items: itemList
+                        .map((item) => DropdownMenuItem<String>(
+                            value: item,
+                            child: Text(
+                              item,
+                              style: TextStyle(fontSize: 18),
+                            )))
+                        .toList(),
+                    onChanged: (item) => setState(() => selectedItem = item),
+                  ),
                 ),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height - 202,
-            child: StreamBuilder(
+              ],
+            ),
+            /* SizedBox(
+              height: MediaQuery.of(context).size.height - 196,
+              child: */
+            StreamBuilder(
                 stream: _stream,
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                   if (!snapshot.hasData) {
@@ -155,6 +158,7 @@ class _HomePageState extends State<HomePage> {
                   }
                   return ListView.builder(
                       shrinkWrap: true,
+                      primary: false,
                       itemCount: snapshot.data.docs.length,
                       itemBuilder: (context, index) {
                         Map<String, dynamic> document =
@@ -237,26 +241,11 @@ class _HomePageState extends State<HomePage> {
                           }
                         }
                         return Container();
-                        //if (time.day >= strtWk.day && time.day <= endWk.day) {
-                        /* return TodoCard(
-                          check: selected[index].checkValue,
-                          time: date(document),
-                          title: document["title"] == null
-                              ? "Add your tasks"
-                              : document["title"],
-                          description: document["description"],
-                          index: index,
-                          document: document,
-                          id: snapshot.data.docs[index].id,
-                          onChange: onChange,
-                        );
-                        } else {
-                                return Container();
-                              }*/
                       });
                 }),
-          ),
-        ],
+            //),
+          ],
+        ),
       ),
     );
   }
@@ -312,27 +301,3 @@ class Select {
   bool checkValue = false;
   Select({required this.id, required this.checkValue});
 }
-/* 
-//for logout
-onPressed: () async {
-                  await authClass.logout();
-                  Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(builder: (builder) => SignUpPage()),
-                      (route) => false);
-                },*/
-
-                /* DropdownButton<String>(
-                      iconEnabledColor: Colors.deepPurple,
-                      focusColor: Colors.deepPurple,
-                      value: selectedItem,
-                      items: itemList
-                          .map((item) => DropdownMenuItem<String>(
-                              value: item,
-                              child: Text(
-                                item,
-                                style: TextStyle(fontSize: 18),
-                              )))
-                          .toList(),
-                      onChanged: (item) => setState(() => selectedItem = item),
-                    ),*/
