@@ -1,5 +1,6 @@
-// ignore_for_file: prefer_const_constructors, unnecessary_new, prefer_final_fields
+// ignore_for_file: prefer_const_constructors, unnecessary_new, prefer_final_fields, use_build_context_synchronously, unused_local_variable
 
+import 'package:devstack/Service/Auth_Service.dart';
 import 'package:devstack/pages/mainPage.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/svg.dart';
@@ -31,6 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   // firebase
   FirebaseAuth _auth = FirebaseAuth.instance;
+  AuthClass _authClass = AuthClass();
   //FirebaseAuth firebaseAuth =  FirebaseAuth.instance;
   final storage = new FlutterSecureStorage();
 
@@ -252,15 +254,18 @@ class _LoginScreenState extends State<LoginScreen> {
   void signIn(String email, String password) async {
     //if (_formKey.currentState!.validate()) {
     try {
-      await _auth
+      /* await _auth
           .signInWithEmailAndPassword(email: email, password: password)
           .then((uid) => {
                 Fluttertoast.showToast(msg: "Login Successful"),
-                Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (builder) => MainPage()),
-                    (route) => false)
-              });
+              });*/
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
+      _authClass.storeTokenAndData2(userCredential);
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (builder) => MainPage()),
+          (route) => false);
     } on FirebaseAuthException catch (error) {
       switch (error.code) {
         case "invalid-email":
@@ -288,18 +293,6 @@ class _LoginScreenState extends State<LoginScreen> {
       Fluttertoast.showToast(msg: errorMessage!);
       print(error.code);
     }
-  }
-
-  void storeTokenAndData(UserCredential userCredential) async {
-    print("aaa-Login screen-storing token and data");
-    await storage.write(
-        key: "token", value: userCredential.credential!.token.toString());
-    await storage.write(
-        key: "usercredential", value: userCredential.toString());
-  }
-
-  Future<String?> getToken() async {
-    return await storage.read(key: "token");
   }
 }
 //}

@@ -52,6 +52,7 @@ class AuthClass {
       await _googleSignIn.signOut();
       await _auth.signOut();
       await storage.delete(key: "token");
+      await storage.delete(key: "uid");
     } catch (e) {
       final snackBar = SnackBar(content: Text(e.toString()));
       ScaffoldMessenger.of(context!).showSnackBar(snackBar);
@@ -72,15 +73,12 @@ class AuthClass {
 
 ////////////////////////////////////////////////
   void storeTokenAndData2(UserCredential userCredential) async {
-    print("storing token and data");
-    await storage.write(
-        key: "token", value: userCredential.credential!.token.toString());
-    await storage.write(
-        key: "usercredential", value: userCredential.toString());
+    print("aaa-Authclass-storing token and data");
+    await storage.write(key: "uid", value: userCredential.user!.uid);
   }
 
   Future<String?> getToken2() async {
-    return await storage.read(key: "token2");
+    return await storage.read(key: "uid");
   }
 
 ///////////////////////////////////////////

@@ -58,7 +58,7 @@ class _MyAppState extends State<MyApp> {
 
   void checkLogin() async {
     String? token = await authClass.getToken();
-    String? token2 = await authClass.getToken();
+    String? token2 = await authClass.getToken2();
     if (token != null) {
       setState(() {
         currentPage = MainPage();
@@ -69,6 +69,12 @@ class _MyAppState extends State<MyApp> {
     }
     if (token == null) {
       print('aaa-main-hello from main check login-token is null');
+      if (token2 != null) {
+        print('aaa-main-hello from main check login-token2 is null');
+        setState(() {
+          currentPage = MainPage();
+        });
+      }
     }
   }
 

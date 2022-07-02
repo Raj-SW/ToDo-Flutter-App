@@ -7,6 +7,7 @@ import 'package:devstack/Service/SoundSystem.dart';
 import 'package:devstack/circle_transition_clipper.dart';
 import 'package:devstack/pages/AddToDo.dart';
 import 'package:devstack/pages/TodoCard.dart';
+import 'package:devstack/pages/Welcome/welcome_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
@@ -96,7 +97,12 @@ class _HomePageState extends State<HomePage> {
             icon: Icon(Icons.exit_to_app),
             color: Colors.deepPurple,
             onPressed: () {
-              authClass.logout(context);
+              //  authClass.logout(context);
+              authClass.signOut();
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (builder) => WelcomeScreen()),
+                  (route) => false);
             },
           )
         ],
