@@ -1,7 +1,5 @@
 // ignore_for_file: sort_child_properties_last, prefer_const_constructors, prefer_typing_uninitialized_variables, prefer_const_literals_to_create_immutables
 
-import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:devstack/pages/view_data_updated.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -13,6 +11,7 @@ import 'package:devstack/assets.dart';
 class TodoCard extends StatefulWidget {
   const TodoCard(
       {Key? key,
+      required this.isDone,
       required this.title,
       required this.time,
       required this.check,
@@ -29,6 +28,7 @@ class TodoCard extends StatefulWidget {
   final Function onChange;
   final index;
   final description;
+  final bool isDone;
   final Map<String, dynamic> document;
   final String id;
   @override
@@ -49,7 +49,7 @@ class _TodoCardState extends State<TodoCard> {
       padding: const EdgeInsets.only(top: 15, left: 25, right: 25, bottom: 5),
       child: Container(
         decoration: BoxDecoration(
-            color: isoverdue(widget.time),
+            color: isoverdue(widget.time, widget.isDone),
             border: Border.all(color: Colors.transparent),
             borderRadius: BorderRadius.all(Radius.circular(20)),
             boxShadow: [
@@ -64,19 +64,20 @@ class _TodoCardState extends State<TodoCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  widget.title,
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                SizedBox(),
-                countDown(widget.time),
-              ],
+            Text(
+              widget.title,
+              style: TextStyle(fontWeight: FontWeight.bold),
             ),
             SizedBox(
+              height: 5,
+            ),
+            countDown(widget.time, widget.isDone),
+            SizedBox(
               height: 15,
+            ),
+            Text("Description:", style: TextStyle(fontWeight: FontWeight.bold)),
+            SizedBox(
+              height: 5,
             ),
             Text(widget.description),
             SizedBox(
@@ -109,12 +110,7 @@ class _TodoCardState extends State<TodoCard> {
                   children: <Widget>[
                     InkWell(
                         onTap: () {
-                          /*  Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (builder) => ViewData(
-                                      document: widget.document,
-                                      id: widget.id)));*/
+                          //Edit button to view and edit data
                           Navigator.of(context).push(PageTransition(
                               type: PageTransitionType.fade,
                               duration: Duration(milliseconds: 550),
@@ -129,19 +125,23 @@ class _TodoCardState extends State<TodoCard> {
                     SizedBox(
                       width: 15,
                     ),
-                    InkWell(
-                        onTap: () {
-                          /*    FirebaseFirestore.instance
-                              .collection("collect2")
-                              .doc(FirebaseAuth.instance.currentUser!.uid)
-                              .collection("Todo")
-                              .doc(widget.id)
-                              .delete();*/
-                        },
-                        child: Text(
-                          'Mark as done',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        )),
+                    if (widget.isDone ==
+                        false) //if isdone is false, no need to show mark as done
+                      InkWell(
+                          onTap: () {
+                            //update task as done
+                            FirebaseFirestore.instance
+                                .collection("collect2")
+                                .doc(FirebaseAuth.instance.currentUser!.uid)
+                                .collection("Todo")
+                                .doc(widget.id)
+                                .update({"isDone": true});
+                            setState(() {});
+                          },
+                          child: Text(
+                            'Mark as done',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          )),
                   ],
                 )
               ],
@@ -152,7 +152,7 @@ class _TodoCardState extends State<TodoCard> {
     );
   }
 
-  Widget countDown(DateTime time) {
+  Widget countDown(DateTime time, bool isDone) {
     var daysLeft = DateTime.now().day - time.day;
     var daysLeftAbs = daysLeft.abs();
     var overdue = false;
@@ -165,27 +165,36 @@ class _TodoCardState extends State<TodoCard> {
         overdue = false;
       });
     }
-    return Text(overdue == false
-        ? "Task overdue by $daysLeftAbs days"
-        : "$daysLeftAbs days left");
+    if (isDone == true) {
+      return Text("Task Done");
+    } else {
+      return Text(overdue == false
+          ? "Task overdue by $daysLeftAbs days"
+          : "$daysLeftAbs day(s) left");
+    }
   }
 
-  Color isoverdue(DateTime time) {
+  Color isoverdue(DateTime time, bool isdone) {
     var daysLeft = time.day - DateTime.now().day;
-    if (daysLeft > 2) {
+    if (isdone == false) {
+      if (daysLeft > 2) {
+        setState(() {
+          color = todoCardBGColor;
+        });
+      } else if (daysLeft >= 0 && daysLeft <= 2) {
+        setState(() {
+          color = Color.fromARGB(255, 255, 124, 124);
+        });
+      } else if (daysLeft < 0) {
+        setState(() {
+          color = Color.fromARGB(255, 187, 186, 186);
+        });
+      }
+    } else {
       setState(() {
-        color = todoCardBGColor;
-      });
-    } else if (daysLeft >= 0 && daysLeft <= 2) {
-      setState(() {
-        color = Color.fromARGB(255, 255, 124, 124);
-      });
-    } else if (daysLeft < 0) {
-      setState(() {
-        color = Color.fromARGB(255, 187, 186, 186);
+        color = Color.fromARGB(255, 215, 255, 217);
       });
     }
-
     return color;
   }
 }

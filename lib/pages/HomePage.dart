@@ -11,6 +11,7 @@ import 'package:devstack/pages/Welcome/welcome_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../Service/Auth_Service.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:devstack/assets.dart';
@@ -44,6 +45,7 @@ class _HomePageState extends State<HomePage> {
       .collection("Todo")
       .orderBy("scheduledTime", descending: false)
       .snapshots();
+
   DateTime now = DateTime.now();
   late DateTime strtWk;
   late DateTime endWk;
@@ -69,7 +71,7 @@ class _HomePageState extends State<HomePage> {
     */
   }
 
-  List<String> itemList = ['Today', 'This Week', 'All', 'Deleted'];
+  List<String> itemList = ['Today', 'This Week', 'All', 'Done'];
   String? selectedItem = 'Today';
 
   @override
@@ -77,10 +79,17 @@ class _HomePageState extends State<HomePage> {
     var _selectedValue;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: Text(
-          "To-Dos",
-          style: TextStyle(color: Colors.deepPurple),
+        backgroundColor: Colors.transparent,
+        //   backgroundColor: Color.fromARGB(0, 255, 255, 255), centerTitle: true,
+        title: Padding(
+          padding: const EdgeInsets.only(top: 20.0),
+          child: Text(
+            "To-Dos",
+            style: GoogleFonts.pacifico(
+              color: Color.fromRGBO(93, 95, 239, 1),
+              fontSize: 41,
+            ),
+          ),
         ), //
         /*  leading: IconButton(
           icon: Icon(Icons.menu), color: Colors.deepPurple,
@@ -93,7 +102,7 @@ class _HomePageState extends State<HomePage> {
           //MenuWidget(),
         ),*/
         actions: [
-          IconButton(
+          /*IconButton(
             icon: Icon(Icons.exit_to_app),
             color: Colors.deepPurple,
             onPressed: () {
@@ -103,7 +112,7 @@ class _HomePageState extends State<HomePage> {
                   MaterialPageRoute(builder: (builder) => WelcomeScreen()),
                   (route) => false);
             },
-          )
+          )*/
         ],
 
         elevation: 0,
@@ -114,45 +123,47 @@ class _HomePageState extends State<HomePage> {
           Navigator.of(context).push(_createRoute());
         },
         backgroundColor: PrimaryColor,
-        elevation: 0,
         child: Icon(
           Icons.add,
           size: 50,
         ),
       ),
-      body: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(right: 30, bottom: 15),
-                child: DropdownButton<String>(
-                  iconEnabledColor: Colors.deepPurple,
-                  focusColor: Colors.deepPurple,
-                  value: selectedItem,
-                  items: itemList
-                      .map((item) => DropdownMenuItem<String>(
-                          value: item,
-                          child: Text(
-                            item,
-                            style: TextStyle(fontSize: 18),
-                          )))
-                      .toList(),
-                  onChanged: (item) => setState(() => selectedItem = item),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 30, bottom: 0),
+                  child: DropdownButton<String>(
+                    iconEnabledColor: Colors.deepPurple,
+                    focusColor: Colors.deepPurple,
+                    value: selectedItem,
+                    items: itemList
+                        .map((item) => DropdownMenuItem<String>(
+                            value: item,
+                            child: Text(
+                              item,
+                              style: TextStyle(fontSize: 18),
+                            )))
+                        .toList(),
+                    onChanged: (item) => setState(() => selectedItem = item),
+                  ),
                 ),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height - 202,
-            child: StreamBuilder(
+              ],
+            ),
+            /*  SizedBox(
+              height: MediaQuery.of(context).size.height - 202,
+              child: */
+            StreamBuilder(
                 stream: _stream,
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                   if (!snapshot.hasData) {
                     return Center(child: CircularProgressIndicator());
                   }
                   return ListView.builder(
+                      primary: false,
                       shrinkWrap: true,
                       itemCount: snapshot.data.docs.length,
                       itemBuilder: (context, index) {
@@ -167,6 +178,7 @@ class _HomePageState extends State<HomePage> {
                         if (selectedItem == "Today") {
                           if (time.day == DateTime.now().day) {
                             return TodoCard(
+                              isDone: document["isDone"],
                               check: selected[index].checkValue,
                               time: date(document),
                               title: document["title"] == null
@@ -185,6 +197,26 @@ class _HomePageState extends State<HomePage> {
                         if (selectedItem == "This Week") {
                           if (time.day >= strtWk.day && time.day <= endWk.day) {
                             return TodoCard(
+                              isDone: document["isDone"],
+                              check: selected[index].checkValue,
+                              time: date(document),
+                              title: document["title"] == null
+                                  ? "Add your tasks"
+                                  : document["title"],
+                              description: document["description"],
+                              index: index,
+                              document: document,
+                              id: snapshot.data.docs[index].id,
+                              onChange: onChange,
+                            );
+                          } else {
+                            return Container();
+                          }
+                        }
+                        if (selectedItem == "Done") {
+                          if (document['isDone'] == true) {
+                            return TodoCard(
+                              isDone: document["isDone"],
                               check: selected[index].checkValue,
                               time: date(document),
                               title: document["title"] == null
@@ -202,6 +234,7 @@ class _HomePageState extends State<HomePage> {
                         }
                         if (selectedItem == "All") {
                           return TodoCard(
+                            isDone: document["isDone"],
                             check: selected[index].checkValue,
                             time: date(document),
                             title: document["title"] == null
@@ -217,24 +250,25 @@ class _HomePageState extends State<HomePage> {
                         return Container();
                         //if (time.day >= strtWk.day && time.day <= endWk.day) {
                         /* return TodoCard(
-                          check: selected[index].checkValue,
-                          time: date(document),
-                          title: document["title"] == null
-                              ? "Add your tasks"
-                              : document["title"],
-                          description: document["description"],
-                          index: index,
-                          document: document,
-                          id: snapshot.data.docs[index].id,
-                          onChange: onChange,
-                        );
-                        } else {
-                                return Container();
-                              }*/
+                            check: selected[index].checkValue,
+                            time: date(document),
+                            title: document["title"] == null
+                                ? "Add your tasks"
+                                : document["title"],
+                            description: document["description"],
+                            index: index,
+                            document: document,
+                            id: snapshot.data.docs[index].id,
+                            onChange: onChange,
+                          );
+                          } else {
+                                  return Container();
+                                }*/
                       });
                 }),
-          ),
-        ],
+            // ),
+          ],
+        ),
       ),
     );
   }
