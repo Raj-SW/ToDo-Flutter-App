@@ -102,7 +102,7 @@ class _HomePageState extends State<HomePage> {
           //MenuWidget(),
         ),*/
         actions: [
-          /*IconButton(
+          IconButton(
             icon: Icon(Icons.exit_to_app),
             color: Colors.deepPurple,
             onPressed: () {
@@ -112,7 +112,7 @@ class _HomePageState extends State<HomePage> {
                   MaterialPageRoute(builder: (builder) => WelcomeScreen()),
                   (route) => false);
             },
-          )*/
+          )
         ],
 
         elevation: 0,
