@@ -15,7 +15,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../Service/Auth_Service.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:devstack/assets.dart';
-
+import 'package:intl/intl.dart';
 import '../model/user_model.dart';
 
 class HomePage extends StatefulWidget {
@@ -26,16 +26,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  _HomePageState() {
-    AlanVoice.onCommand.add((command) {
-      Map<String, dynamic> commandData = command.data;
-      if (commandData["command"] == "addTask") {
-        SoundSystem().playLocal();
-        Navigator.of(context).push(_createRoute());
-        print("maybe");
-      }
-    });
-  }
+ 
   AuthClass authClass = AuthClass();
   final FirebaseAuth auth = FirebaseAuth.instance;
 
@@ -53,6 +44,7 @@ class _HomePageState extends State<HomePage> {
   List<Select> selected = [];
   User? user = FirebaseAuth.instance.currentUser;
   UserModel loggedInUser = UserModel();
+   
   @override
   void initState() {
     super.initState();
@@ -73,7 +65,119 @@ class _HomePageState extends State<HomePage> {
 
   List<String> itemList = ['Today', 'This Week', 'All', 'Done'];
   String? selectedItem = 'Today';
+_HomePageState() {
+    AlanVoice.onCommand.add((command) {
+      Map<String, dynamic> commandData = command.data;
+      //Add a new task-- voice command: Add a new task
+      if (commandData["command"] == "addTask") {
+        SoundSystem().playLocal();
+        Navigator.of(context).push(_createRoute());
+        print("maybe");
+      }
+      //List down all tasks for the day-- voice command: What are today's tasks
+        if (commandData["command"] == "today") {
+          String today="Your tasks for today are as follows: ";
+          setState(() {
+            selectedItem = 'Today';
+          });
+        FirebaseFirestore.instance
+            .collection("collect2")
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .collection("Todo") .get()
+            .then((QuerySnapshot querySnapshot) {
+          querySnapshot.docs.forEach((doc) {
+            bool isDone = doc['isDone'];
+            DateTime theTime = (doc['scheduledTime']).toDate();
+            String formattedDate= DateFormat.MMMMEEEEd().format(theTime);
+            String formattedTime = DateFormat.Hm().format(theTime);
+          if((theTime.day== DateTime.now().day) && (isDone==false)){
+                print(formattedTime);
+            String thisTask = doc["title"] + " at " + formattedTime + ", ";
+            today+=thisTask;
+            print(today);
+            print(date.toString());
+          }  
+          });
 
+          if(today==""){
+            AlanVoice.playText("Your don't have anything due today");
+          } else{
+            AlanVoice.playText(today);
+          }
+       
+        });
+        
+      }
+      //List down all pending tasks-- voice command: List all my tasks
+      if (commandData["command"] == "allTasks") {
+          String all="Here is the list of all your tasks: ";
+          setState(() {
+            selectedItem = 'All';
+          });
+        print("all tasks ");
+        FirebaseFirestore.instance
+            .collection("collect2")
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .collection("Todo") .get()
+            .then((QuerySnapshot querySnapshot) {
+          querySnapshot.docs.forEach((doc) {
+            bool isDone = doc['isDone'];
+            if(isDone==false){
+              DateTime theTime = (doc['scheduledTime']).toDate();
+              String formattedDate= DateFormat.MMMMEEEEd().format(theTime);
+              String formattedTime = DateFormat.Hm().format(theTime);
+              print(formattedTime);
+              String thisTask = doc["title"] + " on " + formattedDate + " at " + formattedTime + ", ";
+              all+=thisTask;
+              print(all);
+              print(date.toString());
+            } 
+          });
+          if(all=="Here is the list of all your tasks: "){
+            AlanVoice.playText("You don't have any upcoming task");
+          } else{
+            AlanVoice.playText(all);
+          }
+        
+        });
+        
+      }
+    //List down all completed tasks-- voice command: List the completed tasks
+    if (commandData["command"] == "completedTasks") {
+          String allCompleted="Here is the list of all your completed tasks: ";
+          setState(() {
+            selectedItem = 'Done';
+          });
+        print("completed tasks ");
+        FirebaseFirestore.instance
+            .collection("collect2")
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .collection("Todo") .get()
+            .then((QuerySnapshot querySnapshot) {
+          querySnapshot.docs.forEach((doc) {
+            bool isDone = doc['isDone'];
+            if(isDone==true){
+              DateTime theTime = (doc['scheduledTime']).toDate();
+              String formattedDate= DateFormat.MMMMEEEEd().format(theTime);
+              String formattedTime = DateFormat.Hm().format(theTime);
+              print(formattedTime);
+              String thisTask = doc["title"] + " due on " + formattedDate + " at " + formattedTime + ", ";
+              allCompleted+=thisTask;
+              print(allCompleted);
+              print(date.toString());
+            } 
+          });
+          if(allCompleted=="Here is the list of all your completed tasks: "){
+            AlanVoice.playText("You don't have any completed task");
+          } else{
+            AlanVoice.playText(allCompleted);
+          }
+        
+        });
+        
+      }
+    });
+  }
   @override
   Widget build(BuildContext context) {
     var _selectedValue;
