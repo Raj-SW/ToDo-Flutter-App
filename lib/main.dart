@@ -67,7 +67,6 @@ class _MyAppState extends State<MyApp> {
         //  currentPage = zoomDrawer();
 
         print('aaa-main-hello from main check login');
-
       });
     } else {
       print("EmailAuth token token check-main.dart");

@@ -132,12 +132,11 @@ class _AddToDoPageState extends State<AddToDoPage> {
                   },
                   icon: Icon(
                     Icons.arrow_back,
-                    color: PrimaryColor,
                     size: 28,
                   ),
                   iconSize: 28,
                 ),
-                label('Add New Task', PrimaryColor, 25),
+                label('Add New Task', Colors.black, 25),
                 SizedBox(
                   width: 50,
                 ),
@@ -283,7 +282,7 @@ class _AddToDoPageState extends State<AddToDoPage> {
       height: 150,
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
-        color: todoCardBGColor,
+        color: SecondaryColor,
         borderRadius: BorderRadius.circular(15),
       ),
       child: TextFormField(
@@ -308,7 +307,7 @@ class _AddToDoPageState extends State<AddToDoPage> {
       height: 55,
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
-        color: todoCardBGColor,
+        color: SecondaryColor,
         borderRadius: BorderRadius.circular(15),
       ),
       child: TextFormField(
@@ -342,7 +341,7 @@ class _AddToDoPageState extends State<AddToDoPage> {
       height: 55,
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
-        color: todoCardBGColor,
+        color: SecondaryColor,
         borderRadius: BorderRadius.circular(15),
       ),
       child: Row(
@@ -378,7 +377,7 @@ class _AddToDoPageState extends State<AddToDoPage> {
       height: 55,
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
-        color: todoCardBGColor,
+        color: SecondaryColor,
         borderRadius: BorderRadius.circular(15),
       ),
       child: Row(

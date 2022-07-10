@@ -39,21 +39,11 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
-      bottomNavigationBar: /* BottomNavigationBar(
-          currentIndex: currentIndex,
-          onTap: (index) => setState(() {
-                currentIndex = index;
-              }),
-          items: [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: "To-Dos"),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.settings_input_component), label: "Settings")
-
-          ]),*/
-          CurvedNavigationBar(
+      extendBodyBehindAppBar: true,
+      backgroundColor: Colors.white,
+      bottomNavigationBar: CurvedNavigationBar(
         backgroundColor: Colors.transparent,
-        color: PrimaryColor,
+        color: Color.fromRGBO(83, 123, 233, 1),
         items: [
           Icon(
             Icons.home,
