@@ -1,7 +1,5 @@
 // ignore_for_file: use_build_context_synchronously, prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_if_null_operators
 
-import 'dart:ui';
-
 import 'package:alan_voice/alan_voice.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:devstack/Service/Auth_Service.dart';
@@ -202,6 +200,8 @@ class _HomePageState extends State<HomePage> {
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return <Widget>[
             SliverAppBar(
+              stretch: true,
+              elevation: 5,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(30),
@@ -221,6 +221,7 @@ class _HomePageState extends State<HomePage> {
               floating: true,
               expandedHeight: 300,
               flexibleSpace: FlexibleSpaceBar(
+                stretchModes: [StretchMode.zoomBackground],
                 collapseMode: CollapseMode.parallax,
                 background: Container(
                   margin: EdgeInsets.only(top: 97),
@@ -266,30 +267,36 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                           Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.only(top: 50),
-                                child: RichText(
-                                    text: TextSpan(
-                                        style: GoogleFonts.roboto(
-                                            color: Colors.white,
-                                            fontSize: 16,
-                                            height: 1),
-                                        children: [
-                                      TextSpan(
-                                          text: 'Today :\n',
-                                          style: TextStyle(
-                                              fontSize: 24,
-                                              fontWeight: FontWeight.bold)),
-                                      TextSpan(text: "\n"),
-                                      TextSpan(
-                                          text: DateFormat.yMMMEd()
-                                              .format(DateTime.now()),
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold))
-                                    ])),
+                              SizedBox(
+                                height: 50,
+                              ),
+                              Text(
+                                "Your Tasks for\n",
+                                style: GoogleFonts.roboto(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  height: 0.8,
+                                ),
+                              ),
+                              Text(
+                                "Today\n",
+                                style: GoogleFonts.roboto(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  height: 0.8,
+                                ),
+                              ),
+                              Text(
+                                DateFormat.yMMMEd().format(DateTime.now()),
+                                style: GoogleFonts.roboto(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  height: 0.8,
+                                ),
                               ),
                             ],
                           ),
