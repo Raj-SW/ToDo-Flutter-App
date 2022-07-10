@@ -51,7 +51,9 @@ class _TodoCardState extends State<TodoCard> {
       padding: const EdgeInsets.only(top: 15, left: 25, right: 25, bottom: 5),
       child: Container(
         decoration: BoxDecoration(
-            color: isoverdue(widget.time, widget.isDone),
+            color: isOverdue(widget.time, widget.isDone) == true
+                ? Color.fromRGBO(255, 146, 146, 1)
+                : findColor(widget.time, widget.isDone, widget.priority),
             border: Border.all(color: Colors.transparent),
             borderRadius: BorderRadius.all(Radius.circular(20)),
             boxShadow: [
@@ -150,7 +152,10 @@ class _TodoCardState extends State<TodoCard> {
     );
   }
 
-  Widget countDown(DateTime time, bool isDone) {
+  Widget countDown(
+    DateTime time,
+    bool isDone,
+  ) {
     var daysLeft = DateTime.now().day - time.day;
     var daysLeftAbs = daysLeft.abs();
     var overdue = false;
@@ -169,27 +174,56 @@ class _TodoCardState extends State<TodoCard> {
         : "$daysLeftAbs days left");
   }
 
-  Color isoverdue(DateTime time, bool isdone) {
-    var daysLeft = time.day - DateTime.now().day;
-    if (isdone == false) {
-      if (daysLeft > 2) {
-        setState(() {
-          color = todoCardBGColor;
-        });
-      } else if (daysLeft >= 0 && daysLeft <= 2) {
-        setState(() {
-          color = Color.fromARGB(255, 255, 124, 124);
-        });
-      } else if (daysLeft < 0) {
-        setState(() {
-          color = Color.fromARGB(255, 187, 186, 186);
-        });
-      }
+  bool isOverdue(
+    DateTime time,
+    bool isDone,
+  ) {
+    var daysLeft = DateTime.now().day - time.day;
+    var overdue = false;
+    if (daysLeft < 0) {
+      setState(() {
+        overdue = true;
+      });
     } else {
       setState(() {
-        color = Color.fromARGB(255, 215, 255, 217);
+        overdue = false;
       });
     }
+
+    return overdue;
+  }
+
+  Color findColor(DateTime time, bool isdone, String priority) {
+    bool overdue = false;
+    setState(() {
+      overdue = isOverdue(time, isdone);
+    });
+    if (isdone == true) {
+      setState(() {
+        overdue = false;
+      });
+    }
+
+    if (isdone == true && overdue == false) {
+      color = Color.fromRGBO(189, 240, 198, 1);
+    }
+
+    if (isdone == false && overdue == true) {
+      color = Color.fromRGBO(255, 146, 146, 1);
+    }
+
+    if (isdone == false && overdue == false) {
+      if (priority == "critical" && overdue == false) {
+        color = Color.fromRGBO(254, 234, 230, 1);
+      }
+      if (priority == "mild" && overdue == false) {
+        color = Color.fromRGBO(253, 241, 220, 1);
+      }
+      if (priority == "normal" && overdue == false) {
+        color = Color.fromRGBO(207, 236, 255, 1);
+      }
+    }
+
     return color;
   }
 }

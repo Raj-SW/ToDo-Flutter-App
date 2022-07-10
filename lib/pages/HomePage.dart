@@ -358,8 +358,9 @@ class _HomePageState extends State<HomePage> {
                         bool isDone = document["isDone"];
                         String priority = document["priority"];
 
-                        if (selectedItem == "Today" && isDone == false) {
-                          if (time.day == DateTime.now().day) {
+                        if (selectedItem == "Today") {
+                          if (time.day == DateTime.now().day &&
+                              isDone == false) {
                             todayCount++;
                             return TodoCard(
                               priority: priority,
@@ -375,17 +376,11 @@ class _HomePageState extends State<HomePage> {
                               id: snapshot.data.docs[index].id,
                               onChange: onChange,
                             );
-                          } else if (todayCount == 0) {
-                            return Column(
-                              children: [
-                                Text("Wow so empty!!"),
-                                Image(image: AssetImage("assets/illust1.png")),
-                              ],
-                            );
                           }
-                        }
-                        if (selectedItem == "This Week" && isDone == false) {
-                          if (time.day >= strtWk.day && time.day <= endWk.day) {
+                        } else if (selectedItem == "This Week") {
+                          if (time.day >= strtWk.day &&
+                              time.day <= endWk.day &&
+                              isDone == false) {
                             return TodoCard(
                               priority: priority,
                               isDone: document["isDone"],
@@ -400,33 +395,8 @@ class _HomePageState extends State<HomePage> {
                               id: snapshot.data.docs[index].id,
                               onChange: onChange,
                             );
-                          } else {
-                            return Container();
                           }
-                        }
-                        /* if (selectedItem == "Done") {
-                          if (document['isDone'] == true) {
-                            String timeBool = 'Done';
-                            return TodoCard(
-                              timeBool: timeBool,
-                              priority: priority,
-                              isDone: document["isDone"],
-                              check: selected[index].checkValue,
-                              time: date(document),
-                              title: document["title"] == null
-                                  ? "Add your tasks"
-                                  : document["title"],
-                              description: document["description"],
-                              index: index,
-                              document: document,
-                              id: snapshot.data.docs[index].id,
-                              onChange: onChange,
-                            );
-                          } else {
-                            return Container();
-                          }
-                        }*/
-                        if (selectedItem == "All" && isDone == false) {
+                        } else if (selectedItem == "All" && isDone == false) {
                           return TodoCard(
                             priority: priority,
                             isDone: document["isDone"],
@@ -441,8 +411,7 @@ class _HomePageState extends State<HomePage> {
                             id: snapshot.data.docs[index].id,
                             onChange: onChange,
                           );
-                        }
-                        if (selectedItem == "Done") {
+                        } else if (selectedItem == "Done") {
                           if (isDone == true) {
                             return TodoCard(
                               priority: priority,
@@ -459,6 +428,13 @@ class _HomePageState extends State<HomePage> {
                               onChange: onChange,
                             );
                           }
+                        } else if (todayCount == 0) {
+                          return Column(
+                            children: [
+                              Text("Wow so empty!!"),
+                              Image(image: AssetImage("assets/illust1.png")),
+                            ],
+                          );
                         }
                         return Container();
                       });
