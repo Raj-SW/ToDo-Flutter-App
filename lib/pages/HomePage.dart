@@ -37,7 +37,7 @@ class _HomePageState extends State<HomePage> {
   DateTime now = DateTime.now();
   late DateTime strtWk;
   late DateTime endWk;
-
+  int todayCount = 0;
   List<Select> selected = [];
   User? user = FirebaseAuth.instance.currentUser;
   UserModel loggedInUser = UserModel();
@@ -156,6 +156,7 @@ class _HomePageState extends State<HomePage> {
               DateTime theTime = (doc['scheduledTime']).toDate();
               String formattedDate = DateFormat.MMMMEEEEd().format(theTime);
               String formattedTime = DateFormat.Hm().format(theTime);
+              String priority = doc["priority"];
               print(formattedTime);
               String thisTask = doc["title"] +
                   " due on " +
@@ -178,7 +179,6 @@ class _HomePageState extends State<HomePage> {
       }
     });
   }
-  int todayCount = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -356,13 +356,13 @@ class _HomePageState extends State<HomePage> {
                             checkValue: false));
                         DateTime time = date(document);
                         bool isDone = document["isDone"];
+                        String priority = document["priority"];
 
                         if (selectedItem == "Today" && isDone == false) {
                           if (time.day == DateTime.now().day) {
-                            setState(() {
-                              todayCount++;
-                            });
+                            todayCount++;
                             return TodoCard(
+                              priority: priority,
                               isDone: document["isDone"],
                               check: selected[index].checkValue,
                               time: date(document),
@@ -376,13 +376,18 @@ class _HomePageState extends State<HomePage> {
                               onChange: onChange,
                             );
                           } else if (todayCount == 0) {
-                            return Image(
-                                image: AssetImage("assets/illust1.png"));
+                            return Column(
+                              children: [
+                                Text("Wow so empty!!"),
+                                Image(image: AssetImage("assets/illust1.png")),
+                              ],
+                            );
                           }
                         }
                         if (selectedItem == "This Week" && isDone == false) {
                           if (time.day >= strtWk.day && time.day <= endWk.day) {
                             return TodoCard(
+                              priority: priority,
                               isDone: document["isDone"],
                               check: selected[index].checkValue,
                               time: date(document),
@@ -399,9 +404,12 @@ class _HomePageState extends State<HomePage> {
                             return Container();
                           }
                         }
-                        if (selectedItem == "Done") {
+                        /* if (selectedItem == "Done") {
                           if (document['isDone'] == true) {
+                            String timeBool = 'Done';
                             return TodoCard(
+                              timeBool: timeBool,
+                              priority: priority,
                               isDone: document["isDone"],
                               check: selected[index].checkValue,
                               time: date(document),
@@ -417,9 +425,10 @@ class _HomePageState extends State<HomePage> {
                           } else {
                             return Container();
                           }
-                        }
+                        }*/
                         if (selectedItem == "All" && isDone == false) {
                           return TodoCard(
+                            priority: priority,
                             isDone: document["isDone"],
                             check: selected[index].checkValue,
                             time: date(document),
@@ -436,6 +445,7 @@ class _HomePageState extends State<HomePage> {
                         if (selectedItem == "Done") {
                           if (isDone == true) {
                             return TodoCard(
+                              priority: priority,
                               check: selected[index].checkValue,
                               isDone: document["isDone"],
                               time: date(document),

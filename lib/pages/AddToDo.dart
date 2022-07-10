@@ -109,6 +109,10 @@ class _AddToDoPageState extends State<AddToDoPage> {
   bool textScanning = false;
   XFile? imageFile;
   String scannedText = "";
+  String priority = "";
+  bool isSelected1 = false;
+  bool isSelected2 = false;
+  bool isSelected3 = false;
 
   @override
   Widget build(BuildContext context) {
@@ -135,14 +139,19 @@ class _AddToDoPageState extends State<AddToDoPage> {
                     size: 28,
                   ),
                   iconSize: 28,
+                  color: PrimaryColor,
                 ),
-                label('Add New Task', Colors.black, 25),
+                label('Add New Task', PrimaryColor, 25),
                 SizedBox(
                   width: 50,
                 ),
                 InkWell(
-                    onTap: () => openDialog(),
-                    child: Icon(Icons.image_search_sharp)),
+                  onTap: () => openDialog(),
+                  child: Icon(
+                    Icons.image_search_sharp,
+                    color: PrimaryColor,
+                  ),
+                ),
                 SizedBox(),
               ],
             ),
@@ -151,6 +160,9 @@ class _AddToDoPageState extends State<AddToDoPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  SizedBox(
+                    height: 15,
+                  ),
                   label('Add Task Title', Colors.black, 16.5),
                   SizedBox(
                     height: 10,
@@ -167,21 +179,163 @@ class _AddToDoPageState extends State<AddToDoPage> {
                   SizedBox(
                     height: 25,
                   ),
-                  label('Choose Date', Colors.black, 16.5),
+                  label('Priority', Colors.black, 16.5),
                   SizedBox(
-                    height: 12,
+                    height: 5,
                   ),
-                  dateSelected(),
-                  SizedBox(
-                    height: 10,
+                  Row(
+                    children: [
+                      ChoiceChip(
+                        avatar: isSelected1 == true
+                            ? Icon(
+                                Icons.check,
+                                color: Colors.white,
+                              )
+                            : null,
+                        avatarBorder: CircleBorder(side: BorderSide.none),
+                        selected: isSelected1,
+                        onSelected: (newboolvalue) {
+                          setState(() {
+                            isSelected2 = false;
+                            isSelected3 = false;
+                            isSelected1 = newboolvalue;
+                            priority = "critical";
+                          });
+                        },
+                        label: Text(
+                          "Critical",
+                          style: TextStyle(
+                              color: isSelected1 == true
+                                  ? Colors.white
+                                  : Colors.black),
+                        ),
+                        backgroundColor: Color.fromARGB(255, 255, 146, 146),
+                        shadowColor: Colors.transparent,
+                        selectedColor: Color(0xFFEF5350),
+                        selectedShadowColor: Colors.red,
+                        side: BorderSide(
+                            color: isSelected1 == true
+                                ? Color(0xFFEF5350)
+                                : Color.fromARGB(255, 255, 0, 0),
+                            style: BorderStyle.solid,
+                            width: 2),
+                        pressElevation: 10,
+                        elevation: 10,
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      ChoiceChip(
+                        avatar: isSelected2 == true
+                            ? Icon(
+                                Icons.check,
+                                color: Colors.white,
+                              )
+                            : null,
+                        avatarBorder: CircleBorder(side: BorderSide.none),
+                        selected: isSelected2,
+                        onSelected: (newboolvalue) {
+                          setState(() {
+                            isSelected1 = false;
+                            isSelected3 = false;
+                            isSelected2 = newboolvalue;
+                            priority = "mild";
+                          });
+                        },
+                        label: Text(
+                          "Mild",
+                          style: TextStyle(
+                              color: isSelected2 == true
+                                  ? Colors.white
+                                  : Colors.black),
+                        ),
+                        backgroundColor: Color.fromARGB(255, 255, 253, 136),
+                        shadowColor: Colors.transparent,
+                        selectedColor: Color.fromARGB(177, 255, 196, 59),
+                        selectedShadowColor: Colors.yellow,
+                        side: BorderSide(
+                            color: Color.fromARGB(54, 255, 196, 59),
+                            style: BorderStyle.solid,
+                            width: 2),
+                        pressElevation: 10,
+                        elevation: 10,
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      ChoiceChip(
+                        avatar: isSelected3 == true
+                            ? Icon(
+                                Icons.check,
+                                color: Colors.white,
+                              )
+                            : null,
+                        avatarBorder: CircleBorder(side: BorderSide.none),
+                        selected: isSelected3,
+                        onSelected: (newboolvalue) {
+                          setState(() {
+                            isSelected1 = false;
+                            isSelected2 = false;
+                            isSelected3 = newboolvalue;
+                            priority = "normal";
+                          });
+                        },
+                        label: Text(
+                          "Normal",
+                          style: TextStyle(
+                              color: isSelected3 == true
+                                  ? Colors.white
+                                  : Colors.black),
+                        ),
+                        backgroundColor: Color.fromARGB(255, 185, 227, 255),
+                        shadowColor: Colors.transparent,
+                        selectedColor: Colors.blue,
+                        selectedShadowColor: Colors.blue,
+                        side: BorderSide(
+                            color: Colors.blue,
+                            style: BorderStyle.solid,
+                            width: 2),
+                        pressElevation: 10,
+                        elevation: 10,
+                      )
+                    ],
                   ),
-                  label('Choose Time', Colors.black, 16.5),
-                  SizedBox(
-                    height: 10,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: 10,
+                          ),
+                          label('Choose Date', Colors.black, 16.5),
+                          SizedBox(
+                            height: 12,
+                          ),
+                          dateSelected(),
+                        ],
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: 10,
+                          ),
+                          label('Choose Time', Colors.black, 16.5),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          timeSelected(),
+                        ],
+                      )
+                    ],
                   ),
-                  timeSelected(),
                   SizedBox(
-                    height: 50,
+                    height: 60,
                   ),
                   button(),
                   SizedBox(
@@ -202,7 +356,8 @@ class _AddToDoPageState extends State<AddToDoPage> {
         //validation
         if (mydateTime == null ||
             _descriptionController.text.isEmpty ||
-            _titleController.text.isEmpty) {
+            _titleController.text.isEmpty ||
+            priority.isEmpty) {
           //show error message
           showDialog(
               context: context,
@@ -244,7 +399,8 @@ class _AddToDoPageState extends State<AddToDoPage> {
               "title": _titleController.text,
               "description": _descriptionController.text,
               "scheduledTime": finalDateTime,
-              "isDone": false
+              "isDone": false,
+              "priority": priority
             },
           );
 
@@ -339,7 +495,7 @@ class _AddToDoPageState extends State<AddToDoPage> {
   Widget dateSelected() {
     return Container(
       height: 55,
-      width: MediaQuery.of(context).size.width,
+      width: MediaQuery.of(context).size.width * 0.45,
       decoration: BoxDecoration(
         color: SecondaryColor,
         borderRadius: BorderRadius.circular(15),
@@ -375,7 +531,7 @@ class _AddToDoPageState extends State<AddToDoPage> {
   Widget timeSelected() {
     return Container(
       height: 55,
-      width: MediaQuery.of(context).size.width,
+      width: MediaQuery.of(context).size.width * 0.45,
       decoration: BoxDecoration(
         color: SecondaryColor,
         borderRadius: BorderRadius.circular(15),

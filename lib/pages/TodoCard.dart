@@ -9,18 +9,19 @@ import 'package:page_transition/page_transition.dart';
 import 'package:devstack/assets.dart';
 
 class TodoCard extends StatefulWidget {
-  const TodoCard(
-      {Key? key,
-      required this.isDone,
-      required this.title,
-      required this.time,
-      required this.check,
-      required this.onChange,
-      required this.index,
-      required this.description,
-      required this.document,
-      required this.id})
-      : super(key: key);
+  const TodoCard({
+    Key? key,
+    required this.isDone,
+    required this.title,
+    required this.time,
+    required this.check,
+    required this.onChange,
+    required this.index,
+    required this.description,
+    required this.document,
+    required this.id,
+    required this.priority,
+  }) : super(key: key);
   //we need to assign all value dynamically
   final String title;
   final DateTime time;
@@ -31,6 +32,7 @@ class TodoCard extends StatefulWidget {
   final bool isDone;
   final Map<String, dynamic> document;
   final String id;
+  final priority;
   @override
   State<TodoCard> createState() => _TodoCardState();
 }
