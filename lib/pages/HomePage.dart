@@ -233,7 +233,8 @@ class _HomePageState extends State<HomePage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "Hey!\n${FirebaseAuth.instance.currentUser!.displayName}",
+                                //"Hey!\n${FirebaseAuth.instance.currentUser!.displayName}",
+                                "Hey UserName + Photo of user",
                                 style: GoogleFonts.roboto(
                                     color: Colors.white,
                                     fontSize: 24,
@@ -242,12 +243,12 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ],
                           ),
-                          CircleAvatar(
+                          /*  CircleAvatar(
                             maxRadius: 30,
                             foregroundImage: NetworkImage(FirebaseAuth
                                 .instance.currentUser!.photoURL
                                 .toString()),
-                          )
+                          )*/
                         ],
                       ),
                       Row(
