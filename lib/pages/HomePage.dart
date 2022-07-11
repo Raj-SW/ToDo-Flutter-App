@@ -200,7 +200,8 @@ class _HomePageState extends State<HomePage> {
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return <Widget>[
             SliverAppBar(
-              stretch: true,
+              floating: true,
+              pinned: true,
               elevation: 5,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.only(
@@ -216,9 +217,6 @@ class _HomePageState extends State<HomePage> {
                   fontSize: 40,
                 ),
               ),
-              snap: true,
-              pinned: true,
-              floating: true,
               expandedHeight: 300,
               flexibleSpace: FlexibleSpaceBar(
                 stretchModes: [StretchMode.zoomBackground],
@@ -399,7 +397,7 @@ class _HomePageState extends State<HomePage> {
                         } else if (selectedItem == "All" && isDone == false) {
                           return TodoCard(
                             priority: priority,
-                            isDone: document["isDone"],
+                            isDone: isDone,
                             check: selected[index].checkValue,
                             time: date(document),
                             title: document["title"] == null

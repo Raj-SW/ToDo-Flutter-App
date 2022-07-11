@@ -194,11 +194,44 @@ class _TodoCardState extends State<TodoCard> {
   }
 
   Color findColor(DateTime time, bool isdone, String priority) {
+    var daysLeft = time.day - DateTime.now().day;
+
     bool overdue = false;
     setState(() {
       overdue = isOverdue(time, isdone);
     });
+
     if (isdone == true) {
+      setState(() {
+        color = Color.fromRGBO(189, 240, 198, 1);
+      });
+      return color;
+    } else {
+      if (daysLeft < 0) {
+        setState(() {
+          color = Color.fromARGB(255, 250, 155, 155);
+        });
+      } else if (daysLeft >= 0) {
+        if (priority == "critical" && overdue == false) {
+          setState(() {
+            color = Color.fromARGB(255, 253, 213, 213);
+          });
+        }
+        if (priority == "mild" && overdue == false) {
+          setState(() {
+            color = Color.fromARGB(255, 255, 234, 197);
+          });
+        }
+        if (priority == "normal" && overdue == false) {
+          setState(() {
+            color = Color.fromRGBO(207, 236, 255, 1);
+          });
+        }
+      }
+    }
+    /*
+    if (isdone == true) {
+      print("If it is done, make overdu false");
       setState(() {
         overdue = false;
       });
@@ -206,10 +239,16 @@ class _TodoCardState extends State<TodoCard> {
 
     if (isdone == true && overdue == false) {
       color = Color.fromRGBO(189, 240, 198, 1);
+      print("if it is done and not overdue, make color green");
+      return color;
     }
 
     if (isdone == false && overdue == true) {
-      color = Color.fromRGBO(255, 146, 146, 1);
+      print("overdue make red");
+      setState(() {
+        color = Color.fromRGBO(255, 146, 146, 1);
+      });
+      return color;
     }
 
     if (isdone == false && overdue == false) {
@@ -222,8 +261,9 @@ class _TodoCardState extends State<TodoCard> {
       if (priority == "normal" && overdue == false) {
         color = Color.fromRGBO(207, 236, 255, 1);
       }
+      return color;
     }
-
+*/
     return color;
   }
 }
