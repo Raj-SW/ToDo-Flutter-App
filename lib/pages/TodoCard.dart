@@ -75,7 +75,12 @@ class _TodoCardState extends State<TodoCard> {
             SizedBox(
               height: 5,
             ),
-            countDown(widget.time, widget.isDone),
+            widget.isDone == false
+                ? countDown(widget.time, widget.isDone)
+                : SizedBox(
+                    width: 0,
+                    height: 0,
+                  ),
             SizedBox(
               height: 15,
             ),
@@ -108,42 +113,46 @@ class _TodoCardState extends State<TodoCard> {
                     Text(DateFormat.j().format(widget.time)),
                   ],
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: <Widget>[
-                    InkWell(
-                        onTap: () {
-                          //Edit button to view and edit data
-                          Navigator.of(context).push(PageTransition(
-                              type: PageTransitionType.fade,
-                              duration: Duration(milliseconds: 550),
-                              reverseDuration: Duration(milliseconds: 250),
-                              child: ViewData(
-                                  document: widget.document, id: widget.id)));
-                        },
-                        child: Text(
-                          'Edit',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        )),
-                    SizedBox(
-                      width: 15,
-                    ),
-                    InkWell(
-                        onTap: () {
-                          FirebaseFirestore.instance
-                              .collection("collect2")
-                              .doc(FirebaseAuth.instance.currentUser!.uid)
-                              .collection("Todo")
-                              .doc(widget.id)
-                              .update({"isDone": true});
-                        },
-                        child: Text(
-                          'Mark as done',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        )),
-                  ],
-                )
+                widget.isDone == false
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: <Widget>[
+                          InkWell(
+                              onTap: () {
+                                //Edit button to view and edit data
+                                Navigator.of(context).push(PageTransition(
+                                    type: PageTransitionType.fade,
+                                    duration: Duration(milliseconds: 550),
+                                    reverseDuration:
+                                        Duration(milliseconds: 250),
+                                    child: ViewData(
+                                        document: widget.document,
+                                        id: widget.id)));
+                              },
+                              child: Text(
+                                'Edit',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              )),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          InkWell(
+                              onTap: () {
+                                FirebaseFirestore.instance
+                                    .collection("collect2")
+                                    .doc(FirebaseAuth.instance.currentUser!.uid)
+                                    .collection("Todo")
+                                    .doc(widget.id)
+                                    .update({"isDone": true});
+                              },
+                              child: Text(
+                                'Mark as done',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              )),
+                        ],
+                      )
+                    : Container()
               ],
             )
           ],
@@ -170,7 +179,7 @@ class _TodoCardState extends State<TodoCard> {
     }
 
     return Text(overdue == false
-        ? "is overdue by $daysLeftAbs days"
+        ? "is overdue by $daysLeftAbs day(s)"
         : "$daysLeftAbs days left");
   }
 
@@ -229,41 +238,6 @@ class _TodoCardState extends State<TodoCard> {
         }
       }
     }
-    /*
-    if (isdone == true) {
-      print("If it is done, make overdu false");
-      setState(() {
-        overdue = false;
-      });
-    }
-
-    if (isdone == true && overdue == false) {
-      color = Color.fromRGBO(189, 240, 198, 1);
-      print("if it is done and not overdue, make color green");
-      return color;
-    }
-
-    if (isdone == false && overdue == true) {
-      print("overdue make red");
-      setState(() {
-        color = Color.fromRGBO(255, 146, 146, 1);
-      });
-      return color;
-    }
-
-    if (isdone == false && overdue == false) {
-      if (priority == "critical" && overdue == false) {
-        color = Color.fromRGBO(254, 234, 230, 1);
-      }
-      if (priority == "mild" && overdue == false) {
-        color = Color.fromRGBO(253, 241, 220, 1);
-      }
-      if (priority == "normal" && overdue == false) {
-        color = Color.fromRGBO(207, 236, 255, 1);
-      }
-      return color;
-    }
-*/
     return color;
   }
 }

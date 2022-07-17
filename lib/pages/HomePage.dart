@@ -427,14 +427,14 @@ class _HomePageState extends State<HomePage> {
                               onChange: onChange,
                             );
                           }
-                        } else if (todayCount == 0) {
+                        } /* else if (todayCount == 0) {
                           return Column(
                             children: [
                               Text("Wow so empty!!"),
                               Image(image: AssetImage("assets/illust1.png")),
                             ],
                           );
-                        }
+                        }*/
                         return Container();
                       });
                 }),
