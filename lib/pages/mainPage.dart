@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
+import 'cardioScreen.dart';
+
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
 
@@ -35,7 +37,7 @@ class _MainPageState extends State<MainPage> {
       }
     });
   }
-  final screens = <Widget>[HomePage(), Settings()];
+  final screens = <Widget>[HomePage(), cardioScreen(), Settings()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,6 +49,10 @@ class _MainPageState extends State<MainPage> {
         items: [
           Icon(
             Icons.home,
+            color: Colors.white,
+          ),
+          Icon(
+            Icons.run_circle_outlined,
             color: Colors.white,
           ),
           Icon(
