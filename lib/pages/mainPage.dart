@@ -4,6 +4,7 @@ import 'package:alan_voice/alan_voice.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:devstack/assets.dart';
 import 'package:devstack/pages/HomePage.dart';
+import 'package:devstack/pages/PomodoroTimer.dart';
 import 'package:devstack/pages/Settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
@@ -37,7 +38,12 @@ class _MainPageState extends State<MainPage> {
       }
     });
   }
-  final screens = <Widget>[HomePage(), cardioScreen(), Settings()];
+  final screens = <Widget>[
+    HomePage(),
+    cardioScreen(),
+    PomodoroTimer(),
+    Settings()
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,6 +59,10 @@ class _MainPageState extends State<MainPage> {
           ),
           Icon(
             Icons.run_circle_outlined,
+            color: Colors.white,
+          ),
+          Icon(
+            Icons.timer_sharp,
             color: Colors.white,
           ),
           Icon(
