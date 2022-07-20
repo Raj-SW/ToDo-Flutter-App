@@ -63,9 +63,6 @@ class _MyAppState extends State<MyApp> {
     if (token != null) {
       setState(() {
         currentPage = MainPage();
-        //currentPage = HiddenDrawer();
-        //  currentPage = zoomDrawer();
-
         print('aaa-main-hello from main check login');
       });
     } else {
