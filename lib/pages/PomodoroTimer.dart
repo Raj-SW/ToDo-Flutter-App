@@ -9,6 +9,7 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_alarm_clock/flutter_alarm_clock.dart';
 import 'package:flutter_spinbox/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 class PomodoroTimer extends StatefulWidget {
@@ -29,7 +30,7 @@ TextStyle mystyle = TextStyle(
 TextEditingController _minuteController = TextEditingController();
 TextEditingController _hourController = TextEditingController();
 double percent = 1;
-int counterTime = 0;
+int counterTime = 10;
 Timer? timer;
 Duration duration1 = Duration();
 bool isnotStarted = false;
@@ -247,7 +248,7 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
                                   onTap: () {
                                     setState(() {
                                       if (counterTime < 120) {
-                                        counterTime = counterTime + 1;
+                                        counterTime = counterTime + 5;
                                       }
                                     });
                                   },
@@ -259,8 +260,8 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
                                 InkWell(
                                     onTap: () {
                                       setState(() {
-                                        if (counterTime > 0) {
-                                          counterTime = counterTime - 1;
+                                        if (counterTime > 5) {
+                                          counterTime = counterTime - 5;
                                         }
                                       });
                                     },
@@ -296,7 +297,7 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
                                     DateTime.now().second +
                                         duration1.inSeconds.remainder(60),
                                   );
-                                  print("aalrm lao");
+                                  print("alarm lao");
                                   setState(() {
                                     isnotStarted = true;
                                   });
@@ -354,6 +355,7 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
       } else {
         isnotStarted = false;
         endTimer();
+        counterTime = 5;
       }
     });
   }
@@ -369,5 +371,9 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
 
   percentCalc() {
     return (duration1.inSeconds / 60) / counterTime;
+  }
+
+  showToast() {
+    Fluttertoast.showToast(msg: "Please enter activity type");
   }
 }
