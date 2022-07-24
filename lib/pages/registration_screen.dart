@@ -30,7 +30,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
   // our form key
   final _formKey = GlobalKey<FormState>();
-
+  //gender
+  int? gender;
   // editing Controller
   final nameEditingController = new TextEditingController();
   final emailEditingController = new TextEditingController();
@@ -78,7 +79,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     Widget textItem1() {
       return Container(
         width: MediaQuery.of(context).size.width - 70,
-        height: 80,
+        height: 50,
         child: TextFormField(
           autofocus: false,
           controller: nameEditingController,
@@ -134,7 +135,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     Widget textItem2() {
       return Container(
         width: MediaQuery.of(context).size.width - 70,
-        height: 80,
+        height: 50,
         child: TextFormField(
           autofocus: false,
           controller: emailEditingController,
@@ -191,7 +192,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     Widget textItem3() {
       return Container(
           width: MediaQuery.of(context).size.width - 70,
-          height: 80,
+          height: 50,
           child: TextFormField(
             obscureText: true,
             autofocus: false,
@@ -283,6 +284,62 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       );
     }
 
+    Widget textItem5() {
+      return Container(
+        width: MediaQuery.of(context).size.width - 70,
+        height: 80,
+        child: TextFormField(
+          autofocus: false,
+          controller: nameEditingController,
+          keyboardType: TextInputType.name,
+          validator: (value) {
+            RegExp regex = new RegExp(r'^.{3,}$');
+            if (value!.isEmpty) {
+              return ("First Name cannot be Empty");
+            }
+            if (!regex.hasMatch(value)) {
+              return ("Enter Valid name(Min. 3 Character)");
+            }
+            return null;
+          },
+          onSaved: (value) {
+            nameEditingController.text = value!;
+          },
+          textInputAction: TextInputAction.next,
+          style: TextStyle(
+            fontSize: 17,
+            color: Color(0xff5d5fef),
+          ),
+          decoration: InputDecoration(
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(50),
+            ),
+            prefixIcon: Icon(Icons.account_circle_outlined),
+            contentPadding: EdgeInsets.fromLTRB(10, 15, 20, 15),
+            labelText: "Gender",
+            labelStyle: TextStyle(
+              fontSize: 17,
+              color: Colors.black,
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(50),
+              borderSide: BorderSide(
+                width: 1.5,
+                color: Color(0xff5d5fef),
+              ),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(50),
+              borderSide: BorderSide(
+                width: 1,
+                color: Colors.grey,
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
     //signup button
     final signUpButton = Material(
       borderRadius: BorderRadius.circular(50),
@@ -329,12 +386,50 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   ),
                   SizedBox(height: 10.2),
                   textItem1(),
-                  SizedBox(height: 2),
+                  SizedBox(height: 20),
+                  Container(
+                    height: 35,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Radio(
+                            value: 1,
+                            groupValue: gender,
+                            onChanged: (value) => setState(() {
+                                  gender = 1;
+                                  print("Gender is Male");
+                                  print(gender);
+                                })),
+                        Text(
+                          "Male",
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Radio(
+                            value: 0,
+                            groupValue: gender,
+                            onChanged: (value) => setState(() {
+                                  gender = 0;
+                                  print("Gender is female");
+                                  print(gender);
+                                })),
+                        Text(
+                          "Female",
+                          style: TextStyle(fontSize: 18),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 20),
                   //emailField,
                   textItem2(),
-                  SizedBox(height: 2),
+                  SizedBox(height: 20),
                   //passwordField,
                   textItem3(),
+                  SizedBox(height: 20),
+
                   //SizedBox(height: 0),
                   //confirmPasswordField,
                   //textItem4(),
@@ -443,19 +538,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     );
   }
 
-
   void signUp(String email, String password) async {
     if (_formKey.currentState!.validate()) {
       try {
-        /*   await _auth
-            .createUserWithEmailAndPassword(email: email, password: password)
-            .then((value) => {postDetailsToFirestore()})
-            .catchError((e) {
-          Fluttertoast.showToast(msg: e!.message);
-        });*/
         UserCredential userCredential = await _auth
             .createUserWithEmailAndPassword(email: email, password: password);
         authClass.storeTokenAndData2(userCredential);
+        initialiseDB();
         Navigator.pushAndRemoveUntil(
             (context),
             MaterialPageRoute(builder: (context) => MainPage()),
@@ -488,5 +577,19 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       }
     }
   }
-}
 
+  void initialiseDB() {
+    print("Initialising Db");
+    FirebaseFirestore.instance
+        .collection("collect2")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection("userModel")
+        .doc("userDetails")
+        .set({
+      "Experience": 0,
+      "Gender": gender,
+      "Level": 0,
+      "userName": nameEditingController.text,
+    });
+  }
+}

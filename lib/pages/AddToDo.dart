@@ -601,6 +601,7 @@ class _AddToDoPageState extends State<AddToDoPage> {
     }
     textScanning = false;
     _descriptionController.text = scannedText;
+    recognisedText(scannedText);
     setState(() {});
     Navigator.of(context).pop();
   }
@@ -608,7 +609,7 @@ class _AddToDoPageState extends State<AddToDoPage> {
   Future openDialog() => showDialog(
       context: context,
       builder: (context) => AlertDialog(
-            title: Text("Add description from gallery or camera"),
+            title: Text("Add Details from image?"),
             actions: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -647,4 +648,42 @@ class _AddToDoPageState extends State<AddToDoPage> {
               ),
             ],
           ));
+  void recognisedText(String scannedText) {
+    print("recognising text");
+
+    if (scannedText.contains("scheduled for")) {
+      print("Date Found");
+      try {
+        print(scannedText.substring(
+            scannedText.lastIndexOf("scheduled for") + 14,
+            scannedText.lastIndexOf("scheduled for") + 14 + 24));
+        print("before parse date");
+        mydateTime = DateTime.parse(scannedText.substring(
+            scannedText.lastIndexOf("scheduled for") + 14,
+            scannedText.lastIndexOf("scheduled for") + 24));
+        print(DateFormat.yMMMEd().format(mydateTime!));
+        print("hey there");
+      } catch (e) {
+        print("not found");
+      }
+    }
+    //for time
+    if (scannedText.contains("at time")) {
+      try {
+        print("before parse time");
+        print(scannedText.substring(scannedText.lastIndexOf("at time") + 8,
+            scannedText.lastIndexOf("at time") + 13));
+        print("hey there 2");
+        var string = scannedText.substring(
+            scannedText.lastIndexOf("at time") + 8,
+            scannedText.lastIndexOf("at time") + 13);
+        List<String> split = string.split(":");
+        _timePicked =
+            TimeOfDay(hour: int.parse(split[0]), minute: int.parse(split[1]));
+        print("hey there 3");
+      } catch (e) {
+        print(e);
+      }
+    }
+  }
 }

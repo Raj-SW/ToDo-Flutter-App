@@ -82,15 +82,18 @@ class _TodoCardState extends State<TodoCard> {
                     height: 0,
                   ),
             SizedBox(
-              height: 15,
+              height: 5,
             ),
-            Text("Description:", style: TextStyle(fontWeight: FontWeight.bold)),
+            // Text("Description:", style: TextStyle(fontWeight: FontWeight.bold)),
             SizedBox(
               height: 5,
             ),
-            Text(widget.description),
+            Text(
+              widget.description,
+              overflow: TextOverflow.ellipsis,
+            ),
             SizedBox(
-              height: 20,
+              height: 10,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

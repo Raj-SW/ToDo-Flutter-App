@@ -177,59 +177,72 @@ class _ViewDataState extends State<ViewData> {
                             size: 28,
                           )),
                       //icon for update
-                      IconButton(
-                          onPressed: () {
-                            if (edit) {
-                              return;
-                            }
-                            showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: Text("Edit Task?"),
-                                    content: Text(
-                                        "You might lose previous information!"),
-                                    actions: <Widget>[
-                                      InkWell(
-                                          onTap: (() {
-                                            setState(() {
-                                              edit = !edit;
-                                            });
-                                            Navigator.pop(context);
-                                          }),
-                                          child: Padding(
-                                            padding: EdgeInsets.all(15),
-                                            child: Text(
-                                              "Yes",
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                              ),
-                                            ),
-                                          )),
-                                      InkWell(
-                                          onTap: (() {
-                                            setState(() {
-                                              edit = false;
-                                            });
-                                            Navigator.pop(context);
-                                          }),
-                                          child: Padding(
-                                            padding: EdgeInsets.all(15),
-                                            child: Text(
-                                              "No",
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                              ),
-                                            ),
-                                          ))
-                                    ],
-                                  );
+                      !edit
+                          ? IconButton(
+                              onPressed: () {
+                                if (edit) {
+                                  return;
+                                }
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: Text("Edit Task?"),
+                                        content: Text(
+                                            "You might lose previous information!"),
+                                        actions: <Widget>[
+                                          InkWell(
+                                              onTap: (() {
+                                                setState(() {
+                                                  edit = !edit;
+                                                  print(edit);
+                                                });
+                                                Navigator.pop(context);
+                                              }),
+                                              child: Padding(
+                                                padding: EdgeInsets.all(15),
+                                                child: Text(
+                                                  "Yes",
+                                                  style: TextStyle(
+                                                    fontSize: 18,
+                                                  ),
+                                                ),
+                                              )),
+                                          InkWell(
+                                              onTap: (() {
+                                                setState(() {
+                                                  edit = false;
+                                                });
+                                                Navigator.pop(context);
+                                              }),
+                                              child: Padding(
+                                                padding: EdgeInsets.all(15),
+                                                child: Text(
+                                                  "No",
+                                                  style: TextStyle(
+                                                    fontSize: 18,
+                                                  ),
+                                                ),
+                                              ))
+                                        ],
+                                      );
+                                    });
+                              },
+                              icon: Icon(
+                                Icons.edit,
+                                color: PrimaryColor,
+                              ))
+                          : InkWell(
+                              onTap: () {
+                                setState(() {
+                                  edit = !edit;
                                 });
-                          },
-                          icon: Icon(
-                            Icons.edit,
-                            color: PrimaryColor,
-                          ))
+                              },
+                              child: Icon(
+                                Icons.edit,
+                                color: PrimaryColor,
+                              ),
+                            )
                     ],
                   ),
                 )
@@ -421,7 +434,7 @@ class _ViewDataState extends State<ViewData> {
                     ],
                   ),
                   SizedBox(
-                    height: 60,
+                    height: 20,
                   ),
                   button(),
                   SizedBox(
@@ -518,14 +531,15 @@ class _ViewDataState extends State<ViewData> {
 
   Widget description() {
     return Container(
-      height: 150,
+      height: 250,
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
         color: SecondaryColor,
         borderRadius: BorderRadius.circular(15),
       ),
       child: TextFormField(
-        enabled: edit ? true : false,
+        readOnly: edit ? false : true,
+        // enabled: edit ? true : false,
         controller: _descriptionController,
         style: TextStyle(color: Color.fromARGB(255, 0, 0, 0), fontSize: 17),
         maxLines: null,

@@ -42,12 +42,15 @@ class _HomePageState extends State<HomePage> {
   User? user = FirebaseAuth.instance.currentUser;
   UserModel loggedInUser = UserModel();
 
+  int gender = 3;
+  String userName = "";
   @override
   void initState() {
     super.initState();
     tz.initializeTimeZones();
     endWk = now.add(Duration(days: DateTime.daysPerWeek - now.weekday));
     strtWk = now.subtract(Duration(days: now.weekday - 1));
+    initialiseNameetc();
   }
 
   List<String> itemList = [
@@ -233,8 +236,9 @@ class _HomePageState extends State<HomePage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                //"Hey!\n${FirebaseAuth.instance.currentUser!.displayName}",
-                                "Hey UserName + Photo of user",
+                                auth.currentUser!.displayName == null
+                                    ? "Hey! $userName"
+                                    : "Hey!\n ${auth.currentUser!.displayName}",
                                 style: GoogleFonts.roboto(
                                     color: Colors.white,
                                     fontSize: 24,
@@ -243,12 +247,21 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ],
                           ),
-                          /*  CircleAvatar(
-                            maxRadius: 30,
-                            foregroundImage: NetworkImage(FirebaseAuth
-                                .instance.currentUser!.photoURL
-                                .toString()),
-                          )*/
+                          FirebaseAuth.instance.currentUser?.photoURL != null
+                              ? CircleAvatar(
+                                  maxRadius: 30,
+                                  foregroundImage: NetworkImage(FirebaseAuth
+                                      .instance.currentUser!.photoURL
+                                      .toString()))
+                              : CircleAvatar(
+                                  maxRadius: 30,
+                                  foregroundImage: gender == 0
+                                      ? AssetImage(
+                                          "assets/profileWomen.png",
+                                        )
+                                      : AssetImage("assets/profileMen.png"),
+                                  backgroundColor: Colors.white,
+                                )
                         ],
                       ),
                       Row(
@@ -487,6 +500,22 @@ class _HomePageState extends State<HomePage> {
 
   Future openDialog() =>
       showDialog(context: context, builder: (context) => AddToDoPage());
+
+  Future<void> initialiseNameetc() async {
+    var mydocument = FirebaseFirestore.instance
+        .collection("collect2")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection("userModel")
+        .doc("userDetails");
+    mydocument.get().then((value) => {
+          setState(() {
+            gender = value["Gender"];
+            userName = value["userName"];
+            print("legender$gender");
+            print("lename$userName");
+          })
+        });
+  }
 }
 
 class Select {
