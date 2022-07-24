@@ -7,10 +7,8 @@ import 'package:devstack/Service/SoundSystem.dart';
 import 'package:devstack/circle_transition_clipper.dart';
 import 'package:devstack/pages/AddToDo.dart';
 import 'package:devstack/pages/TodoCard.dart';
-import 'package:devstack/pages/Welcome/welcome_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../Service/Auth_Service.dart';
 import 'package:timezone/data/latest.dart' as tz;
@@ -39,20 +37,28 @@ class _HomePageState extends State<HomePage> {
   DateTime now = DateTime.now();
   late DateTime strtWk;
   late DateTime endWk;
-
+  int todayCount = 0;
   List<Select> selected = [];
   User? user = FirebaseAuth.instance.currentUser;
   UserModel loggedInUser = UserModel();
 
+  int gender = 3;
+  String userName = "";
   @override
   void initState() {
     super.initState();
     tz.initializeTimeZones();
     endWk = now.add(Duration(days: DateTime.daysPerWeek - now.weekday));
     strtWk = now.subtract(Duration(days: now.weekday - 1));
+    initialiseNameetc();
   }
 
-  List<String> itemList = ['Today', 'This Week', 'All', 'Done'];
+  List<String> itemList = [
+    'Today',
+    'This Week',
+    'All',
+    'Done',
+  ];
   String? selectedItem = 'Today';
   _HomePageState() {
     AlanVoice.onCommand.add((command) {
@@ -153,6 +159,7 @@ class _HomePageState extends State<HomePage> {
               DateTime theTime = (doc['scheduledTime']).toDate();
               String formattedDate = DateFormat.MMMMEEEEd().format(theTime);
               String formattedTime = DateFormat.Hm().format(theTime);
+              String priority = doc["priority"];
               print(formattedTime);
               String thisTask = doc["title"] +
                   " due on " +
@@ -175,79 +182,166 @@ class _HomePageState extends State<HomePage> {
       }
     });
   }
+
   @override
   Widget build(BuildContext context) {
     var _selectedValue;
     return Scaffold(
-      extendBody: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        //   backgroundColor: Color.fromARGB(0, 255, 255, 255), centerTitle: true,
-        title: Padding(
-          padding: const EdgeInsets.only(top: 20.0),
-          child: Text(
-            "To-Dos",
-            style: GoogleFonts.pacifico(
-              color: Color.fromRGBO(93, 95, 239, 1),
-              fontSize: 41,
-            ),
-          ),
-        ), //
-        /*  leading: IconButton(
-          icon: Icon(Icons.menu), color: Colors.deepPurple,
-          onPressed: () {
-            SoundSystem().playLocal();
-            ZoomDrawer.of(context)!.toggle();
-            //MenuWidget();
-          },
-          //menu widget can used instead of icon button
-          //MenuWidget(),
-        ),*/
-        actions: [
-          IconButton(
-            icon: Icon(Icons.exit_to_app),
-            color: Colors.deepPurple,
-            onPressed: () {
-              authClass.signOut();
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (builder) => WelcomeScreen()),
-                  (route) => false);
-            },
-          )
-        ],
-
-        elevation: 0,
-      ),
+      extendBodyBehindAppBar: true,
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Color.fromARGB(255, 233, 116, 80),
         onPressed: () {
           SoundSystem().playLocal();
           Navigator.of(context).push(_createRoute());
         },
-        backgroundColor: PrimaryColor,
         child: Icon(
           Icons.add,
           size: 50,
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
+      body: NestedScrollView(
+        headerSliverBuilder: (context, innerBoxIsScrolled) {
+          return <Widget>[
+            SliverAppBar(
+              floating: true,
+              pinned: true,
+              elevation: 5,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(30),
+                      bottomRight: Radius.circular(30))),
+              toolbarHeight: 60,
+              centerTitle: true,
+              backgroundColor: Color.fromRGBO(83, 123, 233, 1),
+              title: Text(
+                "To-Do List",
+                style: GoogleFonts.pacifico(
+                  color: Colors.white,
+                  fontSize: 40,
+                ),
+              ),
+              expandedHeight: 300,
+              flexibleSpace: FlexibleSpaceBar(
+                stretchModes: [StretchMode.zoomBackground],
+                collapseMode: CollapseMode.parallax,
+                background: Container(
+                  margin: EdgeInsets.only(top: 97),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                auth.currentUser!.displayName == null
+                                    ? "Hey! $userName"
+                                    : "Hey!\n ${auth.currentUser!.displayName}",
+                                style: GoogleFonts.roboto(
+                                    color: Colors.white,
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                          FirebaseAuth.instance.currentUser?.photoURL != null
+                              ? CircleAvatar(
+                                  maxRadius: 30,
+                                  foregroundImage: NetworkImage(FirebaseAuth
+                                      .instance.currentUser!.photoURL
+                                      .toString()))
+                              : CircleAvatar(
+                                  maxRadius: 30,
+                                  foregroundImage: gender == 0
+                                      ? AssetImage(
+                                          "assets/profileWomen.png",
+                                        )
+                                      : AssetImage("assets/profileMen.png"),
+                                  backgroundColor: Colors.white,
+                                )
+                        ],
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              left: 10,
+                            ),
+                            child: Image(
+                              image: AssetImage("assets/HomePageSliver.png"),
+                              height: 170,
+                              width: MediaQuery.of(context).size.width / 2,
+                            ),
+                          ),
+                          Column(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                height: 50,
+                              ),
+                              Text(
+                                "Your Tasks for\n",
+                                style: GoogleFonts.roboto(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  height: 0.8,
+                                ),
+                              ),
+                              Text(
+                                "Today\n",
+                                style: GoogleFonts.roboto(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  height: 0.8,
+                                ),
+                              ),
+                              Text(
+                                DateFormat.yMMMEd().format(DateTime.now()),
+                                style: GoogleFonts.roboto(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  height: 0.8,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ];
+        },
+        body: SingleChildScrollView(
+          child: Column(children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(right: 30, bottom: 15),
+                  padding: const EdgeInsets.only(
+                    right: 30,
+                  ),
                   child: DropdownButton<String>(
-                    iconEnabledColor: Colors.deepPurple,
-                    focusColor: Colors.deepPurple,
+                    iconEnabledColor: Color.fromRGBO(83, 123, 233, 1),
+                    focusColor: Color.fromRGBO(83, 123, 233, 1),
                     value: selectedItem,
                     items: itemList
                         .map((item) => DropdownMenuItem<String>(
                             value: item,
                             child: Text(
                               item,
-                              style: TextStyle(fontSize: 18),
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  color: Color.fromRGBO(83, 123, 233, 1)),
                             )))
                         .toList(),
                     onChanged: (item) => setState(() => selectedItem = item),
@@ -255,11 +349,6 @@ class _HomePageState extends State<HomePage> {
                 ),
               ],
             ),
-
-            /* SizedBox(
-              height: MediaQuery.of(context).size.height - 196,
-
-              child: */
             StreamBuilder(
                 stream: _stream,
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -279,10 +368,14 @@ class _HomePageState extends State<HomePage> {
                             checkValue: false));
                         DateTime time = date(document);
                         bool isDone = document["isDone"];
+                        String priority = document["priority"];
 
-                        if (selectedItem == "Today" && isDone == false) {
-                          if (time.day == DateTime.now().day) {
+                        if (selectedItem == "Today") {
+                          if (time.day == DateTime.now().day &&
+                              isDone == false) {
+                            todayCount++;
                             return TodoCard(
+                              priority: priority,
                               isDone: document["isDone"],
                               check: selected[index].checkValue,
                               time: date(document),
@@ -295,13 +388,13 @@ class _HomePageState extends State<HomePage> {
                               id: snapshot.data.docs[index].id,
                               onChange: onChange,
                             );
-                          } else {
-                            return Container();
                           }
-                        }
-                        if (selectedItem == "This Week" && isDone == false) {
-                          if (time.day >= strtWk.day && time.day <= endWk.day) {
+                        } else if (selectedItem == "This Week") {
+                          if (time.day >= strtWk.day &&
+                              time.day <= endWk.day &&
+                              isDone == false) {
                             return TodoCard(
+                              priority: priority,
                               isDone: document["isDone"],
                               check: selected[index].checkValue,
                               time: date(document),
@@ -314,32 +407,11 @@ class _HomePageState extends State<HomePage> {
                               id: snapshot.data.docs[index].id,
                               onChange: onChange,
                             );
-                          } else {
-                            return Container();
                           }
-                        }
-                        if (selectedItem == "Done") {
-                          if (document['isDone'] == true) {
-                            return TodoCard(
-                              isDone: document["isDone"],
-                              check: selected[index].checkValue,
-                              time: date(document),
-                              title: document["title"] == null
-                                  ? "Add your tasks"
-                                  : document["title"],
-                              description: document["description"],
-                              index: index,
-                              document: document,
-                              id: snapshot.data.docs[index].id,
-                              onChange: onChange,
-                            );
-                          } else {
-                            return Container();
-                          }
-                        }
-                        if (selectedItem == "All" && isDone == false) {
+                        } else if (selectedItem == "All" && isDone == false) {
                           return TodoCard(
-                            isDone: document["isDone"],
+                            priority: priority,
+                            isDone: isDone,
                             check: selected[index].checkValue,
                             time: date(document),
                             title: document["title"] == null
@@ -351,10 +423,10 @@ class _HomePageState extends State<HomePage> {
                             id: snapshot.data.docs[index].id,
                             onChange: onChange,
                           );
-                        }
-                        if (selectedItem == "Done") {
+                        } else if (selectedItem == "Done") {
                           if (isDone == true) {
                             return TodoCard(
+                              priority: priority,
                               check: selected[index].checkValue,
                               isDone: document["isDone"],
                               time: date(document),
@@ -368,12 +440,18 @@ class _HomePageState extends State<HomePage> {
                               onChange: onChange,
                             );
                           }
-                        }
+                        } /* else if (todayCount == 0) {
+                          return Column(
+                            children: [
+                              Text("Wow so empty!!"),
+                              Image(image: AssetImage("assets/illust1.png")),
+                            ],
+                          );
+                        }*/
                         return Container();
                       });
                 }),
-            //),
-          ],
+          ]),
         ),
       ),
     );
@@ -406,7 +484,6 @@ class _HomePageState extends State<HomePage> {
           double endRadius = screenSize.height * 1 * 2;
 
           var radiusTween = Tween(begin: beginRadius, end: endRadius);
-          //var radiusTweenAnimation = animation.drive(radiusTween);
           var radiusTweenAnimation = animation
               .drive(CurveTween(curve: Curves.easeInToLinear))
               .drive(radiusTween);
@@ -423,6 +500,22 @@ class _HomePageState extends State<HomePage> {
 
   Future openDialog() =>
       showDialog(context: context, builder: (context) => AddToDoPage());
+
+  Future<void> initialiseNameetc() async {
+    var mydocument = FirebaseFirestore.instance
+        .collection("collect2")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection("userModel")
+        .doc("userDetails");
+    mydocument.get().then((value) => {
+          setState(() {
+            gender = value["Gender"];
+            userName = value["userName"];
+            print("legender$gender");
+            print("lename$userName");
+          })
+        });
+  }
 }
 
 class Select {

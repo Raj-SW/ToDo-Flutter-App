@@ -26,21 +26,47 @@ class _ViewDataState extends State<ViewData> {
   TimeOfDay _timePicked = TimeOfDay.now();
   DateTime? finalDateTime;
   bool edit = false;
-
+  String priority = "";
+  String timeBool = "";
+  DateTime now = DateTime.now();
+  late DateTime strtWk;
+  late DateTime endWk;
   @override
   void initState() {
+    endWk = now.add(Duration(days: DateTime.daysPerWeek - now.weekday));
+    strtWk = now.subtract(Duration(days: now.weekday - 1));
     super.initState();
     tz.initializeTimeZones();
-    String title = widget.document['title'] == null
-        ? "Hey there"
-        : widget.document['title'];
+    String title = widget.document['title'] ?? "Hey there";
     _titleController = TextEditingController(text: title);
     _descriptionController =
         TextEditingController(text: widget.document['description']);
     DateTime initDate = widget.document["scheduledTime"].toDate();
     mydateTime = initDate;
     _timePicked = TimeOfDay.fromDateTime(initDate);
+    priority = widget.document['priority'];
+    prioritySetter(priority);
+
+    if (mydateTime!.day == DateTime.now().day &&
+        widget.document['isDone'] == false) {
+      timeBool = "todayCount";
+    }
+    if (mydateTime!.day >= strtWk.day &&
+        mydateTime!.day <= endWk.day &&
+        widget.document['isDone']) {
+      timeBool = "WeeklyCount";
+    }
+    if (widget.document['isDone'] == false) {
+      timeBool = "AllCount";
+    }
+    if (widget.document['isDone'] == true) {
+      timeBool = "AllDone";
+    }
   }
+
+  bool isSelected1 = false;
+  bool isSelected2 = false;
+  bool isSelected3 = false;
 
   @override
   Widget build(BuildContext context) {
@@ -151,59 +177,72 @@ class _ViewDataState extends State<ViewData> {
                             size: 28,
                           )),
                       //icon for update
-                      IconButton(
-                          onPressed: () {
-                            if (edit) {
-                              return;
-                            }
-                            showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: Text("Edit Task?"),
-                                    content: Text(
-                                        "You might lose previous information!"),
-                                    actions: <Widget>[
-                                      InkWell(
-                                          onTap: (() {
-                                            setState(() {
-                                              edit = !edit;
-                                            });
-                                            Navigator.pop(context);
-                                          }),
-                                          child: Padding(
-                                            padding: EdgeInsets.all(15),
-                                            child: Text(
-                                              "Yes",
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                              ),
-                                            ),
-                                          )),
-                                      InkWell(
-                                          onTap: (() {
-                                            setState(() {
-                                              edit = false;
-                                            });
-                                            Navigator.pop(context);
-                                          }),
-                                          child: Padding(
-                                            padding: EdgeInsets.all(15),
-                                            child: Text(
-                                              "No",
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                              ),
-                                            ),
-                                          ))
-                                    ],
-                                  );
+                      !edit
+                          ? IconButton(
+                              onPressed: () {
+                                if (edit) {
+                                  return;
+                                }
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: Text("Edit Task?"),
+                                        content: Text(
+                                            "You might lose previous information!"),
+                                        actions: <Widget>[
+                                          InkWell(
+                                              onTap: (() {
+                                                setState(() {
+                                                  edit = !edit;
+                                                  print(edit);
+                                                });
+                                                Navigator.pop(context);
+                                              }),
+                                              child: Padding(
+                                                padding: EdgeInsets.all(15),
+                                                child: Text(
+                                                  "Yes",
+                                                  style: TextStyle(
+                                                    fontSize: 18,
+                                                  ),
+                                                ),
+                                              )),
+                                          InkWell(
+                                              onTap: (() {
+                                                setState(() {
+                                                  edit = false;
+                                                });
+                                                Navigator.pop(context);
+                                              }),
+                                              child: Padding(
+                                                padding: EdgeInsets.all(15),
+                                                child: Text(
+                                                  "No",
+                                                  style: TextStyle(
+                                                    fontSize: 18,
+                                                  ),
+                                                ),
+                                              ))
+                                        ],
+                                      );
+                                    });
+                              },
+                              icon: Icon(
+                                Icons.edit,
+                                color: PrimaryColor,
+                              ))
+                          : InkWell(
+                              onTap: () {
+                                setState(() {
+                                  edit = !edit;
                                 });
-                          },
-                          icon: Icon(
-                            Icons.edit,
-                            color: PrimaryColor,
-                          ))
+                              },
+                              child: Icon(
+                                Icons.edit,
+                                color: PrimaryColor,
+                              ),
+                            )
                     ],
                   ),
                 )
@@ -214,7 +253,10 @@ class _ViewDataState extends State<ViewData> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  label(edit ? 'Edit Title' : 'View Title', Colors.black, 16.5),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  label('Add Task Title', Colors.black, 16.5),
                   SizedBox(
                     height: 10,
                   ),
@@ -222,8 +264,7 @@ class _ViewDataState extends State<ViewData> {
                   SizedBox(
                     height: 25,
                   ),
-                  label(edit ? 'Edit Description' : 'View Description',
-                      Colors.black, 16.5),
+                  label('Add Task Description', Colors.black, 16.5),
                   SizedBox(
                     height: 10,
                   ),
@@ -231,25 +272,171 @@ class _ViewDataState extends State<ViewData> {
                   SizedBox(
                     height: 25,
                   ),
-                  label(edit ? 'Edit Date' : 'Scheduled date', Colors.black,
-                      16.5),
+                  label('Priority', Colors.black, 16.5),
                   SizedBox(
-                    height: 12,
+                    height: 5,
                   ),
-                  dateSelected(),
+                  Row(
+                    children: [
+                      ChoiceChip(
+                        avatar: isSelected1 == true
+                            ? Icon(
+                                Icons.check,
+                                color: Colors.white,
+                              )
+                            : null,
+                        avatarBorder: CircleBorder(side: BorderSide.none),
+                        selected: isSelected1,
+                        onSelected: edit == true
+                            ? (newboolvalue) {
+                                setState(() {
+                                  isSelected2 = false;
+                                  isSelected3 = false;
+                                  isSelected1 = newboolvalue;
+                                  priority = "critical";
+                                });
+                              }
+                            : null,
+                        label: Text(
+                          "Critical",
+                          style: TextStyle(
+                              color: isSelected1 == true
+                                  ? Colors.white
+                                  : Colors.black),
+                        ),
+                        backgroundColor: Color.fromARGB(255, 255, 146, 146),
+                        shadowColor: Colors.transparent,
+                        selectedColor: Color(0xFFEF5350),
+                        selectedShadowColor: Colors.red,
+                        side: BorderSide(
+                            color: isSelected1 == true
+                                ? Color(0xFFEF5350)
+                                : Color.fromARGB(255, 255, 0, 0),
+                            style: BorderStyle.solid,
+                            width: 2),
+                        pressElevation: 10,
+                        elevation: 10,
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      ChoiceChip(
+                        avatar: isSelected2 == true
+                            ? Icon(
+                                Icons.check,
+                                color: Colors.white,
+                              )
+                            : null,
+                        avatarBorder: CircleBorder(side: BorderSide.none),
+                        selected: isSelected2,
+                        onSelected: edit == true
+                            ? (newboolvalue) {
+                                setState(() {
+                                  isSelected1 = false;
+                                  isSelected3 = false;
+                                  isSelected2 = newboolvalue;
+                                  priority = "mild";
+                                });
+                              }
+                            : null,
+                        label: Text(
+                          "Mild",
+                          style: TextStyle(
+                              color: isSelected2 == true
+                                  ? Colors.white
+                                  : Colors.black),
+                        ),
+                        backgroundColor: Color.fromARGB(255, 255, 253, 136),
+                        shadowColor: Colors.transparent,
+                        selectedColor: Color.fromARGB(177, 255, 196, 59),
+                        selectedShadowColor: Colors.yellow,
+                        side: BorderSide(
+                            color: Color.fromARGB(54, 255, 196, 59),
+                            style: BorderStyle.solid,
+                            width: 2),
+                        pressElevation: 10,
+                        elevation: 10,
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      ChoiceChip(
+                        avatar: isSelected3 == true
+                            ? Icon(
+                                Icons.check,
+                                color: Colors.white,
+                              )
+                            : null,
+                        avatarBorder: CircleBorder(side: BorderSide.none),
+                        selected: isSelected3,
+                        onSelected: edit == true
+                            ? (newboolvalue) {
+                                setState(() {
+                                  isSelected1 = false;
+                                  isSelected2 = false;
+                                  isSelected3 = newboolvalue;
+                                  priority = "normal";
+                                });
+                              }
+                            : null,
+                        label: Text(
+                          "Normal",
+                          style: TextStyle(
+                              color: isSelected3 == true
+                                  ? Colors.white
+                                  : Colors.black),
+                        ),
+                        backgroundColor: Color.fromARGB(255, 185, 227, 255),
+                        shadowColor: Colors.transparent,
+                        selectedColor: Colors.blue,
+                        selectedShadowColor: Colors.blue,
+                        side: BorderSide(
+                            color: Colors.blue,
+                            style: BorderStyle.solid,
+                            width: 2),
+                        pressElevation: 10,
+                        elevation: 10,
+                      )
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: 10,
+                          ),
+                          label('Choose Date', Colors.black, 16.5),
+                          SizedBox(
+                            height: 12,
+                          ),
+                          dateSelected(),
+                        ],
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: 10,
+                          ),
+                          label('Choose Time', Colors.black, 16.5),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          timeSelected(),
+                        ],
+                      )
+                    ],
+                  ),
                   SizedBox(
-                    height: 10,
+                    height: 20,
                   ),
-                  label(edit ? 'Edit Time' : 'Scheduled Time', Colors.black,
-                      16.5),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  timeSelected(),
-                  SizedBox(
-                    height: 50,
-                  ),
-                  edit ? button() : Container(),
+                  button(),
                   SizedBox(
                     height: 15,
                   ),
@@ -308,7 +495,8 @@ class _ViewDataState extends State<ViewData> {
             {
               "title": _titleController.text,
               "description": _descriptionController.text,
-              "scheduledTime": finalDateTime
+              "scheduledTime": finalDateTime,
+              "priority": priority
             },
           );
 //calling on notification
@@ -343,14 +531,15 @@ class _ViewDataState extends State<ViewData> {
 
   Widget description() {
     return Container(
-      height: 150,
+      height: 250,
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
-        color: todoCardBGColor,
+        color: SecondaryColor,
         borderRadius: BorderRadius.circular(15),
       ),
       child: TextFormField(
-        enabled: edit ? true : false,
+        readOnly: edit ? false : true,
+        // enabled: edit ? true : false,
         controller: _descriptionController,
         style: TextStyle(color: Color.fromARGB(255, 0, 0, 0), fontSize: 17),
         maxLines: null,
@@ -370,7 +559,7 @@ class _ViewDataState extends State<ViewData> {
       height: 55,
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
-        color: todoCardBGColor,
+        color: SecondaryColor,
         borderRadius: BorderRadius.circular(15),
       ),
       child: TextFormField(
@@ -403,26 +592,24 @@ class _ViewDataState extends State<ViewData> {
   Widget dateSelected() {
     return Container(
       height: 55,
-      width: MediaQuery.of(context).size.width,
+      width: MediaQuery.of(context).size.width * 0.45,
       decoration: BoxDecoration(
-        color: todoCardBGColor,
+        color: SecondaryColor,
         borderRadius: BorderRadius.circular(15),
       ),
       child: Row(
         children: <Widget>[
           IconButton(
             icon: Icon(Icons.calendar_month),
-            onPressed: edit
-                ? () async {
-                    mydateTime = await showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(2021),
-                      lastDate: DateTime(2023),
-                    );
-                    setState(() {});
-                  }
-                : null,
+            onPressed: () async {
+              mydateTime = (await showDatePicker(
+                context: context,
+                initialDate: DateTime.now(),
+                firstDate: DateTime(2021),
+                lastDate: DateTime(2023),
+              ));
+              setState(() {});
+            },
           ),
           Text(
             mydateTime == null
@@ -441,27 +628,24 @@ class _ViewDataState extends State<ViewData> {
   Widget timeSelected() {
     return Container(
       height: 55,
-      width: MediaQuery.of(context).size.width,
+      width: MediaQuery.of(context).size.width * 0.45,
       decoration: BoxDecoration(
-        color: todoCardBGColor,
+        color: SecondaryColor,
         borderRadius: BorderRadius.circular(15),
       ),
       child: Row(
         children: <Widget>[
           IconButton(
             icon: Icon(Icons.alarm),
-            onPressed: edit
-                ? () {
-                    showTimePicker(
-                            context: context, initialTime: TimeOfDay.now())
-                        .then((value) {
-                      setState(() {
-                        _timePicked = value!;
-                      });
-                    });
-                    setState(() {});
-                  }
-                : null,
+            onPressed: () {
+              showTimePicker(context: context, initialTime: TimeOfDay.now())
+                  .then((value) {
+                setState(() {
+                  _timePicked = value!;
+                });
+              });
+              setState(() {});
+            },
           ),
           Text(
             _timePicked.format(context),
@@ -478,5 +662,24 @@ class _ViewDataState extends State<ViewData> {
         fontSize: 18,
         textColor: Colors.white,
         gravity: ToastGravity.BOTTOM);
+  }
+
+  void prioritySetter(String priority) {
+    if (priority == 'critical') {
+      isSelected1 = true;
+      isSelected2 = false;
+      isSelected3 = false;
+    }
+    if (priority == 'mild') {
+      isSelected2 = true;
+      isSelected3 = false;
+      isSelected1 = false;
+    }
+    if (priority == 'normal') {
+      isSelected3 = true;
+      isSelected1 = false;
+      isSelected2 = false;
+    }
+    setState(() {});
   }
 }

@@ -4,10 +4,13 @@ import 'package:alan_voice/alan_voice.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:devstack/assets.dart';
 import 'package:devstack/pages/HomePage.dart';
+import 'package:devstack/pages/PomodoroTimer.dart';
 import 'package:devstack/pages/Settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+
+import 'cardioScreen.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -35,28 +38,31 @@ class _MainPageState extends State<MainPage> {
       }
     });
   }
-  final screens = <Widget>[HomePage(), Settings()];
+  final screens = <Widget>[
+    HomePage(),
+    cardioScreen(),
+    PomodoroTimer(),
+    Settings()
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
-      bottomNavigationBar: /* BottomNavigationBar(
-          currentIndex: currentIndex,
-          onTap: (index) => setState(() {
-                currentIndex = index;
-              }),
-          items: [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: "To-Dos"),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.settings_input_component), label: "Settings")
-
-          ]),*/
-          CurvedNavigationBar(
+      extendBodyBehindAppBar: true,
+      backgroundColor: Colors.white,
+      bottomNavigationBar: CurvedNavigationBar(
         backgroundColor: Colors.transparent,
-        color: PrimaryColor,
+        color: Color.fromRGBO(83, 123, 233, 1),
         items: [
           Icon(
             Icons.home,
+            color: Colors.white,
+          ),
+          Icon(
+            Icons.run_circle_outlined,
+            color: Colors.white,
+          ),
+          Icon(
+            Icons.timer_sharp,
             color: Colors.white,
           ),
           Icon(

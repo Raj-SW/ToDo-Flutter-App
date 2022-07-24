@@ -9,18 +9,19 @@ import 'package:page_transition/page_transition.dart';
 import 'package:devstack/assets.dart';
 
 class TodoCard extends StatefulWidget {
-  const TodoCard(
-      {Key? key,
-      required this.isDone,
-      required this.title,
-      required this.time,
-      required this.check,
-      required this.onChange,
-      required this.index,
-      required this.description,
-      required this.document,
-      required this.id})
-      : super(key: key);
+  const TodoCard({
+    Key? key,
+    required this.isDone,
+    required this.title,
+    required this.time,
+    required this.check,
+    required this.onChange,
+    required this.index,
+    required this.description,
+    required this.document,
+    required this.id,
+    required this.priority,
+  }) : super(key: key);
   //we need to assign all value dynamically
   final String title;
   final DateTime time;
@@ -31,6 +32,7 @@ class TodoCard extends StatefulWidget {
   final bool isDone;
   final Map<String, dynamic> document;
   final String id;
+  final priority;
   @override
   State<TodoCard> createState() => _TodoCardState();
 }
@@ -49,7 +51,9 @@ class _TodoCardState extends State<TodoCard> {
       padding: const EdgeInsets.only(top: 15, left: 25, right: 25, bottom: 5),
       child: Container(
         decoration: BoxDecoration(
-            color: isoverdue(widget.time, widget.isDone),
+            color: isOverdue(widget.time, widget.isDone) == true
+                ? Color.fromRGBO(255, 146, 146, 1)
+                : findColor(widget.time, widget.isDone, widget.priority),
             border: Border.all(color: Colors.transparent),
             borderRadius: BorderRadius.all(Radius.circular(20)),
             boxShadow: [
@@ -71,17 +75,25 @@ class _TodoCardState extends State<TodoCard> {
             SizedBox(
               height: 5,
             ),
-            countDown(widget.time, widget.isDone),
-            SizedBox(
-              height: 15,
-            ),
-            Text("Description:", style: TextStyle(fontWeight: FontWeight.bold)),
+            widget.isDone == false
+                ? countDown(widget.time, widget.isDone)
+                : SizedBox(
+                    width: 0,
+                    height: 0,
+                  ),
             SizedBox(
               height: 5,
             ),
-            Text(widget.description),
+            // Text("Description:", style: TextStyle(fontWeight: FontWeight.bold)),
             SizedBox(
-              height: 20,
+              height: 5,
+            ),
+            Text(
+              widget.description,
+              overflow: TextOverflow.ellipsis,
+            ),
+            SizedBox(
+              height: 10,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -104,42 +116,46 @@ class _TodoCardState extends State<TodoCard> {
                     Text(DateFormat.j().format(widget.time)),
                   ],
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: <Widget>[
-                    InkWell(
-                        onTap: () {
-                          //Edit button to view and edit data
-                          Navigator.of(context).push(PageTransition(
-                              type: PageTransitionType.fade,
-                              duration: Duration(milliseconds: 550),
-                              reverseDuration: Duration(milliseconds: 250),
-                              child: ViewData(
-                                  document: widget.document, id: widget.id)));
-                        },
-                        child: Text(
-                          'Edit',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        )),
-                    SizedBox(
-                      width: 15,
-                    ),
-                    InkWell(
-                        onTap: () {
-                          FirebaseFirestore.instance
-                              .collection("collect2")
-                              .doc(FirebaseAuth.instance.currentUser!.uid)
-                              .collection("Todo")
-                              .doc(widget.id)
-                              .update({"isDone": true});
-                        },
-                        child: Text(
-                          'Mark as done',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        )),
-                  ],
-                )
+                widget.isDone == false
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: <Widget>[
+                          InkWell(
+                              onTap: () {
+                                //Edit button to view and edit data
+                                Navigator.of(context).push(PageTransition(
+                                    type: PageTransitionType.fade,
+                                    duration: Duration(milliseconds: 550),
+                                    reverseDuration:
+                                        Duration(milliseconds: 250),
+                                    child: ViewData(
+                                        document: widget.document,
+                                        id: widget.id)));
+                              },
+                              child: Text(
+                                'Edit',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              )),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          InkWell(
+                              onTap: () {
+                                FirebaseFirestore.instance
+                                    .collection("collect2")
+                                    .doc(FirebaseAuth.instance.currentUser!.uid)
+                                    .collection("Todo")
+                                    .doc(widget.id)
+                                    .update({"isDone": true});
+                              },
+                              child: Text(
+                                'Mark as done',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              )),
+                        ],
+                      )
+                    : Container()
               ],
             )
           ],
@@ -148,7 +164,10 @@ class _TodoCardState extends State<TodoCard> {
     );
   }
 
-  Widget countDown(DateTime time, bool isDone) {
+  Widget countDown(
+    DateTime time,
+    bool isDone,
+  ) {
     var daysLeft = DateTime.now().day - time.day;
     var daysLeftAbs = daysLeft.abs();
     var overdue = false;
@@ -163,30 +182,64 @@ class _TodoCardState extends State<TodoCard> {
     }
 
     return Text(overdue == false
-        ? "is overdue by $daysLeftAbs days"
+        ? "is overdue by $daysLeftAbs day(s)"
         : "$daysLeftAbs days left");
   }
 
-  Color isoverdue(DateTime time, bool isdone) {
-    var daysLeft = time.day - DateTime.now().day;
-    if (isdone == false) {
-      if (daysLeft > 2) {
-        setState(() {
-          color = todoCardBGColor;
-        });
-      } else if (daysLeft >= 0 && daysLeft <= 2) {
-        setState(() {
-          color = Color.fromARGB(255, 255, 124, 124);
-        });
-      } else if (daysLeft < 0) {
-        setState(() {
-          color = Color.fromARGB(255, 187, 186, 186);
-        });
-      }
+  bool isOverdue(
+    DateTime time,
+    bool isDone,
+  ) {
+    var daysLeft = DateTime.now().day - time.day;
+    var overdue = false;
+    if (daysLeft < 0) {
+      setState(() {
+        overdue = true;
+      });
     } else {
       setState(() {
-        color = Color.fromARGB(255, 215, 255, 217);
+        overdue = false;
       });
+    }
+
+    return overdue;
+  }
+
+  Color findColor(DateTime time, bool isdone, String priority) {
+    var daysLeft = time.day - DateTime.now().day;
+
+    bool overdue = false;
+    setState(() {
+      overdue = isOverdue(time, isdone);
+    });
+
+    if (isdone == true) {
+      setState(() {
+        color = Color.fromRGBO(189, 240, 198, 1);
+      });
+      return color;
+    } else {
+      if (daysLeft < 0) {
+        setState(() {
+          color = Color.fromARGB(255, 250, 155, 155);
+        });
+      } else if (daysLeft >= 0) {
+        if (priority == "critical" && overdue == false) {
+          setState(() {
+            color = Color.fromARGB(255, 253, 213, 213);
+          });
+        }
+        if (priority == "mild" && overdue == false) {
+          setState(() {
+            color = Color.fromARGB(255, 255, 234, 197);
+          });
+        }
+        if (priority == "normal" && overdue == false) {
+          setState(() {
+            color = Color.fromRGBO(207, 236, 255, 1);
+          });
+        }
+      }
     }
     return color;
   }
