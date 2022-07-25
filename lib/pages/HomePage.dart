@@ -48,8 +48,8 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     tz.initializeTimeZones();
-    endWk = now.add(Duration(days: DateTime.daysPerWeek - now.weekday));
     strtWk = now.subtract(Duration(days: now.weekday - 1));
+    endWk = now.add(Duration(days: DateTime.daysPerWeek - now.weekday));
     initialiseNameetc();
   }
 
