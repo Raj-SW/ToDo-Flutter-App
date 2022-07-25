@@ -1,7 +1,9 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_const_declarations, avoid_print
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_const_declarations, avoid_print, curly_braces_in_flow_control_structures
 
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -20,8 +22,9 @@ class PomodoroTimer extends StatefulWidget {
 }
 
 List<String> menuItems = ["Sport", "Study", "Rest", "Other"];
+int beginTime = 0;
 bool isSelected1 = false;
-bool isSelected2 = false;
+bool isSelected2 = true;
 bool isSelected3 = false;
 String activityType = "";
 TextStyle mystyle = TextStyle(
@@ -29,7 +32,7 @@ TextStyle mystyle = TextStyle(
 );
 TextEditingController _minuteController = TextEditingController();
 TextEditingController _hourController = TextEditingController();
-double percent = 1;
+double percent = 0;
 int counterTime = 10;
 Timer? timer;
 Duration duration1 = Duration();
@@ -248,7 +251,7 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
                                   onTap: () {
                                     setState(() {
                                       if (counterTime < 120) {
-                                        counterTime = counterTime + 5;
+                                        counterTime = counterTime + 1;
                                       }
                                     });
                                   },
@@ -260,8 +263,8 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
                                 InkWell(
                                     onTap: () {
                                       setState(() {
-                                        if (counterTime > 5) {
-                                          counterTime = counterTime - 5;
+                                        if (counterTime > 1) {
+                                          counterTime = counterTime - 1;
                                         }
                                       });
                                     },
@@ -281,31 +284,39 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
                         Expanded(child: SizedBox()),
                         isnotStarted == false
                             ? ElevatedButton(
-                                onPressed: () {
-                                  print("button start pressed");
-                                  duration1 = Duration(minutes: counterTime);
-                                  startTimer();
-                                  FlutterAlarmClock.createAlarm(
+                                onPressed: isCatselected()
+                                    ? () {
+                                        print("button start pressed");
+                                        duration1 =
+                                            Duration(minutes: counterTime);
+                                        startTimer();
+                                        /*  FlutterAlarmClock.createAlarm(
                                       DateTime.now().hour + duration1.inHours,
                                       DateTime.now().minute +
                                           duration1.inMinutes,
                                       title: "Time'sUp",
-                                      skipUi: true);
-                                  print(
-                                      DateTime.now().hour + duration1.inHours);
-                                  print(
-                                    DateTime.now().second +
-                                        duration1.inSeconds.remainder(60),
-                                  );
-                                  print("alarm lao");
-                                  setState(() {
-                                    isnotStarted = true;
-                                  });
-                                },
+                                      skipUi: true);*/
+                                        FlutterAlarmClock.createTimer(
+                                            counterTime * 60,
+                                            skipUi: true,
+                                            title: "Time is Up");
+                                        print(DateTime.now().hour +
+                                            duration1.inHours);
+                                        print(
+                                          DateTime.now().second +
+                                              duration1.inSeconds.remainder(60),
+                                        );
+                                        setState(() {
+                                          isnotStarted = true;
+                                          beginTime = counterTime;
+                                        });
+                                      }
+                                    : showToast(),
                                 child: Text("Start"),
                               )
                             : ElevatedButton(
                                 onPressed: () {
+                                  beginTime = duration1.inMinutes;
                                   duration1 = Duration();
                                   endTimer();
                                   setState(() {
@@ -339,6 +350,7 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
 
   void endTimer() {
     //timer?.cancel();
+    writeToFirebase();
     setState(() {
       timer?.cancel();
     });
@@ -374,6 +386,67 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
   }
 
   showToast() {
-    Fluttertoast.showToast(msg: "Please enter activity type");
+    Fluttertoast.showToast(
+        msg: "Please enter activity type to start timer",
+        gravity: ToastGravity.TOP);
+  }
+
+  isCatselected() {
+    if ((isSelected1 || isSelected2 || isSelected3) == false) {
+      return false;
+    } else
+      return true;
+  }
+
+  Future<void> writeToFirebase() async {
+    int workCumm, studyCumm, restCumm;
+    final doc = FirebaseFirestore.instance
+        .collection("collect2")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection("userModel")
+        .doc("pomodoroCummulative");
+    final snapshot = await doc.get();
+
+    workCumm = snapshot["work"];
+    studyCumm = snapshot["study"];
+    restCumm = snapshot["rest"];
+
+    if (activityType == 'Work') {
+      setState(() {
+        workCumm = workCumm + beginTime;
+      });
+      FirebaseFirestore.instance
+          .collection("collect2")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection("userModel")
+          .doc("pomodoroCummulative")
+          .update({"work": workCumm});
+    }
+    if (activityType == 'Study') {
+      setState(() {
+        studyCumm = studyCumm + beginTime;
+      });
+      FirebaseFirestore.instance
+          .collection("collect2")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection("userModel")
+          .doc("pomodoroCummulative")
+          .update({"study": studyCumm});
+    }
+    if (activityType == 'Rest') {
+      setState(() {
+        restCumm = restCumm + beginTime;
+      });
+
+      FirebaseFirestore.instance
+          .collection("collect2")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection("userModel")
+          .doc("pomodoroCummulative")
+          .update({"rest": restCumm});
+    }
+
+    print("firebase  $activityType");
+    print(restCumm);
   }
 }
