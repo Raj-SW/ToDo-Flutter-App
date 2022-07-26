@@ -1,5 +1,8 @@
 // ignore_for_file: prefer_const_constructors
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
@@ -13,6 +16,9 @@ class NotificationService {
     return NotificationDetails(
         android: AndroidNotificationDetails('channel id', 'channel name',
             channelDescription: 'channel description',
+            fullScreenIntent: true,
+            enableVibration: true,
+            enableLights: true,
             importance: Importance.max),
         iOS: IOSNotificationDetails());
   }
