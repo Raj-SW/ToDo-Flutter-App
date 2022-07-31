@@ -429,11 +429,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   //passwordField,
                   textItem3(),
                   SizedBox(height: 20),
-
-                  //SizedBox(height: 0),
-                  //confirmPasswordField,
-                  //textItem4(),
-                  //SizedBox(height: 20),
                   signUpButton,
                   SizedBox(height: 12),
                   Row(

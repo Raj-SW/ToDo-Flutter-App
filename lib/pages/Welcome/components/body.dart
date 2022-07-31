@@ -1,6 +1,5 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:devstack/assets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -8,15 +7,6 @@ import 'background.dart';
 import 'rounded_button.dart';
 import 'package:devstack/constants.dart';
 import '../../login_screen.dart';
-import '../../registration_screen.dart';
-/*
-import 'package:signup_login/pages/Welcome/components/background.dart';
-import 'package:signup_login/pages/Welcome/components/rounded_button.dart';
-import 'package:signup_login/constants.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:signup_login/pages/login_screen.dart';
-import 'package:signup_login/pages/registration_screen.dart';
-*/
 import '../../registration_screen.dart';
 
 class Body extends StatefulWidget {
@@ -48,7 +38,7 @@ class _BodyState extends State<Body> {
               style: GoogleFonts.pacifico(
                   fontWeight: FontWeight.normal,
                   fontSize: 70,
-                  color: Color.fromRGBO(93, 95, 239, 1)),
+                  color: Color(0xFF5D5FEF)),
             ),
             SizedBox(height: size.height * 0.05),
             SvgPicture.asset(

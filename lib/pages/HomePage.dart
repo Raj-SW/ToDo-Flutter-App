@@ -9,6 +9,7 @@ import 'package:devstack/pages/AddToDo.dart';
 import 'package:devstack/pages/TodoCard.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../Service/Auth_Service.dart';
 import 'package:timezone/data/latest.dart' as tz;
@@ -41,9 +42,12 @@ class _HomePageState extends State<HomePage> {
   List<Select> selected = [];
   User? user = FirebaseAuth.instance.currentUser;
   UserModel loggedInUser = UserModel();
-
+  var level = 0;
   int gender = 3;
   String userName = "";
+  var completedCount = 0;
+  var incompletedCount = 0;
+  var totalTasks = 0;
   @override
   void initState() {
     super.initState();
@@ -188,15 +192,19 @@ class _HomePageState extends State<HomePage> {
     var _selectedValue;
     return Scaffold(
       extendBodyBehindAppBar: true,
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Color.fromARGB(255, 233, 116, 80),
-        onPressed: () {
-          SoundSystem().playLocal();
-          Navigator.of(context).push(_createRoute());
-        },
-        child: Icon(
-          Icons.add,
-          size: 50,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 70),
+        child: FloatingActionButton(
+          isExtended: true,
+          backgroundColor: Color.fromARGB(255, 233, 116, 80),
+          onPressed: () {
+            SoundSystem().playLocal();
+            Navigator.of(context).push(_createRoute());
+          },
+          child: Icon(
+            Icons.add,
+            size: 50,
+          ),
         ),
       ),
       body: NestedScrollView(
@@ -208,113 +216,114 @@ class _HomePageState extends State<HomePage> {
               elevation: 5,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(30),
-                      bottomRight: Radius.circular(30))),
-              toolbarHeight: 60,
+                      bottomLeft: Radius.circular(40),
+                      bottomRight: Radius.circular(40))),
+              toolbarHeight: 80,
               centerTitle: true,
-              backgroundColor: Color.fromRGBO(83, 123, 233, 1),
-              title: Text(
-                "To-Do List",
-                style: GoogleFonts.pacifico(
-                  color: Colors.white,
-                  fontSize: 40,
+              backgroundColor: Color.fromARGB(255, 106, 139, 228),
+              // Color.fromARGB(255, 102, 133, 218), //Color.fromRGBO(83, 123, 233, 1),
+              title: Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: Text(
+                  "Better.Me",
+                  style: GoogleFonts.pacifico(
+                    color: Colors.white,
+                    fontSize: 50,
+                  ),
                 ),
               ),
-              expandedHeight: 300,
+              expandedHeight: 220,
               flexibleSpace: FlexibleSpaceBar(
                 stretchModes: [StretchMode.zoomBackground],
                 collapseMode: CollapseMode.parallax,
-                background: Container(
-                  margin: EdgeInsets.only(top: 97),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                auth.currentUser!.displayName == null
-                                    ? "Hey! $userName"
-                                    : "Hey!\n ${auth.currentUser!.displayName}",
-                                style: GoogleFonts.roboto(
-                                    color: Colors.white,
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
-                          ),
-                          FirebaseAuth.instance.currentUser?.photoURL != null
-                              ? CircleAvatar(
-                                  maxRadius: 30,
-                                  foregroundImage: NetworkImage(FirebaseAuth
-                                      .instance.currentUser!.photoURL
-                                      .toString()))
-                              : CircleAvatar(
-                                  maxRadius: 30,
-                                  foregroundImage: gender == 0
-                                      ? AssetImage(
-                                          "assets/profileWomen.png",
-                                        )
-                                      : AssetImage("assets/profileMen.png"),
-                                  backgroundColor: Colors.white,
-                                )
-                        ],
-                      ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              left: 10,
+                background: Padding(
+                  padding: const EdgeInsets.only(top: 120),
+                  child: Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              width: 25,
                             ),
-                            child: Image(
-                              image: AssetImage("assets/HomePageSliver.png"),
-                              height: 170,
-                              width: MediaQuery.of(context).size.width / 2,
+                            FirebaseAuth.instance.currentUser?.photoURL != null
+                                ? CircleAvatar(
+                                    maxRadius: 45,
+                                    foregroundImage: NetworkImage(FirebaseAuth
+                                        .instance.currentUser!.photoURL
+                                        .toString()))
+                                : CircleAvatar(
+                                    maxRadius: 45,
+                                    foregroundImage: gender == 0
+                                        ? AssetImage(
+                                            "assets/profileWomen.png",
+                                          )
+                                        : AssetImage("assets/profileMen.png"),
+                                    backgroundColor: Colors.white,
+                                  ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 0),
+                                  child: Text(
+                                    FirebaseAuth.instance.currentUser!
+                                                .displayName !=
+                                            null
+                                        ? "Hi, $userName!"
+                                        : "Hey!\n ${auth.currentUser!.displayName}",
+                                    style: GoogleFonts.roboto(
+                                        color: Colors.white,
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.bold),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 7),
+                                  child: Text(
+                                    "Level $level",
+                                    style: GoogleFonts.roboto(
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.only(left: 12, top: 6),
+                                  child: Text(
+                                    "$incompletedCount tasks remaining",
+                                    style: GoogleFonts.roboto(
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                      height: .8,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 30, top: 5),
+                          child: Text(
+                            DateFormat.yMMMEd().format(DateTime.now()),
+                            style: GoogleFonts.roboto(
+                              color: Colors.white,
+                              fontSize: 12,
+                              height: 1.2,
                             ),
                           ),
-                          Column(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                height: 50,
-                              ),
-                              Text(
-                                "Your Tasks for\n",
-                                style: GoogleFonts.roboto(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  height: 0.8,
-                                ),
-                              ),
-                              Text(
-                                "Today\n",
-                                style: GoogleFonts.roboto(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  height: 0.8,
-                                ),
-                              ),
-                              Text(
-                                DateFormat.yMMMEd().format(DateTime.now()),
-                                style: GoogleFonts.roboto(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  height: 0.8,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      )
-                    ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -326,11 +335,15 @@ class _HomePageState extends State<HomePage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(
-                    right: 30,
-                  ),
+                Container(
+                  margin: const EdgeInsets.only(right: 60, top: 0),
                   child: DropdownButton<String>(
+                    icon: FaIcon(FontAwesomeIcons.angleDown),
+                    isDense: false,
+                    elevation: 3,
+                    borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(20),
+                        bottomRight: Radius.circular(20)),
                     iconEnabledColor: Color.fromRGBO(83, 123, 233, 1),
                     focusColor: Color.fromRGBO(83, 123, 233, 1),
                     value: selectedItem,
@@ -341,6 +354,7 @@ class _HomePageState extends State<HomePage> {
                               item,
                               style: TextStyle(
                                   fontSize: 18,
+                                  fontWeight: FontWeight.w500,
                                   color: Color.fromRGBO(83, 123, 233, 1)),
                             )))
                         .toList(),
@@ -440,15 +454,10 @@ class _HomePageState extends State<HomePage> {
                               onChange: onChange,
                             );
                           }
-                        } /* else if (todayCount == 0) {
-                          return Column(
-                            children: [
-                              Text("Wow so empty!!"),
-                              Image(image: AssetImage("assets/illust1.png")),
-                            ],
-                          );
-                        }*/
-                        return Container();
+                        }
+                        return Container(
+                          height: 2,
+                        );
                       });
                 }),
           ]),
@@ -511,10 +520,27 @@ class _HomePageState extends State<HomePage> {
           setState(() {
             gender = value["Gender"];
             userName = value["userName"];
-            print("legender$gender");
-            print("lename$userName");
+            level = value["Level"];
           })
         });
+    final mytaskDoc = FirebaseFirestore.instance
+        .collection("collect2")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection("Todo");
+    mytaskDoc.get().then((value) {
+      value.docs.forEach((element) {
+        if (element['isDone'] == false) {
+          setState(() {
+            incompletedCount++;
+          });
+        }
+        if (element['isDone'] == true) {
+          setState(() {
+            completedCount++;
+          });
+        }
+      });
+    });
   }
 }
 
