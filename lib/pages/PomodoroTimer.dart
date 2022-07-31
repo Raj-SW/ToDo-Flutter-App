@@ -179,17 +179,25 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
                                           duration1 =
                                               Duration(minutes: counterTime);
                                           startTimer();
-                                          FlutterAlarmClock.createAlarm(
+                                          /* FlutterAlarmClock.createAlarm(
+                                              DateTime.now().hour +
+                                                  (counterTime / 60)
+                                                      .abs()
+                                                      .toInt(),
+                                              DateTime.now().minute +
+                                                  counterTime % 60
+
                                               DateTime.now().hour +
                                                   duration1.inHours,
                                               DateTime.now().minute +
-                                                  duration1.inMinutes,
+                                                  duration1.inMinutes
+                                              ,
                                               title: "Time'sUp",
-                                              skipUi: true);
-                                          /* FlutterAlarmClock.createTimer(
+                                              skipUi: true);*/
+                                          FlutterAlarmClock.createTimer(
                                               counterTime * 60,
                                               skipUi: true,
-                                              title: "Time is Up");*/
+                                              title: "Time is Up");
                                           setState(() {
                                             isnotStarted = true;
                                             beginTime = counterTime;
