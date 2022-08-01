@@ -50,7 +50,6 @@ class _MyAppState extends State<MyApp> {
   User? user;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     checkLogin();
     NotificationService.init();
@@ -63,10 +62,8 @@ class _MyAppState extends State<MyApp> {
     if (token != null) {
       setState(() {
         currentPage = MainPage();
-        print('aaa-main-hello from main check login');
       });
     } else {
-      print("EmailAuth token token check-main.dart");
       String? token2 = await authClass.getTokenForEmailAuth();
       if (token2 == null) {
         print("Email token null");
@@ -77,9 +74,7 @@ class _MyAppState extends State<MyApp> {
       }
     }
     if (token == null) {
-      print('aaa-main-hello from main check login-token is null');
       if (token2 != null) {
-        print('aaa-main-hello from main check login-token2 is null');
         setState(() {
           currentPage = MainPage();
         });
@@ -87,12 +82,12 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  //MenuItema currentItem = MenuItems.homePage;
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(useMaterial3: false, primarySwatch: Colors.deepPurple),
+      theme: ThemeData(
+        useMaterial3: false,
+      ),
       debugShowCheckedModeBanner: false,
       home: currentPage,
     );

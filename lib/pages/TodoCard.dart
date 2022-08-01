@@ -148,6 +148,7 @@ class _TodoCardState extends State<TodoCard> {
                                     .collection("Todo")
                                     .doc(widget.id)
                                     .update({"isDone": true});
+                                setState(() {});
                               },
                               child: Text(
                                 'Mark as done',

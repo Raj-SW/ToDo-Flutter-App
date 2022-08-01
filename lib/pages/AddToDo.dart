@@ -504,7 +504,7 @@ print(a);
         maxLines: null,
         decoration: InputDecoration(
             border: InputBorder.none,
-            hintText: "Task Title",
+            hintText: "Task Description",
             hintStyle:
                 TextStyle(color: Color.fromARGB(255, 96, 96, 96), fontSize: 17),
             contentPadding: EdgeInsets.only(
@@ -621,6 +621,7 @@ print(a);
 
   showToast() {
     return Fluttertoast.showToast(
+        backgroundColor: Color.fromRGBO(83, 123, 233, 1),
         toastLength: Toast.LENGTH_SHORT,
         msg: "Task Added",
         fontSize: 18,
@@ -638,10 +639,14 @@ print(a);
         getRecognisedText(pickedImage);
       }
     } catch (e) {
-      textScanning = false;
-      imageFile = null;
-      setState(() {});
-      scannedText = "Error";
+      setState(() {
+        textScanning = false;
+        imageFile = null;
+        scannedText = "Error";
+        showToastError("Error");
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("No text found")));
+      });
     }
   }
 
@@ -661,12 +666,51 @@ print(a);
     recognisedText(scannedText);
     setState(() {});
     Navigator.of(context).pop();
+    if (scannedText == "") {
+      errorDialog('Unfortunately no text found');
+    } else if (!scannedText.contains("scheduled for") &&
+        !scannedText.contains("at time")) {
+      errorDialog("Sorry date and time not found");
+    } else if (!scannedText.contains("scheduled for") &&
+        scannedText.contains("at time")) {
+      errorDialog("Sorry date not found");
+    } else if (!scannedText.contains("at time") &&
+        scannedText.contains("scheduled for")) {
+      errorDialog("Sorry time not found");
+    }
   }
+
+  Future errorDialog(String text) => showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+            title: Text("Oops!!"),
+            content: Text(
+              text,
+              style: TextStyle(color: Colors.black, fontSize: 20),
+            ),
+            actions: [
+              InkWell(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    "ok",
+                    style: TextStyle(color: Colors.blue, fontSize: 20),
+                  ),
+                ),
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          ));
 
   Future openDialog() => showDialog(
       context: context,
       builder: (context) => AlertDialog(
-            title: Text("Add Details from image?"),
+            title: Text(
+              "Add description from image?",
+              textAlign: TextAlign.center,
+            ),
             actions: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -707,40 +751,107 @@ print(a);
           ));
   void recognisedText(String scannedText) {
     print("recognising text");
+    if (scannedText.length > 10) {
+      _titleController.text = scannedText.substring(0, 10);
+    }
 
     if (scannedText.contains("scheduled for")) {
-      print("Date Found");
       try {
-        print(scannedText.substring(
-            scannedText.lastIndexOf("scheduled for") + 14,
-            scannedText.lastIndexOf("scheduled for") + 14 + 24));
-        print("before parse date");
         mydateTime = DateTime.parse(scannedText.substring(
             scannedText.lastIndexOf("scheduled for") + 14,
             scannedText.lastIndexOf("scheduled for") + 24));
         print(DateFormat.yMMMEd().format(mydateTime!));
-        print("hey there");
+      } catch (e) {}
+    }
+    if (scannedText.contains("appointment on the")) {
+      try {
+        mydateTime = DateTime.parse(scannedText.substring(
+            scannedText.lastIndexOf("appointment on the") + 20,
+            scannedText.lastIndexOf("appointment on the") + 30));
       } catch (e) {
         print("not found");
       }
     }
+
+    //priprity
+    if (scannedText.contains("of priority critical")) {
+      try {
+        /*    priority = (scannedText.substring(
+            scannedText.lastIndexOf("of priority") + 12,
+            scannedText.lastIndexOf("of priority") + 16));*/
+        setState(() {
+          isSelected2 = false;
+          isSelected3 = false;
+          isSelected1 = true;
+          priority = "critical";
+        });
+        print(scannedText.substring(scannedText.lastIndexOf("of priority") + 12,
+            scannedText.lastIndexOf("of priority") + 16));
+        print(priority);
+      } catch (e) {
+        print("not found");
+      }
+    }
+    if (scannedText.contains("of priority mild")) {
+      try {
+        /*  priority = (scannedText.substring(
+            scannedText.lastIndexOf("of priority") + 12,
+            scannedText.lastIndexOf("of priority") + 16));*/
+        setState(() {
+          isSelected1 = false;
+          isSelected3 = false;
+          isSelected2 = true;
+          priority = "mild";
+        });
+        print(scannedText.substring(scannedText.lastIndexOf("of priority") + 12,
+            scannedText.lastIndexOf("of priority") + 16));
+      } catch (e) {
+        print("not found");
+      }
+    }
+    if (scannedText.contains("of priority normal")) {
+      try {
+        setState(() {
+          isSelected1 = false;
+          isSelected2 = false;
+          isSelected3 = true;
+          priority = "normal";
+        });
+        /*priority = (scannedText.substring(
+            scannedText.lastIndexOf("of priority") + 12,
+            scannedText.lastIndexOf("of priority") + 18));*/
+        print(scannedText.substring(scannedText.lastIndexOf("of priority") + 12,
+            scannedText.lastIndexOf("of priority") + 18));
+      } catch (e) {
+        print("not found");
+      }
+    }
+
     //for time
     if (scannedText.contains("at time")) {
       try {
-        print("before parse time");
         print(scannedText.substring(scannedText.lastIndexOf("at time") + 8,
             scannedText.lastIndexOf("at time") + 13));
-        print("hey there 2");
         var string = scannedText.substring(
             scannedText.lastIndexOf("at time") + 8,
             scannedText.lastIndexOf("at time") + 13);
         List<String> split = string.split(":");
         _timePicked =
             TimeOfDay(hour: int.parse(split[0]), minute: int.parse(split[1]));
-        print("hey there 3");
+        _titleController.text = scannedText.substring(0, 30);
       } catch (e) {
         print(e);
       }
     }
+  }
+
+  showToastError(String message) {
+    return Fluttertoast.showToast(
+        backgroundColor: Color.fromARGB(255, 233, 83, 83),
+        toastLength: Toast.LENGTH_SHORT,
+        msg: message,
+        fontSize: 18,
+        textColor: Colors.white,
+        gravity: ToastGravity.BOTTOM);
   }
 }
