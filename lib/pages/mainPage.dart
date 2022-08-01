@@ -31,7 +31,7 @@ class _MainPageState extends State<MainPage> {
       if (commandData["command"] == "settingsPage") {
         setState(() {
           print('load settings');
-          currentIndex = 3;
+          currentIndex = 1;
         });
       }
       if (commandData["command"] == "todoPage") {
