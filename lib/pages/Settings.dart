@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, file_names
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, file_names, non_constant_identifier_names
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:devstack/Service/Auth_Service.dart';
@@ -12,6 +12,7 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../Service/SoundSystem.dart';
@@ -41,15 +42,15 @@ class _SettingsState extends State<Settings> {
       overdueCount = 0,
       totaltaskCount = 0;
   late List<pomodoroData> pomodoroChartData;
+  late List<taskCat> taskCatChartData;
+
   @override
   void initState() {
-    // TODO: implement initState
     fetchUserDetails();
-    fetchProductivityStats();
-    fetchPomodoroStats();
     pomodoroChartData = getPomodoroData();
+    taskCatChartData = getTaskCatData();
+
     setState(() {});
-    display();
     super.initState();
   }
 
@@ -61,27 +62,15 @@ class _SettingsState extends State<Settings> {
       appBar: AppBar(
         backgroundColor: Color.fromRGBO(83, 123, 233, 1),
         elevation: 0,
+        toolbarHeight: 60,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(30),
+                bottomRight: Radius.circular(30))),
+        centerTitle: true,
         foregroundColor: PrimaryColor,
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.exit_to_app,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              authClass.signOut();
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                      builder: (builder) => const WelcomeScreen()),
-                  (route) => false);
-            },
-          )
-        ],
-        title: Text(
-          "Preferences",
-          style: TextStyle(color: Colors.white),
-        ),
+        title: Text("Preferences",
+            style: GoogleFonts.pacifico(color: Colors.white, fontSize: 40)),
       ),
       body: SingleChildScrollView(
           child: Column(
@@ -202,22 +191,83 @@ class _SettingsState extends State<Settings> {
                     ),
                     Text("Focus Timer Stats"),
                     Container(
-                      padding: EdgeInsets.all(5),
+                      padding: EdgeInsets.all(00),
                       width: MediaQuery.of(context).size.width,
-                      height: 250,
+                      height: 175,
                       child: SfCartesianChart(
+                        plotAreaBorderWidth: 0,
+                        plotAreaBorderColor: Color.fromARGB(255, 255, 255, 255),
                         series: <ChartSeries>[
                           BarSeries<pomodoroData, String>(
+                              trackBorderWidth: 0,
+                              enableTooltip: true,
                               dataSource: pomodoroChartData,
+                              color: PrimaryColorlight,
                               xValueMapper: (pomodoroData data, _) =>
                                   data.Priority,
                               yValueMapper: (pomodoroData data, _) =>
                                   data.count)
                         ],
-                        primaryXAxis: CategoryAxis(),
+                        primaryXAxis: CategoryAxis(
+                            majorGridLines: MajorGridLines(width: 0)),
+                        primaryYAxis: NumericAxis(
+                            title: AxisTitle(text: "Hours"),
+                            majorGridLines: MajorGridLines(width: 0)),
                       ),
-                    )
+                    ),
+                    Container(
+                      padding: EdgeInsets.all(00),
+                      width: MediaQuery.of(context).size.width,
+                      height: 175,
+                      child: SfCircularChart(
+                          legend: Legend(
+                              isVisible: true,
+                              overflowMode: LegendItemOverflowMode.wrap),
+                          series: <CircularSeries>[
+                            PieSeries<taskCat, String>(
+                              dataSource: taskCatChartData,
+                              dataLabelSettings:
+                                  DataLabelSettings(isVisible: true),
+                              xValueMapper: (taskCat data, _) => data.priority,
+                              yValueMapper: (taskCat data, _) => data.count,
+                            )
+                          ]),
+                    ),
+                    Text(
+                        "Total Tasks - $totaltaskCount\nOverdue tasks - ${overdueCount - isDoneCountTrue}\nCompleted tasks - $isDoneCountTrue\n Pending tasks -$isDoneCountFalse "),
                   ]),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              padding: EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.blue,
+                  ),
+                  borderRadius: BorderRadius.all(Radius.circular(30))),
+              width: MediaQuery.of(context).size.width,
+              child: InkWell(
+                onTap: () {
+                  authClass.signOut();
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (builder) => const WelcomeScreen()),
+                      (route) => false);
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Sign Out"),
+                    SizedBox(
+                      width: 15,
+                    ),
+                    FaIcon(FontAwesomeIcons.arrowRightFromBracket)
+                  ],
+                ),
+              ),
             ),
           ),
           //this container makes sure that no widget is overlapped by bottom navigation bar
@@ -243,26 +293,19 @@ class _SettingsState extends State<Settings> {
             experience = value["Experience"];
           })
         });
-  }
-
-  Future fetchPomodoroStats() async {
     var myPomodorodocument = FirebaseFirestore.instance
         .collection("collect2")
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .collection("userModel")
-        .doc("pomodoroCummulative")
-        .get();
-    myPomodorodocument.then((value) => {
+        .doc("pomodoroCummulative");
+    myPomodorodocument.get().then((value) => {
           setState(() {
             restStat = value["rest"];
             studyStat = value["study"];
             workStat = value["work"];
           })
         });
-    print("restat $restStat");
-  }
 
-  Future fetchProductivityStats() async {
     var myTaskdocument = await FirebaseFirestore.instance
         .collection("collect2")
         .doc(FirebaseAuth.instance.currentUser!.uid)
@@ -297,25 +340,44 @@ class _SettingsState extends State<Settings> {
     print("overdue $overdueCount");
     print("isdone $isDoneCountTrue");
     print("total $totaltaskCount");
+    print("restat $restStat");
+    print("studyStat $studyStat");
+    print("workStat $workStat");
+    setState(() {
+      pomodoroChartData = getPomodoroData();
+      taskCatChartData = getTaskCatData();
+    });
   }
 
   List<pomodoroData> getPomodoroData() {
-    final List<pomodoroData> pomodoro = [
+    List<pomodoroData> pomodoro = [
       pomodoroData("Study", studyStat),
       pomodoroData("Rest", restStat),
       pomodoroData("Work", workStat),
     ];
-
+    setState(() {});
     return pomodoro;
   }
 
-  void display() {
-    print("aaa $restStat");
+  List<taskCat> getTaskCatData() {
+    List<taskCat> taskCatData = [
+      taskCat("Normal", normalCount),
+      taskCat("Mild", mildCount),
+      taskCat("Critical", criticalCount),
+    ];
+    setState(() {});
+    return taskCatData;
   }
 }
 
 class pomodoroData {
   pomodoroData(this.Priority, this.count);
   String Priority = '';
+  int count = 0;
+}
+
+class taskCat {
+  taskCat(this.priority, this.count);
+  String priority = '';
   int count = 0;
 }

@@ -16,6 +16,7 @@ class NotificationService {
     return NotificationDetails(
         android: AndroidNotificationDetails('channel id', 'channel name',
             channelDescription: 'channel description',
+            usesChronometer: true,
             fullScreenIntent: true,
             enableVibration: true,
             enableLights: true,
@@ -33,6 +34,7 @@ class NotificationService {
     });
   }
 
+  static void cancel(int id) => _notifications.cancel(id);
   static Future showScheduledNotification({
     int id = 0,
     String? title,
@@ -51,4 +53,17 @@ class NotificationService {
           uiLocalNotificationDateInterpretation:
               UILocalNotificationDateInterpretation.absoluteTime,
           matchDateTimeComponents: DateTimeComponents.dateAndTime);
+  static Future showNotification({
+    int id = 0,
+    String? title,
+    String? body,
+    String? payload,
+  }) async =>
+      _notifications.show(
+        id,
+        title,
+        body,
+        await _notificationDetails(),
+        payload: payload,
+      );
 }

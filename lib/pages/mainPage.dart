@@ -31,7 +31,7 @@ class _MainPageState extends State<MainPage> {
       if (commandData["command"] == "settingsPage") {
         setState(() {
           print('load settings');
-          currentIndex = 1;
+          currentIndex = 3;
         });
       }
       if (commandData["command"] == "todoPage") {
@@ -45,7 +45,7 @@ class _MainPageState extends State<MainPage> {
   final screens = <Widget>[
     HomePage(),
     MyHomePage(),
-    cardioScreen(),
+    // cardioScreen(),
     PomodoroTimer(),
     Settings()
   ];
@@ -72,7 +72,7 @@ class _MainPageState extends State<MainPage> {
         items: [
           FloatingNavbarItem(icon: Icons.home),
           FloatingNavbarItem(icon: Icons.calendar_month_sharp),
-          FloatingNavbarItem(icon: Icons.run_circle_outlined),
+          // FloatingNavbarItem(icon: Icons.run_circle_outlined),
           FloatingNavbarItem(icon: Icons.timer_sharp),
           FloatingNavbarItem(icon: Icons.settings),
         ],

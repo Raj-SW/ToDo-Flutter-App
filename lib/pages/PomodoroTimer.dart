@@ -18,6 +18,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
+import '../Service/Notif_services.dart';
+
 class PomodoroTimer extends StatefulWidget {
   const PomodoroTimer({Key? key}) : super(key: key);
 
@@ -194,10 +196,17 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
                                               ,
                                               title: "Time'sUp",
                                               skipUi: true);*/
+
                                           FlutterAlarmClock.createTimer(
                                               counterTime * 60,
                                               skipUi: true,
                                               title: "Time is Up");
+                                          /* NotificationService
+                                              .showScheduledNotification(
+                                                  id: 007,
+                                                  title: 'Times Up',
+                                                  scheduledDate: DateTime.now()
+                                                      .add(duration1));*/
                                           setState(() {
                                             isnotStarted = true;
                                             beginTime = counterTime;
@@ -215,6 +224,7 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
                                     beginTime = duration1.inMinutes;
                                     duration1 = Duration();
                                     endTimer();
+                                    NotificationService.cancel(007);
                                     setState(() {
                                       isnotStarted = false;
                                     });
@@ -396,6 +406,10 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
         final seconds = duration1.inSeconds - reduceSeconds;
         duration1 = Duration(seconds: seconds);
       } else {
+        /*  NotificationService.showNotification(
+          id: 007,
+          title: 'Times Up',
+        );*/
         isnotStarted = false;
         endTimer();
         counterTime = 5;
@@ -414,7 +428,7 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
   }
 
   percentCalc() {
-    return (duration1.inSeconds / 60) / counterTime;
+    return (duration1.inSeconds) / (counterTime * 60);
   }
 
   showToast() {
