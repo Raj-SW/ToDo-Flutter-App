@@ -152,45 +152,79 @@ class _SettingsState extends State<Settings> {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  padding: EdgeInsets.all(15),
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.blue,
-                      ),
-                      borderRadius: BorderRadius.all(Radius.circular(30))),
-                  width: MediaQuery.of(context).size.width,
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Settings"),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        ListTile(
-                          leading: FaIcon(
-                            FontAwesomeIcons.volumeHigh,
-                            size: 18,
-                          ),
-                          title: Slider(
-                            max: 1,
-                            min: 0,
-                            onChanged: (double value) {
-                              setState(() {
-                                _setVolumeValue = value;
-                                VolumeController().setVolume(_setVolumeValue);
-                              });
-                            },
-                            value: _setVolumeValue,
-                          ),
-                        ),
-                        ListTile(
-                          leading: FaIcon(FontAwesomeIcons.bell),
-                          title: Text("Notifications"),
-                          trailing: Icon(Icons.keyboard_arrow_right),
-                        ),
-                      ]),
-                ),
+                child: Stack(alignment: AlignmentDirectional.topEnd, children: [
+                  Container(
+                    padding: EdgeInsets.only(top: 50),
+                    child: Container(
+                      padding: EdgeInsets.all(15),
+                      decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black12,
+                              blurRadius: 1,
+                              offset: Offset(2, 2), // Shadow position
+                            ),
+                          ],
+                          color: Color.fromRGBO(254, 218, 191, 1),
+                          borderRadius: BorderRadius.all(Radius.circular(30))),
+                      width: MediaQuery.of(context).size.width,
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Settings",
+                                style: GoogleFonts.poppins(
+                                    fontSize: 18, fontWeight: FontWeight.w500)),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            ListTile(
+                              leading: FaIcon(
+                                FontAwesomeIcons.volumeHigh,
+                                size: 18,
+                              ),
+                              title: Slider(
+                                max: 1,
+                                min: 0,
+                                onChanged: (double value) {
+                                  setState(() {
+                                    _setVolumeValue = value;
+                                    VolumeController()
+                                        .setVolume(_setVolumeValue);
+                                  });
+                                },
+                                value: _setVolumeValue,
+                              ),
+                            ),
+                            ListTile(
+                              leading: FaIcon(FontAwesomeIcons.bell),
+                              title: Text("Notifications",
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 18,
+                                  )),
+                              trailing: Icon(Icons.keyboard_arrow_right),
+                            ),
+                            ListTile(
+                              leading: FaIcon(
+                                FontAwesomeIcons.palette,
+                              ),
+                              title: Text("Theme",
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 18,
+                                  )),
+                              trailing: Icon(Icons.keyboard_arrow_right),
+                            )
+                          ]),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 20),
+                    child: Image.asset(
+                      "assets/setting.png",
+                      width: 125,
+                      height: 125,
+                    ),
+                  )
+                ]),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -355,7 +389,7 @@ class _SettingsState extends State<Settings> {
               ),
               //this container makes sure that no widget is overlapped by bottom navigation bar
               Container(
-                height: 70,
+                height: 50,
               )
             ],
           ),
