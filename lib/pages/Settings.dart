@@ -2,20 +2,14 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:devstack/Service/Auth_Service.dart';
-import 'package:devstack/Service/userData.dart';
 import 'package:devstack/assets.dart';
-import 'package:devstack/pages/Screen2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:fl_chart/fl_chart.dart';
-import '../Service/SoundSystem.dart';
 import 'Welcome/welcome_screen.dart';
 
 class Settings extends StatefulWidget {
@@ -58,7 +52,7 @@ class _SettingsState extends State<Settings> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Color.fromARGB(255, 255, 255, 255),
       appBar: AppBar(
         backgroundColor: Color.fromRGBO(83, 123, 233, 1),
         elevation: 0,
@@ -79,11 +73,16 @@ class _SettingsState extends State<Settings> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(
-              padding: EdgeInsets.all(20),
+              padding: EdgeInsets.all(15),
               decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.blue,
-                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 1,
+                      offset: Offset(2, 2), // Shadow position
+                    ),
+                  ],
+                  color: Color.fromRGBO(207, 236, 255, 1),
                   borderRadius: BorderRadius.all(Radius.circular(30))),
               width: MediaQuery.of(context).size.width,
               child: Row(
@@ -103,18 +102,29 @@ class _SettingsState extends State<Settings> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(userName),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Text(gender == 1 ? "Male" : "Female"),
-                      SizedBox(
-                        height: 5,
+                      Text(
+                        userName,
+                        style: GoogleFonts.poppins(
+                            fontSize: 22, fontWeight: FontWeight.w600),
                       ),
                       SizedBox(
                         height: 5,
                       ),
-                      Text("Level $level")
+                      Row(
+                        children: [
+                          Text("Lv. " + getLevel(),
+                              style: GoogleFonts.poppins(fontSize: 16)),
+                          LinearPercentIndicator(
+                            animationDuration: 1000,
+                            animation: true,
+                            barRadius: Radius.circular(30),
+                            width: 175,
+                            lineHeight: 10,
+                            percent: getExpPer(),
+                            progressColor: PrimaryColor,
+                          ),
+                        ],
+                      )
                     ],
                   ),
                   Expanded(child: SizedBox()),
@@ -125,150 +135,235 @@ class _SettingsState extends State<Settings> {
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Container(
-              padding: EdgeInsets.all(15),
-              decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.blue,
-                  ),
-                  borderRadius: BorderRadius.all(Radius.circular(30))),
-              width: MediaQuery.of(context).size.width,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Settings"),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  ListTile(
-                    leading: FaIcon(
-                      FontAwesomeIcons.volumeHigh,
-                      size: 18,
-                    ),
-                    title: Slider(
-                      max: 100,
-                      min: 0,
-                      divisions: 100,
-                      onChanged: (double value) {
-                        setState(() {
-                          value++;
-                          print("increasing volume");
-                        });
-                      },
-                      value: 0,
-                    ),
-                  ),
-                  ListTile(
-                    leading: FaIcon(FontAwesomeIcons.bell),
-                    title: Text("Notifications"),
-                    trailing: Icon(Icons.keyboard_arrow_right),
-                  ),
-                  ListTile(
-                    leading: FaIcon(FontAwesomeIcons.palette),
-                    title: Text("Theme"),
-                    trailing: Icon(Icons.keyboard_arrow_right),
-                  )
-                ],
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              padding: EdgeInsets.all(15),
-              decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.blue,
-                  ),
-                  borderRadius: BorderRadius.all(Radius.circular(30))),
-              width: MediaQuery.of(context).size.width,
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("Stats"),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Text("Focus Timer Stats"),
-                    Container(
-                      padding: EdgeInsets.all(00),
-                      width: MediaQuery.of(context).size.width,
-                      height: 175,
-                      child: SfCartesianChart(
-                        plotAreaBorderWidth: 0,
-                        plotAreaBorderColor: Color.fromARGB(255, 255, 255, 255),
-                        series: <ChartSeries>[
-                          BarSeries<pomodoroData, String>(
-                              trackBorderWidth: 0,
-                              enableTooltip: true,
-                              dataSource: pomodoroChartData,
-                              color: PrimaryColorlight,
-                              xValueMapper: (pomodoroData data, _) =>
-                                  data.Priority,
-                              yValueMapper: (pomodoroData data, _) =>
-                                  data.count)
-                        ],
-                        primaryXAxis: CategoryAxis(
-                            majorGridLines: MajorGridLines(width: 0)),
-                        primaryYAxis: NumericAxis(
-                            title: AxisTitle(text: "Hours"),
-                            majorGridLines: MajorGridLines(width: 0)),
+            child: Stack(alignment: AlignmentDirectional.topEnd, children: [
+              Container(
+                padding: EdgeInsets.only(top: 30),
+                child: Container(
+                  padding: EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 1,
+                          offset: Offset(2, 2), // Shadow position
+                        ),
+                      ],
+                      color: Color.fromRGBO(246, 237, 203, 1),
+                      borderRadius: BorderRadius.all(Radius.circular(30))),
+                  width: MediaQuery.of(context).size.width,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Settings",
+                        style: GoogleFonts.poppins(
+                            fontSize: 18, fontWeight: FontWeight.w500),
                       ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.all(00),
-                      width: MediaQuery.of(context).size.width,
-                      height: 175,
-                      child: SfCircularChart(
-                          legend: Legend(
-                              isVisible: true,
-                              overflowMode: LegendItemOverflowMode.wrap),
-                          series: <CircularSeries>[
-                            PieSeries<taskCat, String>(
-                              dataSource: taskCatChartData,
-                              dataLabelSettings:
-                                  DataLabelSettings(isVisible: true),
-                              xValueMapper: (taskCat data, _) => data.priority,
-                              yValueMapper: (taskCat data, _) => data.count,
-                            )
-                          ]),
-                    ),
-                    Text(
-                        "Total Tasks - $totaltaskCount\nOverdue tasks - ${overdueCount - isDoneCountTrue}\nCompleted tasks - $isDoneCountTrue\n Pending tasks -$isDoneCountFalse "),
-                  ]),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              padding: EdgeInsets.all(15),
-              decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.blue,
+                      SizedBox(height: 15),
+                      ListTile(
+                        leading: FaIcon(
+                          FontAwesomeIcons.volumeHigh,
+                          size: 18,
+                        ),
+                        title: Slider(
+                          max: 100,
+                          min: 0,
+                          divisions: 100,
+                          onChanged: (double value) {
+                            setState(() {
+                              value++;
+                            });
+                          },
+                          value: 0,
+                        ),
+                      ),
+                      ListTile(
+                        leading: FaIcon(FontAwesomeIcons.bell),
+                        title: Text("Notifications",
+                            style: GoogleFonts.poppins(
+                              fontSize: 18,
+                            )),
+                        trailing: Icon(Icons.keyboard_arrow_right),
+                      ),
+                      ListTile(
+                        leading: FaIcon(FontAwesomeIcons.palette),
+                        title: Text("Theme",
+                            style: GoogleFonts.poppins(
+                              fontSize: 18,
+                            )),
+                        trailing: Icon(Icons.keyboard_arrow_right),
+                      )
+                    ],
                   ),
-                  borderRadius: BorderRadius.all(Radius.circular(30))),
-              width: MediaQuery.of(context).size.width,
-              child: InkWell(
-                onTap: () {
-                  authClass.signOut();
-                  Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                          builder: (builder) => const WelcomeScreen()),
-                      (route) => false);
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("Sign Out"),
-                    SizedBox(
-                      width: 15,
-                    ),
-                    FaIcon(FontAwesomeIcons.arrowRightFromBracket)
-                  ],
                 ),
               ),
-            ),
+              Padding(
+                padding: const EdgeInsets.only(right: 20),
+                child: Image.asset(
+                  "assets/setting.png",
+                  width: 100,
+                  height: 100,
+                ),
+              ),
+            ]),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Stack(alignment: AlignmentDirectional.topEnd, children: [
+              Container(
+                padding: EdgeInsets.only(top: 20),
+                child: Container(
+                  padding: EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 1,
+                          offset: Offset(2, 2), // Shadow position
+                        ),
+                      ],
+                      color: Color.fromARGB(255, 255, 254, 215),
+                      borderRadius: BorderRadius.all(Radius.circular(30))),
+                  width: MediaQuery.of(context).size.width,
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Your Stats",
+                          style: GoogleFonts.poppins(
+                              fontSize: 18, fontWeight: FontWeight.w500),
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        Text("Focus Timer Stats",
+                            style: GoogleFonts.poppins(
+                              fontSize: 18,
+                            )),
+                        Container(
+                          padding: EdgeInsets.all(00),
+                          width: MediaQuery.of(context).size.width,
+                          height: 175,
+                          child: SfCartesianChart(
+                            plotAreaBorderWidth: 0,
+                            plotAreaBorderColor:
+                                Color.fromARGB(255, 255, 255, 255),
+                            series: <ChartSeries>[
+                              BarSeries<pomodoroData, String>(
+                                  trackBorderWidth: 0,
+                                  enableTooltip: true,
+                                  dataSource: pomodoroChartData,
+                                  color: PrimaryColorlight,
+                                  xValueMapper: (pomodoroData data, _) =>
+                                      data.Priority,
+                                  yValueMapper: (pomodoroData data, _) =>
+                                      data.count)
+                            ],
+                            primaryXAxis: CategoryAxis(
+                                majorGridLines: MajorGridLines(width: 0)),
+                            primaryYAxis: NumericAxis(
+                                title: AxisTitle(
+                                    text: "Hours",
+                                    textStyle: GoogleFonts.poppins(
+                                      fontSize: 16,
+                                    )),
+                                majorGridLines: MajorGridLines(width: 0)),
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.all(00),
+                          width: MediaQuery.of(context).size.width,
+                          height: 175,
+                          child: SfCircularChart(
+                              legend: Legend(
+                                  isVisible: true,
+                                  overflowMode: LegendItemOverflowMode.wrap),
+                              series: <CircularSeries>[
+                                PieSeries<taskCat, String>(
+                                  dataSource: taskCatChartData,
+                                  dataLabelSettings:
+                                      DataLabelSettings(isVisible: true),
+                                  xValueMapper: (taskCat data, _) =>
+                                      data.priority,
+                                  yValueMapper: (taskCat data, _) => data.count,
+                                )
+                              ]),
+                        ),
+                        Text(
+                            "Total Tasks - $totaltaskCount\nOverdue tasks - ${overdueCount - isDoneCountTrue}\nCompleted tasks - $isDoneCountTrue\nPending tasks -$isDoneCountFalse ",
+                            style: GoogleFonts.poppins(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                            )),
+                      ]),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 20),
+                child: Image.asset(
+                  "assets/stats.png",
+                  width: 150,
+                  height: 150,
+                ),
+              )
+            ]),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Stack(alignment: AlignmentDirectional.topEnd, children: [
+              Container(
+                padding: EdgeInsets.only(top: 20),
+                child: Container(
+                  padding: EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 1,
+                          offset: Offset(2, 2), // Shadow position
+                        ),
+                      ],
+                      color: Color.fromARGB(255, 251, 175, 175),
+                      borderRadius: BorderRadius.all(Radius.circular(30))),
+                  width: MediaQuery.of(context).size.width,
+                  child: InkWell(
+                    onTap: () {
+                      authClass.signOut();
+                      Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                              builder: (builder) => const WelcomeScreen()),
+                          (route) => false);
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Sign Out",
+                          style: GoogleFonts.poppins(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              color: Color.fromARGB(194, 255, 0, 0)),
+                        ),
+                        SizedBox(
+                          width: 15,
+                        ),
+                        FaIcon(FontAwesomeIcons.arrowRightFromBracket,
+                            color: Color.fromARGB(194, 255, 0, 0))
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 20, bottom: 20, top: 0),
+                child: Image.asset(
+                  "assets/logout1.png",
+                  width: 90,
+                  height: 90,
+                ),
+              )
+            ]),
           ),
           //this container makes sure that no widget is overlapped by bottom navigation bar
           Container(
@@ -367,6 +462,14 @@ class _SettingsState extends State<Settings> {
     ];
     setState(() {});
     return taskCatData;
+  }
+
+  String getLevel() {
+    return ((experience / 200).floor()).toString();
+  }
+
+  getExpPer() {
+    return (experience.remainder(200) / 200);
   }
 }
 

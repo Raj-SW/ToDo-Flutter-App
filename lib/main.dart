@@ -1,22 +1,13 @@
 // ignore_for_file: prefer_const_constructors, non_constant_identifier_names
 
 import 'package:alan_voice/alan_voice.dart';
-//import 'package:devstack/MenuPage.dart';
 import 'package:devstack/Service/Auth_Service.dart';
-//import 'package:devstack/hidden_drawer.dart';
-//import 'package:devstack/pages/HomePage.dart';
-//import 'package:devstack/pages/Settings.dart';
 import 'package:devstack/pages/mainPage.dart';
-//import 'package:devstack/zoomDrawer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-//import 'package:devstack/pages/SignUpPage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-//import 'package:flutter_zoom_drawer/config.dart';
-//import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'Service/Notif_services.dart';
-//import 'menuItem.dart';
 import 'pages/Welcome/welcome_screen.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =

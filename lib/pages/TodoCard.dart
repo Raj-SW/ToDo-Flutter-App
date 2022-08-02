@@ -4,7 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:devstack/pages/view_data_updated.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:devstack/assets.dart';
 
@@ -41,9 +44,10 @@ class _TodoCardState extends State<TodoCard> {
   Color color = todoCardBGColor;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
+
+  bool animatBool = true;
 
   @override
   Widget build(BuildContext context) {
@@ -51,9 +55,7 @@ class _TodoCardState extends State<TodoCard> {
       padding: const EdgeInsets.only(top: 15, left: 25, right: 25, bottom: 5),
       child: Container(
         decoration: BoxDecoration(
-            color: isOverdue(widget.time, widget.isDone) == true
-                ? Color.fromRGBO(255, 146, 146, 1)
-                : findColor(widget.time, widget.isDone, widget.priority),
+            color: findColor(widget.time, widget.isDone, widget.priority),
             border: Border.all(color: Colors.transparent),
             borderRadius: BorderRadius.all(Radius.circular(20)),
             boxShadow: [
@@ -141,14 +143,17 @@ class _TodoCardState extends State<TodoCard> {
                             width: 15,
                           ),
                           InkWell(
-                              onTap: () {
+                              onTap: () async {
+                                showSuccessDialog();
+                                await Future.delayed(
+                                    Duration(milliseconds: 2000));
+                                Navigator.of(context).pop();
                                 FirebaseFirestore.instance
                                     .collection("collect2")
                                     .doc(FirebaseAuth.instance.currentUser!.uid)
                                     .collection("Todo")
                                     .doc(widget.id)
                                     .update({"isDone": true});
-                                setState(() {});
                               },
                               child: Text(
                                 'Mark as done',
@@ -169,7 +174,7 @@ class _TodoCardState extends State<TodoCard> {
     DateTime time,
     bool isDone,
   ) {
-    var daysLeft = DateTime.now().day - time.day;
+    var daysLeft = time.day - DateTime.now().day;
     var daysLeftAbs = daysLeft.abs();
     var overdue = false;
     if (daysLeft < 0) {
@@ -181,17 +186,20 @@ class _TodoCardState extends State<TodoCard> {
         overdue = false;
       });
     }
-
-    return Text(overdue == false
-        ? "is overdue by $daysLeftAbs day(s)"
-        : "$daysLeftAbs days left");
+    return overdue == false
+        ? Text(daysLeft != 0 ? "$daysLeftAbs day(s) left" : "Due today!")
+        : Text(
+            "Overdue!!",
+            style: GoogleFonts.poppins(
+                color: Colors.red, fontWeight: FontWeight.bold),
+          );
   }
 
   bool isOverdue(
     DateTime time,
     bool isDone,
   ) {
-    var daysLeft = DateTime.now().day - time.day;
+    var daysLeft = time.day - DateTime.now().day;
     var overdue = false;
     if (daysLeft < 0) {
       setState(() {
@@ -220,28 +228,35 @@ class _TodoCardState extends State<TodoCard> {
       });
       return color;
     } else {
-      if (daysLeft < 0) {
+      if (priority == "critical") {
         setState(() {
-          color = Color.fromARGB(255, 250, 155, 155);
+          color = Color.fromARGB(255, 253, 213, 213);
         });
-      } else if (daysLeft >= 0) {
-        if (priority == "critical" && overdue == false) {
-          setState(() {
-            color = Color.fromARGB(255, 253, 213, 213);
-          });
-        }
-        if (priority == "mild" && overdue == false) {
-          setState(() {
-            color = Color.fromARGB(255, 255, 234, 197);
-          });
-        }
-        if (priority == "normal" && overdue == false) {
-          setState(() {
-            color = Color.fromRGBO(207, 236, 255, 1);
-          });
-        }
+      }
+      if (priority == "mild") {
+        setState(() {
+          color = Color.fromARGB(255, 255, 234, 197);
+        });
+      }
+      if (priority == "normal") {
+        setState(() {
+          color = Color.fromRGBO(207, 236, 255, 1);
+        });
       }
     }
     return color;
   }
+
+  Future showSuccessDialog() => showDialog(
+        context: context,
+        barrierColor: Colors.white,
+        builder: (context) => AlertDialog(
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(32.0))),
+          backgroundColor: null,
+          contentPadding: EdgeInsets.all(5),
+          content: Lottie.asset("assets/lottieSuccess.json"),
+        ),
+      );
 }
