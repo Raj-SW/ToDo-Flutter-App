@@ -13,7 +13,6 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 import 'Welcome/welcome_screen.dart';
 import 'package:volume_controller/volume_controller.dart';
 
-
 class Settings extends StatefulWidget {
   const Settings({Key? key}) : super(key: key);
 
@@ -58,9 +57,9 @@ class _SettingsState extends State<Settings> {
     });
 
     VolumeController().getVolume().then((volume) => _setVolumeValue = volume);
-    
   }
-   @override
+
+  @override
   void dispose() {
     VolumeController().removeListener();
     super.dispose();
@@ -162,47 +161,36 @@ class _SettingsState extends State<Settings> {
                   borderRadius: BorderRadius.all(Radius.circular(30))),
               width: MediaQuery.of(context).size.width,
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Settings"),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  ListTile(
-                    leading: FaIcon(
-                      FontAwesomeIcons.volumeHigh,
-                      size: 18,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Settings"),
+                    SizedBox(
+                      height: 20,
                     ),
-                    title: Slider(
-                      max: 1,
-                      min: 0,
-                      
-                      onChanged: (double value) {
-                        setState(() {
-                          _setVolumeValue = value;
-                        VolumeController().setVolume(_setVolumeValue);
-                        });
-                      },
-                      value: _setVolumeValue,
+                    ListTile(
+                      leading: FaIcon(
+                        FontAwesomeIcons.volumeHigh,
+                        size: 18,
+                      ),
+                      title: Slider(
+                        max: 1,
+                        min: 0,
+                        onChanged: (double value) {
+                          setState(() {
+                            _setVolumeValue = value;
+                            VolumeController().setVolume(_setVolumeValue);
+                          });
+                        },
+                        value: _setVolumeValue,
+                      ),
                     ),
-                  ),
-                  ListTile(
-                    leading: FaIcon(FontAwesomeIcons.bell),
-                    title: Text("Notifications"),
-                    trailing: Icon(Icons.keyboard_arrow_right),
-
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right: 20),
-                child: Image.asset(
-                  "assets/setting.png",
-                  width: 100,
-                  height: 100,
-                ),
-              ),
-            ]),
+                    ListTile(
+                      leading: FaIcon(FontAwesomeIcons.bell),
+                      title: Text("Notifications"),
+                      trailing: Icon(Icons.keyboard_arrow_right),
+                    ),
+                  ]),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
