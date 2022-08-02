@@ -311,7 +311,7 @@ class _SettingsState extends State<Settings> {
                                   ]),
                             ),
                             Text(
-                                "Total Tasks - $totaltaskCount\nOverdue tasks - ${overdueCount - isDoneCountTrue}\nCompleted tasks - $isDoneCountTrue\nPending tasks -$isDoneCountFalse ",
+                                "Total Tasks - $totaltaskCount\nOverdue tasks - ${totaltaskCount - isDoneCountTrue}\nCompleted tasks - $isDoneCountTrue\nPending tasks -$isDoneCountFalse ",
                                 style: GoogleFonts.poppins(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w400,
