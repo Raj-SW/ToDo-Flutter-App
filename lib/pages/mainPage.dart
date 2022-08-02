@@ -137,7 +137,6 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       extendBody: true,
       extendBodyBehindAppBar: false,
-
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
       bottomNavigationBar: FloatingNavbar(
         elevation: 0,
@@ -153,43 +152,11 @@ class _MainPageState extends State<MainPage> {
         items: [
           FloatingNavbarItem(icon: Icons.home),
           FloatingNavbarItem(icon: Icons.calendar_month_sharp),
-          // FloatingNavbarItem(icon: Icons.run_circle_outlined),
           FloatingNavbarItem(icon: Icons.timer_sharp),
           FloatingNavbarItem(icon: Icons.settings),
         ],
       ),
-      /*  CurvedNavigationBar(
-        backgroundColor: Colors.transparent,
-        color: Color.fromARGB(255, 102, 133, 218),
-        items: [
-          Icon(
-            Icons.home,
-            color: Colors.white,
-          ),
-          Icon(
-            Icons.calendar_month_sharp,
-            color: Colors.white,
-          ),
-          Icon(
-            Icons.run_circle_outlined,
-            color: Colors.white,
-          ),
-          Icon(
-            Icons.timer_sharp,
-            color: Colors.white,
-          ),
-          Icon(
-            Icons.settings,
-            color: Colors.white,
-          )
-        ],
-        height: 50,
-        index: currentIndex,
-        onTap: (index) => setState(() => currentIndex = index),
-      ),*/
       body: screens[currentIndex],
-
-      // body: screens[_index],
     );
   }
 }

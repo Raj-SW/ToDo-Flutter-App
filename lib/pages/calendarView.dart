@@ -56,10 +56,15 @@ class _MyHomePageState extends State<MyHomePage> {
             borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(30),
                 bottomRight: Radius.circular(30))),
-        title: Text(
-          "Calendar",
-          style: GoogleFonts.pacifico(
-              fontWeight: FontWeight.normal, fontSize: 40, color: Colors.white),
+        title: Padding(
+          padding: const EdgeInsets.only(top: 10),
+          child: Text(
+            "Calendar",
+            style: GoogleFonts.pacifico(
+                fontWeight: FontWeight.normal,
+                fontSize: 40,
+                color: Colors.white),
+          ),
         ),
         centerTitle: true,
       ),
@@ -225,7 +230,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   : Container(),
           Expanded(
               child: Padding(
-            padding: const EdgeInsets.only(left: 5, right: 5),
+            padding: const EdgeInsets.only(left: 10, right: 10),
             child: SfCalendar(
               monthCellBuilder: (context, details) =>
                   monthCellBuilder(context, details),
@@ -472,15 +477,21 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: [
                   Text(h1,
                       style: GoogleFonts.poppins(
-                        color:
-                            checkToday(h1, d1) ? Colors.white : Colors.black54,
-                      )),
+                          color: checkToday(h1, d1)
+                              ? Colors.white
+                              : Colors.black54,
+                          fontWeight: checkToday(h1, d1)
+                              ? FontWeight.bold
+                              : FontWeight.normal)),
                   Text(d1,
                       style: GoogleFonts.poppins(
                           color: checkToday(h1, d1)
                               ? colorYellowbold
                               : Colors.black54,
-                          fontSize: 12)),
+                          fontSize: 12,
+                          fontWeight: checkToday(h1, d1)
+                              ? FontWeight.bold
+                              : FontWeight.normal)),
                   Icon(
                     Icons.circle,
                     size: 5,
@@ -502,13 +513,19 @@ class _MyHomePageState extends State<MyHomePage> {
                           color: checkToday(h2, d2)
                               ? colorYellowbold
                               : Colors.black54,
-                          fontSize: 12)),
+                          fontSize: 12,
+                          fontWeight: checkToday(h2, d2)
+                              ? FontWeight.bold
+                              : FontWeight.normal)),
                   Text(d2,
                       style: GoogleFonts.poppins(
                           color: checkToday(h2, d2)
                               ? colorYellowbold
                               : Colors.black54,
-                          fontSize: 12)),
+                          fontSize: 12,
+                          fontWeight: checkToday(h2, d2)
+                              ? FontWeight.bold
+                              : FontWeight.normal)),
                   Icon(
                     Icons.circle,
                     size: 5,
@@ -527,16 +544,23 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: [
                   Text(h3,
                       style: GoogleFonts.poppins(
+                        color: checkToday(h3, d3)
+                            ? colorYellowbold
+                            : Colors.black54,
+                        fontSize: 12,
+                        fontWeight: checkToday(h3, d3)
+                            ? FontWeight.bold
+                            : FontWeight.normal,
+                      )),
+                  Text(d3,
+                      style: GoogleFonts.poppins(
                           color: checkToday(h3, d3)
                               ? colorYellowbold
                               : Colors.black54,
-                          fontSize: 12)),
-                  Text(d3,
-                      style: GoogleFonts.poppins(
-                          color: checkToday(h1, d1)
-                              ? colorYellowbold
-                              : Colors.black54,
-                          fontSize: 12)),
+                          fontSize: 12,
+                          fontWeight: checkToday(h3, d3)
+                              ? FontWeight.bold
+                              : FontWeight.normal)),
                   Icon(
                     Icons.circle,
                     size: 5,
@@ -558,14 +582,20 @@ class _MyHomePageState extends State<MyHomePage> {
                           color: checkToday(h4, d4)
                               ? colorYellowbold
                               : Colors.black54,
-                          fontSize: 12)),
+                          fontSize: 12,
+                          fontWeight: checkToday(h4, d4)
+                              ? FontWeight.bold
+                              : FontWeight.normal)),
                   Text(
                     d4,
                     style: GoogleFonts.poppins(
                         color: checkToday(h4, d4)
                             ? colorYellowbold
                             : Colors.black54,
-                        fontSize: 12),
+                        fontSize: 12,
+                        fontWeight: checkToday(h4, d4)
+                            ? FontWeight.bold
+                            : FontWeight.normal),
                   ),
                   Icon(
                     Icons.circle,
@@ -588,14 +618,20 @@ class _MyHomePageState extends State<MyHomePage> {
                           color: checkToday(h5, d5)
                               ? colorYellowbold
                               : Colors.black54,
-                          fontSize: 12)),
+                          fontSize: 12,
+                          fontWeight: checkToday(h5, d5)
+                              ? FontWeight.bold
+                              : FontWeight.normal)),
                   Text(
                     d5,
                     style: GoogleFonts.poppins(
                         color: checkToday(h5, d5)
                             ? colorYellowbold
                             : Colors.black54,
-                        fontSize: 12),
+                        fontSize: 12,
+                        fontWeight: checkToday(h5, d5)
+                            ? FontWeight.bold
+                            : FontWeight.normal),
                   ),
                   Icon(
                     Icons.circle,
@@ -618,13 +654,19 @@ class _MyHomePageState extends State<MyHomePage> {
                           color: checkToday(h6, d6)
                               ? colorYellowbold
                               : Colors.black54,
-                          fontSize: 12)),
+                          fontSize: 12,
+                          fontWeight: checkToday(h6, d6)
+                              ? FontWeight.bold
+                              : FontWeight.normal)),
                   Text(d6,
                       style: GoogleFonts.poppins(
                           color: checkToday(h6, d6)
                               ? colorYellowbold
                               : Colors.black54,
-                          fontSize: 12)),
+                          fontSize: 12,
+                          fontWeight: checkToday(h6, d6)
+                              ? FontWeight.bold
+                              : FontWeight.normal)),
                   Icon(
                     Icons.circle,
                     size: 5,
@@ -647,14 +689,18 @@ class _MyHomePageState extends State<MyHomePage> {
                               ? colorYellowbold
                               : Colors.black54,
                           fontSize: 12,
-                          fontWeight: FontWeight.bold)),
+                          fontWeight: checkToday(h7, d7)
+                              ? FontWeight.bold
+                              : FontWeight.normal)),
                   Text(d7,
                       style: GoogleFonts.poppins(
                           color: checkToday(h7, d7)
                               ? colorYellowbold
                               : Colors.black54,
                           fontSize: 12,
-                          fontWeight: FontWeight.bold)),
+                          fontWeight: checkToday(h7, d7)
+                              ? FontWeight.bold
+                              : FontWeight.normal)),
                   Icon(
                     Icons.circle,
                     size: 5,

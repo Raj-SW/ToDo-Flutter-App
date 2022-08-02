@@ -58,18 +58,21 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
         extendBodyBehindAppBar: true,
         appBar: AppBar(
           centerTitle: true,
-          toolbarHeight: 60,
+          toolbarHeight: 65,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(30),
                   bottomRight: Radius.circular(30))),
           elevation: 0,
-          title: Text(
-            "Your Pomodoro",
-            textAlign: TextAlign.center,
-            style: GoogleFonts.pacifico(
-              color: Colors.white,
-              fontSize: 40,
+          title: Padding(
+            padding: const EdgeInsets.only(top: 0),
+            child: Text(
+              "Your Pomodoro",
+              textAlign: TextAlign.center,
+              style: GoogleFonts.pacifico(
+                color: Colors.white,
+                fontSize: 40,
+              ),
             ),
           ),
           backgroundColor: Color.fromRGBO(83, 123, 233, 1),
@@ -372,6 +375,27 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
                             elevation: 10,
                           )
                         ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 5),
+                        child: Text(
+                          "Use your timer to track \nyour focus time",
+                          style: GoogleFonts.poppins(
+                              color: Colors.black38,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 17),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 0),
+                        child: Opacity(
+                          opacity: 0.7,
+                          child: Image.asset(
+                            "assets/pomodoroFill.png",
+                            height: 150,
+                          ),
+                        ),
                       ),
                     ],
                   )

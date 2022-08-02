@@ -621,12 +621,12 @@ print(a);
 
   showToast() {
     return Fluttertoast.showToast(
-        backgroundColor: Color.fromRGBO(83, 123, 233, 1),
+        backgroundColor: Color.fromARGB(255, 0, 0, 0),
         toastLength: Toast.LENGTH_SHORT,
         msg: "Task Added",
         fontSize: 18,
         textColor: Colors.white,
-        gravity: ToastGravity.BOTTOM);
+        gravity: ToastGravity.TOP);
   }
 
   void getImage(ImageSource source) async {
@@ -706,48 +706,51 @@ print(a);
 
   Future openDialog() => showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-            title: Text(
-              "Add description from image?",
-              textAlign: TextAlign.center,
-            ),
-            actions: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(
-
-                        ///Choose from Gallery
-                        onPressed: () {
-                          getImage(ImageSource.gallery);
-                        },
-                        child: Column(
-                          children: <Widget>[
-                            Icon(Icons.image),
-                            Text("Gallery")
-                          ],
-                        )),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(
-
-                        ///Choose from camera
-                        onPressed: () {
-                          getImage(ImageSource.camera);
-                        },
-                        child: Column(
-                          children: <Widget>[
-                            Icon(Icons.camera),
-                            Text("Camera")
-                          ],
-                        )),
-                  )
-                ],
+      builder: (context) => AnimatedContainer(
+            duration: Duration(milliseconds: 2000),
+            child: AlertDialog(
+              title: Text(
+                "Add description from image?",
+                textAlign: TextAlign.center,
               ),
-            ],
+              actions: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ElevatedButton(
+
+                          ///Choose from Gallery
+                          onPressed: () {
+                            getImage(ImageSource.gallery);
+                          },
+                          child: Column(
+                            children: <Widget>[
+                              Icon(Icons.image),
+                              Text("Gallery")
+                            ],
+                          )),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ElevatedButton(
+
+                          ///Choose from camera
+                          onPressed: () {
+                            getImage(ImageSource.camera);
+                          },
+                          child: Column(
+                            children: <Widget>[
+                              Icon(Icons.camera),
+                              Text("Camera")
+                            ],
+                          )),
+                    )
+                  ],
+                ),
+              ],
+            ),
           ));
   void recognisedText(String scannedText) {
     print("recognising text");
