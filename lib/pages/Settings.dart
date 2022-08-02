@@ -191,7 +191,7 @@ class _SettingsState extends State<Settings> {
                     title: Text("Notifications"),
                     trailing: Icon(Icons.keyboard_arrow_right),
 
-                  ),
+                  ),]
                 ),
               ),
               Padding(
