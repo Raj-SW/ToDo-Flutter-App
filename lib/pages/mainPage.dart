@@ -28,90 +28,73 @@ class _MainPageState extends State<MainPage> {
   _MainPageState() {
     AlanVoice.onCommand.add((command) {
       Map<String, dynamic> commandData = command.data;
-//next page
-      if (commandData["command"] == "nextPage") {
-        if(currentIndex==3){
-          AlanVoice.playText("You have reached the last page");
-        } else{
-            setState(() {
-          print('load todo');
-          currentIndex++;
-          if(currentIndex==0){
-            AlanVoice.playText("You have been redirected to the todo page");
-          } else if(currentIndex==1){
-            AlanVoice.playText("You have been redirected to the tab bar page");
-          } else if(currentIndex==2){
-            AlanVoice.playText("You have been redirected to the activity timer page");
-          } else if(currentIndex==3){
-            AlanVoice.playText("You have been redirected to the settings page");
-          }
-          
+      if (commandData["command"] == "settingsPage") {
+        setState(() {
+          print('load settings');
+          currentIndex = 3;
         });
-        }
-      
       }
+
       //next page
       if (commandData["command"] == "backPage") {
-        if(currentIndex==0){
+        if (currentIndex == 0) {
           AlanVoice.playText("You are on the first page");
-        } else{
+        } else {
           setState(() {
-          print('load todo');
-          currentIndex--;
-          if(currentIndex==0){
-            AlanVoice.playText("You have been redirected to the todo page");
-          } else if(currentIndex==1){
-            AlanVoice.playText("You have been redirected to the tab bar page");
-          } else if(currentIndex==2){
-            AlanVoice.playText("You have been redirected to the activity timer page");
-          } else if(currentIndex==3){
-            AlanVoice.playText("You have been redirected to the settings page");
-          }
-          
-        });
+            print('load todo');
+            currentIndex--;
+            if (currentIndex == 0) {
+              AlanVoice.playText("You have been redirected to the todo page");
+            } else if (currentIndex == 1) {
+              AlanVoice.playText(
+                  "You have been redirected to the tab bar page");
+            } else if (currentIndex == 2) {
+              AlanVoice.playText(
+                  "You have been redirected to the activity timer page");
+            } else if (currentIndex == 3) {
+              AlanVoice.playText(
+                  "You have been redirected to the settings page");
+            }
+          });
         }
-        
       }
 
-       if (commandData["command"] == "todoPage") {
-        if(currentIndex==0){
+      if (commandData["command"] == "todoPage") {
+        if (currentIndex == 0) {
           AlanVoice.playText("You are already on the todo page");
-        } else{
-           setState(() {
-          print('load todo');
-          currentIndex = 0;
-          AlanVoice.playText("You have been redirected to the todo page");
-        });
+        } else {
+          setState(() {
+            print('load todo');
+            currentIndex = 0;
+            AlanVoice.playText("You have been redirected to the todo page");
+          });
         }
-       
       }
       if (commandData["command"] == "tabBarPage") {
-        if(currentIndex==1){
-            AlanVoice.playText("You are already on the tab bar page");
-        } else{
-           setState(() {
-          print('load todo');
-          currentIndex = 1;
-          AlanVoice.playText("You have been redirected to the tab bar page");
-        });
+        if (currentIndex == 1) {
+          AlanVoice.playText("You are already on the tab bar page");
+        } else {
+          setState(() {
+            print('load todo');
+            currentIndex = 1;
+            AlanVoice.playText("You have been redirected to the tab bar page");
+          });
         }
-       
       }
       if (commandData["command"] == "activityTimerPage") {
-
-        if(currentIndex==2){
+        if (currentIndex == 2) {
           AlanVoice.playText("You are already on the activity timer page");
-        } else{
-           setState(() {
-          print('load todo');
-          currentIndex = 2;
-          AlanVoice.playText("You have been redirected to the activity timer page");
-        });
+        } else {
+          setState(() {
+            print('load todo');
+            currentIndex = 2;
+            AlanVoice.playText(
+                "You have been redirected to the activity timer page");
+          });
         }
-       
       }
       if (commandData["command"] == "settingsPage") {
-        if(currentIndex==3){
+        if (currentIndex == 3) {
           AlanVoice.playText("You are already on the settings page");
         }
         setState(() {
@@ -120,9 +103,9 @@ class _MainPageState extends State<MainPage> {
           AlanVoice.playText("You have been redirected to the settings page");
         });
       }
-      
     });
   }
+
   final screens = <Widget>[
     HomePage(),
     MyHomePage(),
@@ -130,9 +113,10 @@ class _MainPageState extends State<MainPage> {
     PomodoroTimer(),
     Settings()
   ];
-  @override
   int _index = 0;
   int _selectedIndex = 0;
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
