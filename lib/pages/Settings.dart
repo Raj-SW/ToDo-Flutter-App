@@ -11,6 +11,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'Welcome/welcome_screen.dart';
+import 'package:volume_controller/volume_controller.dart';
+
 
 class Settings extends StatefulWidget {
   const Settings({Key? key}) : super(key: key);
@@ -20,6 +22,9 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
+  double _volumeListenerValue = 0;
+  double _getVolume = 0;
+  double _setVolumeValue = 0;
   String userName = "";
   int gender = 0,
       level = 0,
@@ -46,6 +51,19 @@ class _SettingsState extends State<Settings> {
 
     setState(() {});
     super.initState();
+
+    // Listen to system volume change
+    VolumeController().listener((volume) {
+      setState(() => _volumeListenerValue = volume);
+    });
+
+    VolumeController().getVolume().then((volume) => _setVolumeValue = volume);
+    
+  }
+   @override
+  void dispose() {
+    VolumeController().removeListener();
+    super.dispose();
   }
 
   AuthClass authClass = AuthClass();
@@ -135,65 +153,44 @@ class _SettingsState extends State<Settings> {
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Stack(alignment: AlignmentDirectional.topEnd, children: [
-              Container(
-                padding: EdgeInsets.only(top: 30),
-                child: Container(
-                  padding: EdgeInsets.all(15),
-                  decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 1,
-                          offset: Offset(2, 2), // Shadow position
-                        ),
-                      ],
-                      color: Color.fromRGBO(246, 237, 203, 1),
-                      borderRadius: BorderRadius.all(Radius.circular(30))),
-                  width: MediaQuery.of(context).size.width,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Settings",
-                        style: GoogleFonts.poppins(
-                            fontSize: 18, fontWeight: FontWeight.w500),
-                      ),
-                      SizedBox(height: 15),
-                      ListTile(
-                        leading: FaIcon(
-                          FontAwesomeIcons.volumeHigh,
-                          size: 18,
-                        ),
-                        title: Slider(
-                          max: 100,
-                          min: 0,
-                          divisions: 100,
-                          onChanged: (double value) {
-                            setState(() {
-                              value++;
-                            });
-                          },
-                          value: 0,
-                        ),
-                      ),
-                      ListTile(
-                        leading: FaIcon(FontAwesomeIcons.bell),
-                        title: Text("Notifications",
-                            style: GoogleFonts.poppins(
-                              fontSize: 18,
-                            )),
-                        trailing: Icon(Icons.keyboard_arrow_right),
-                      ),
-                      ListTile(
-                        leading: FaIcon(FontAwesomeIcons.palette),
-                        title: Text("Theme",
-                            style: GoogleFonts.poppins(
-                              fontSize: 18,
-                            )),
-                        trailing: Icon(Icons.keyboard_arrow_right),
-                      )
-                    ],
+            child: Container(
+              padding: EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.blue,
+                  ),
+                  borderRadius: BorderRadius.all(Radius.circular(30))),
+              width: MediaQuery.of(context).size.width,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Settings"),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  ListTile(
+                    leading: FaIcon(
+                      FontAwesomeIcons.volumeHigh,
+                      size: 18,
+                    ),
+                    title: Slider(
+                      max: 1,
+                      min: 0,
+                      
+                      onChanged: (double value) {
+                        setState(() {
+                          _setVolumeValue = value;
+                        VolumeController().setVolume(_setVolumeValue);
+                        });
+                      },
+                      value: _setVolumeValue,
+                    ),
+                  ),
+                  ListTile(
+                    leading: FaIcon(FontAwesomeIcons.bell),
+                    title: Text("Notifications"),
+                    trailing: Icon(Icons.keyboard_arrow_right),
+
                   ),
                 ),
               ),

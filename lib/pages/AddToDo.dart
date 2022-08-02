@@ -44,19 +44,75 @@ class _AddToDoPageState extends State<AddToDoPage> {
       }
       if (commandData["command"] == "getDate") {
         print("olala");
-        setState(() {
+
+        
           print(commandData["text"]);
           print("******");
-          mydateTime = DateTime.parse(commandData["text"]);
+          
+         mydateTime = DateTime.parse(commandData["text"]);
+         DateTime due = DateTime.parse(commandData["text"]);
+         DateTime today = DateTime.now();
+         int a = due.compareTo(today); 
+print(a);
+       
+       if(a<0){
+        AlanVoice.playText("Date cannot be before today");
+        
+
+         } else{
+         
+          setState(() {
+             mydateTime = DateTime.parse(commandData["text"]);
+             AlanVoice.playText("Date has been set successfully");
+              });
+        }
+
           // mydateTime = DateTime.parse(commandData["text"]);
           print(mydateTime);
+      
+      }
+      //set priority
+      if (commandData["command"] == "criticalPriority") {
+        print("criticalPriority");
+        setState(() {
+          
+          priority="critical";
+            isSelected1 = true;
+            isSelected2 = false;
+            isSelected3 = false;
+         
         });
       }
+      if (commandData["command"] == "mildPriority") {
+        print("mildPriority");
+        setState(() {
+          
+          priority="mild";
+         
+            isSelected1 = false;
+            isSelected2 = true;
+            isSelected3 = false;
+          
+        });
+      }
+       if (commandData["command"] == "normalPriority") {
+        print("normalPriority");
+        setState(() {
+          
+          priority="normal";
+           isSelected1 = false;
+            isSelected2 = false;
+            isSelected3 = true;
+          
+        });
+      }
+      
       if (commandData["command"] == "saveTask") {
         print("olala");
         //final date time declaration and initialisation
         finalDateTime = DateTime(mydateTime!.year, mydateTime!.month,
             mydateTime!.day, _timePicked.hour, _timePicked.minute);
+
         print("final date and time");
         print(finalDateTime);
 
@@ -71,6 +127,7 @@ class _AddToDoPageState extends State<AddToDoPage> {
             "description": _descriptionController.text,
             "scheduledTime": finalDateTime,
             "isDone": false,
+            "priority": priority
           },
         );
 

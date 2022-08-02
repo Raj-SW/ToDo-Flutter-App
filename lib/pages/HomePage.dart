@@ -73,6 +73,51 @@ class _HomePageState extends State<HomePage> {
         Navigator.of(context).push(_createRoute());
         print("maybe");
       }
+       //List down all this week tasks
+      if (commandData["command"] == "weekTasks") {
+        String all = "Here is the list of all this weeks tasks: ";
+        setState(() {
+          selectedItem = 'This Week';
+        });
+        print("week tasks ");
+        FirebaseFirestore.instance
+            .collection("collect2")
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .collection("Todo")
+            .get()
+            .then((QuerySnapshot querySnapshot) {
+          querySnapshot.docs.forEach((doc) {
+            bool isDone = doc['isDone'];
+            
+             
+            if (isDone == false) {
+              DateTime theTime = (doc['scheduledTime']).toDate();
+              if (theTime.day >= strtWk.day &&
+                              theTime.day <= endWk.day &&
+                              isDone == false) {
+            String formattedDate = DateFormat.MMMMEEEEd().format(theTime);
+                          String formattedTime = DateFormat.Hm().format(theTime);
+                          print(formattedTime);
+                          String thisTask = doc["title"] +
+                              " due " +
+                              formattedDate +
+                              /*" at " +
+                              formattedTime +*/
+                              ", ";
+                          all += thisTask;
+                          print(all);
+                          print(date.toString());
+                              }
+              
+            }
+          });
+          if (all == "Here is the list of all this weeks tasks: ") {
+            AlanVoice.playText("You don't have any task set for this week");
+          } else {
+            AlanVoice.playText(all);
+          }
+        });
+      }
       //List down all tasks for the day-- voice command: What are today's tasks
       if (commandData["command"] == "today") {
         String today = "Your tasks for today are as follows: ";
@@ -127,10 +172,10 @@ class _HomePageState extends State<HomePage> {
               String formattedTime = DateFormat.Hm().format(theTime);
               print(formattedTime);
               String thisTask = doc["title"] +
-                  " on " +
+                  " due " +
                   formattedDate +
-                  " at " +
-                  formattedTime +
+                  /*" at " +
+                  formattedTime +*/
                   ", ";
               all += thisTask;
               print(all);
@@ -166,10 +211,10 @@ class _HomePageState extends State<HomePage> {
               String priority = doc["priority"];
               print(formattedTime);
               String thisTask = doc["title"] +
-                  " due on " +
-                  formattedDate +
+                  " was due on " +
+                  formattedDate +/*
                   " at " +
-                  formattedTime +
+                  formattedTime +*/
                   ", ";
               allCompleted += thisTask;
               print(allCompleted);
