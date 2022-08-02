@@ -11,8 +11,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'Welcome/welcome_screen.dart';
-import 'package:volume_controller/volume_controller.dart';
-
 
 class Settings extends StatefulWidget {
   const Settings({Key? key}) : super(key: key);
@@ -22,9 +20,6 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
-  double _volumeListenerValue = 0;
-  double _getVolume = 0;
-  double _setVolumeValue = 0;
   String userName = "";
   int gender = 0,
       level = 0,
@@ -51,19 +46,6 @@ class _SettingsState extends State<Settings> {
 
     setState(() {});
     super.initState();
-
-    // Listen to system volume change
-    VolumeController().listener((volume) {
-      setState(() => _volumeListenerValue = volume);
-    });
-
-    VolumeController().getVolume().then((volume) => _setVolumeValue = volume);
-    
-  }
-   @override
-  void dispose() {
-    VolumeController().removeListener();
-    super.dispose();
   }
 
   AuthClass authClass = AuthClass();
@@ -174,16 +156,16 @@ class _SettingsState extends State<Settings> {
                       size: 18,
                     ),
                     title: Slider(
-                      max: 1,
+                      max: 100,
                       min: 0,
-                      
+                      divisions: 100,
                       onChanged: (double value) {
                         setState(() {
-                          _setVolumeValue = value;
-                        VolumeController().setVolume(_setVolumeValue);
+                          value++;
+                          print("increasing volume");
                         });
                       },
-                      value: _setVolumeValue,
+                      value: 0,
                     ),
                   ),
                   ListTile(
