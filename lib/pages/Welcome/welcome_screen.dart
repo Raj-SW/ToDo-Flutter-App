@@ -40,5 +40,5 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   void onClickedNotification(String? payload) => Navigator.of(context)
-      .push(MaterialPageRoute(builder: (context) => MainPage()));
+      .push(MaterialPageRoute(builder: (context) => zoomDrawer()));
 }

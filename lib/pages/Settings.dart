@@ -179,7 +179,7 @@ class _SettingsState extends State<Settings> {
                                   animationDuration: 1000,
                                   animation: true,
                                   barRadius: Radius.circular(30),
-                                  width: 175,
+                                  width: 165,
                                   lineHeight: 10,
                                   percent: getExpPer(),
                                   progressColor: PrimaryColor,

@@ -458,7 +458,7 @@ class _HomePageState extends State<HomePage> {
                           endIndent: 120,
                         ),
                       ),
-                      Text('Education',
+                      Text('Study',
                           style: GoogleFonts.poppins(
                               fontSize: 32,
                               color: Colors.white,
@@ -466,38 +466,42 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 225, top: 100),
+                /*  Padding(
+                  padding: const EdgeInsets.only(right: 215, top: 90),
                   child: Transform.rotate(
                     angle: 0.25,
                     child: Lottie.asset(
                       "assets/educationGlobe.json",
-                      width: 85,
-                      height: 85,
+                      width: 100,
+                      height: 100,
                     ),
                   ),
-                ),
+                ),*/
                 Padding(
                   padding: const EdgeInsets.only(right: 20, top: 30),
                   child: Transform.rotate(
                     angle: 0.25,
                     child: Lottie.asset(
                       "assets/BooksLottie.json",
-                      width: 175,
-                      height: 175,
+                      width: 180,
+                      height: 180,
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 0, top: 0),
-                  child: Lottie.asset(
-                    "assets/brain2.json",
-                    width: 175,
-                    height: 175,
+                /* Padding(
+                  padding: const EdgeInsets.only(right: 30, top: 0),
+                  child: Transform.rotate(
+                    angle: 0.3,
+                    child: Lottie.asset(
+                      "assets/miscLottie(5).json", //"assets/educBrainLottie.json",
+                      width: 70,
+                      height: 70,
+                    ),
                   ),
-                ),
+                ),*/
               ]),
             ),
+            //Todos
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Stack(alignment: AlignmentDirectional.topEnd, children: [
@@ -532,7 +536,6 @@ class _HomePageState extends State<HomePage> {
                           endIndent: 120,
                         ),
                       ),
-                      Expanded(child: SizedBox()),
                       Text('Todos',
                           style: GoogleFonts.poppins(
                               fontSize: 32,
@@ -541,16 +544,41 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                 ),
-                Padding(
+                /*Padding(
                   padding: const EdgeInsets.only(right: 20, top: 15),
                   child: Image.asset(
                     "assets/todos.png",
                     width: 175,
                     height: 175,
                   ),
+                ),*/
+                Padding(
+                  padding: const EdgeInsets.only(right: 0, top: 10),
+                  child: Lottie.asset(
+                    "assets/todo(3).json",
+                    width: 200,
+                    height: 200,
+                  ),
                 ),
+                /* Padding(
+                  padding: const EdgeInsets.only(right: 225, top: 55),
+                  child: Lottie.asset(
+                    "assets/miscLottie(11).json",
+                    width: 80,
+                    height: 80,
+                  ),
+                ),*/
+                /*   Padding(
+                  padding: const EdgeInsets.only(right: 145, top: 55),
+                  child: Lottie.asset(
+                    "assets/miscLottie(6).json",
+                    width: 70,
+                    height: 70,
+                  ),
+                ),*/
               ]),
             ),
+            //sport
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Stack(alignment: AlignmentDirectional.topEnd, children: [
@@ -568,9 +596,9 @@ class _HomePageState extends State<HomePage> {
                       color: Color.fromRGBO(255, 229, 164, 1),
                       borderRadius: BorderRadius.all(Radius.circular(30))),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text('2/12 tasks',
+                      Text('4/5 tasks',
                           style: GoogleFonts.poppins(
                               fontSize: 18,
                               color: Colors.black,
@@ -581,12 +609,12 @@ class _HomePageState extends State<HomePage> {
                           thickness: 1,
                           height: 2,
                           color: Colors.black54,
-                          indent: 1,
-                          endIndent: 120,
+                          indent: 120,
+                          endIndent: 1,
                         ),
                       ),
                       Expanded(child: SizedBox()),
-                      Text('Todos',
+                      Text('Sports',
                           style: GoogleFonts.poppins(
                               fontSize: 32,
                               color: Colors.black,
@@ -595,13 +623,24 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(right: 20, top: 15),
-                  child: Image.asset(
-                    "assets/wishlist2.jpg",
-                    width: 175,
-                    height: 175,
+                  padding: const EdgeInsets.only(right: 175, top: 0),
+                  child: Lottie.asset(
+                    "assets/sportLottie(1).json",
+                    width: 250,
+                    height: 250,
                   ),
                 ),
+                /*  Padding(
+                  padding: const EdgeInsets.only(right: 50, top: 20),
+                  child: Transform.rotate(
+                    angle: -0.35,
+                    child: Lottie.asset(
+                      "assets/sportLottie(2).json",
+                      width: 150,
+                      height: 150,
+                    ),
+                  ),
+                ),*/
               ]),
             ),
           ]),
