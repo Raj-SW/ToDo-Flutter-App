@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously, prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_if_null_operators
 
+import 'dart:async';
+
 import 'package:alan_voice/alan_voice.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:devstack/Service/Auth_Service.dart';
@@ -7,10 +9,13 @@ import 'package:devstack/Service/SoundSystem.dart';
 import 'package:devstack/circle_transition_clipper.dart';
 import 'package:devstack/pages/AddToDo.dart';
 import 'package:devstack/pages/TodoCard.dart';
+import 'package:devstack/zoomDrawer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 import '../Service/Auth_Service.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:devstack/assets.dart';
@@ -34,7 +39,17 @@ class _HomePageState extends State<HomePage> {
       .collection("Todo")
       .orderBy("scheduledTime", descending: false)
       .snapshots();
-
+  final StreamSubscription<DocumentSnapshot<Map<String, dynamic>>> coinStream =
+      FirebaseFirestore.instance
+          .collection("collect2")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection("userModel")
+          .doc("userDetails")
+          .snapshots()
+          .listen((event) {
+    int val = event['coins'];
+    updateVal(val);
+  });
   DateTime now = DateTime.now();
   late DateTime strtWk;
   late DateTime endWk;
@@ -48,6 +63,7 @@ class _HomePageState extends State<HomePage> {
   var completedCount = 0;
   var incompletedCount = 0;
   var totalTasks = 0;
+  static int Coins = 0;
   @override
   void initState() {
     super.initState();
@@ -73,7 +89,7 @@ class _HomePageState extends State<HomePage> {
         Navigator.of(context).push(_createRoute());
         print("maybe");
       }
-       //List down all this week tasks
+      //List down all this week tasks
       if (commandData["command"] == "weekTasks") {
         String all = "Here is the list of all this weeks tasks: ";
         setState(() {
@@ -88,27 +104,25 @@ class _HomePageState extends State<HomePage> {
             .then((QuerySnapshot querySnapshot) {
           querySnapshot.docs.forEach((doc) {
             bool isDone = doc['isDone'];
-            
-             
+
             if (isDone == false) {
               DateTime theTime = (doc['scheduledTime']).toDate();
               if (theTime.day >= strtWk.day &&
-                              theTime.day <= endWk.day &&
-                              isDone == false) {
-            String formattedDate = DateFormat.MMMMEEEEd().format(theTime);
-                          String formattedTime = DateFormat.Hm().format(theTime);
-                          print(formattedTime);
-                          String thisTask = doc["title"] +
-                              " due " +
-                              formattedDate +
-                              /*" at " +
+                  theTime.day <= endWk.day &&
+                  isDone == false) {
+                String formattedDate = DateFormat.MMMMEEEEd().format(theTime);
+                String formattedTime = DateFormat.Hm().format(theTime);
+                print(formattedTime);
+                String thisTask = doc["title"] +
+                    " due " +
+                    formattedDate +
+                    /*" at " +
                               formattedTime +*/
-                              ", ";
-                          all += thisTask;
-                          print(all);
-                          print(date.toString());
-                              }
-              
+                    ", ";
+                all += thisTask;
+                print(all);
+                print(date.toString());
+              }
             }
           });
           if (all == "Here is the list of all this weeks tasks: ") {
@@ -212,7 +226,7 @@ class _HomePageState extends State<HomePage> {
               print(formattedTime);
               String thisTask = doc["title"] +
                   " was due on " +
-                  formattedDate +/*
+                  formattedDate + /*
                   " at " +
                   formattedTime +*/
                   ", ";
@@ -236,27 +250,52 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     var _selectedValue;
     return Scaffold(
+      backgroundColor: Colors.white,
       extendBodyBehindAppBar: true,
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 70),
-        child: FloatingActionButton(
-          isExtended: true,
-          backgroundColor: returnFloatingColor(context),
-          //backgroundColor: Color.fromARGB(255, 233, 116, 80),
-          onPressed: () {
-            SoundSystem().playLocal();
-            Navigator.of(context).push(_createRoute());
-          },
-          child: Icon(
-            Icons.add,
-            size: 50,
+
+      floatingActionButton: FloatingActionButton(
+        isExtended: true,
+        backgroundColor: Color.fromARGB(255, 233, 116, 80),
+        onPressed: () {
+          SoundSystem().playLocal();
+          Navigator.of(context).push(_createRoute());
+        },
+        child: Icon(
+          Icons.add,
+          size: 50,
+
+     
           ),
+
         ),
       ),
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return <Widget>[
             SliverAppBar(
+
+              actions: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text("$Coins"),
+                )
+              ],
+              leading: Padding(
+                padding: const EdgeInsets.only(left: 20, top: 10),
+                child: IconButton(
+                  icon: FaIcon(
+                    FontAwesomeIcons.bars,
+                    // color: Color(0xff5d5fef),
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    ZoomDrawer.of(context)!.toggle();
+                  },
+                  iconSize: 32,
+                ),
+              ),
+              elevation: 8,
+
               floating: true,
               pinned: true,
               elevation: 5,
@@ -270,111 +309,27 @@ class _HomePageState extends State<HomePage> {
               //color: returnBettermeBackgroundColor(context),
              // backgroundColor: Color.fromARGB(255, 106, 139, 228),
               // Color.fromARGB(255, 102, 133, 218), //Color.fromRGBO(83, 123, 233, 1),
+
               title: Padding(
                 padding: const EdgeInsets.only(top: 10),
                 child: Text(
                   "Better.Me",
                   style: GoogleFonts.pacifico(
+                    //  color: Color(0xff5d5fef),
                     color: Colors.white,
-                    fontSize: 50,
+                    fontSize: 41,
                   ),
                 ),
               ),
-              expandedHeight: 220,
-              flexibleSpace: FlexibleSpaceBar(
-                stretchModes: [StretchMode.zoomBackground],
-                collapseMode: CollapseMode.parallax,
-                background: Padding(
-                  padding: const EdgeInsets.only(top: 120),
-                  child: Container(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              width: 25,
-                            ),
-                            FirebaseAuth.instance.currentUser?.photoURL != null
-                                ? CircleAvatar(
-                                    maxRadius: 45,
-                                    foregroundImage: NetworkImage(FirebaseAuth
-                                        .instance.currentUser!.photoURL
-                                        .toString()))
-                                : CircleAvatar(
-                                    maxRadius: 45,
-                                    foregroundImage: gender == 0
-                                        ? AssetImage(
-                                            "assets/profileWomen.png",
-                                          )
-                                        : AssetImage("assets/profileMen.png"),
-                                    backgroundColor: Colors.white,
-                                  ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 0),
-                                  child: Text(
-                                    FirebaseAuth.instance.currentUser!
-                                                .displayName !=
-                                            null
-                                        ? "Hi, $userName!"
-                                        : "Hey!\n ${auth.currentUser!.displayName}",
-                                    style: GoogleFonts.roboto(
-                                        color: Colors.white,
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.bold),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 7),
-                                  child: Text(
-                                    "Level $level",
-                                    style: GoogleFonts.roboto(
-                                      color: Colors.white,
-                                      fontSize: 18,
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.only(left: 12, top: 6),
-                                  child: Text(
-                                    "$incompletedCount tasks remaining",
-                                    style: GoogleFonts.roboto(
-                                      color: Colors.white,
-                                      fontSize: 18,
-                                      height: .8,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 30, top: 5),
-                          child: Text(
-                            DateFormat.yMMMEd().format(DateTime.now()),
-                            style: GoogleFonts.roboto(
-                              color: Colors.white,
-                              fontSize: 12,
-                              height: 1.2,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+              toolbarHeight: 70,
+              centerTitle: true,
+              // backgroundColor: Color.fromARGB(255, 255, 255, 255),
+              backgroundColor: Color(0xff5d5fef),
+              // Color.fromARGB(255, 102, 133, 218), //Color.fromRGBO(83, 123, 233, 1),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(40),
+                      bottomRight: Radius.circular(40))),
             ),
           ];
         },
@@ -442,6 +397,7 @@ class _HomePageState extends State<HomePage> {
                             todayCount++;
                             return TodoCard(
                               priority: priority,
+                              coins: Coins,
                               isDone: document["isDone"],
                               check: selected[index].checkValue,
                               time: date(document),
@@ -461,6 +417,7 @@ class _HomePageState extends State<HomePage> {
                               isDone == false) {
                             return TodoCard(
                               priority: priority,
+                              coins: Coins,
                               isDone: document["isDone"],
                               check: selected[index].checkValue,
                               time: date(document),
@@ -477,6 +434,7 @@ class _HomePageState extends State<HomePage> {
                         } else if (selectedItem == "All" && isDone == false) {
                           return TodoCard(
                             priority: priority,
+                            coins: Coins,
                             isDone: isDone,
                             check: selected[index].checkValue,
                             time: date(document),
@@ -493,6 +451,7 @@ class _HomePageState extends State<HomePage> {
                           if (isDone == true) {
                             return TodoCard(
                               priority: priority,
+                              coins: Coins,
                               check: selected[index].checkValue,
                               isDone: document["isDone"],
                               time: date(document),
@@ -512,6 +471,225 @@ class _HomePageState extends State<HomePage> {
                         );
                       });
                 }),
+            //Education Container
+            /* Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Stack(alignment: AlignmentDirectional.topEnd, children: [
+                Container(
+                  padding: EdgeInsets.all(20),
+                  width: MediaQuery.of(context).size.width,
+                  height: 200,
+                  decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.black54,
+                            blurRadius: 2,
+                            offset: Offset(0, 2))
+                      ],
+                      color: Color.fromRGBO(245, 119, 185, 0.95),
+                      borderRadius: BorderRadius.all(Radius.circular(30))),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('5/7 tasks',
+                          style: GoogleFonts.poppins(
+                              fontSize: 18,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500)),
+                      Padding(
+                        padding: const EdgeInsets.all(1.0),
+                        child: Divider(
+                          thickness: 1,
+                          height: 2,
+                          color: Colors.white,
+                          indent: 1,
+                          endIndent: 120,
+                        ),
+                      ),
+                      Text('Study',
+                          style: GoogleFonts.poppins(
+                              fontSize: 32,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700)),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 215, top: 90),
+                  child: Transform.rotate(
+                    angle: 0.25,
+                    child: Lottie.asset(
+                      "assets/educationGlobe.json",
+                      width: 100,
+                      height: 100,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 20, top: 30),
+                  child: Transform.rotate(
+                    angle: 0.25,
+                    child: Lottie.asset(
+                      "assets/BooksLottie.json",
+                      animate: true,
+                      frameRate: FrameRate.max,
+                      width: 180,
+                      height: 180,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 30, top: 0),
+                  child: Transform.rotate(
+                    angle: 0.3,
+                    child: Lottie.asset(
+                      "assets/miscLottie(5).json", //"assets/educBrainLottie.json",
+                      width: 70,
+                      height: 70,
+                    ),
+                  ),
+                ),
+              ]),
+            ),
+            //Todos
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Stack(alignment: AlignmentDirectional.topEnd, children: [
+                Container(
+                  padding: EdgeInsets.all(20),
+                  width: MediaQuery.of(context).size.width,
+                  height: 200,
+                  decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.black54,
+                            blurRadius: 2,
+                            offset: Offset(0, 2))
+                      ],
+                      color: Color.fromRGBO(107, 72, 246, 0.75),
+                      borderRadius: BorderRadius.all(Radius.circular(30))),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('2/12 tasks',
+                          style: GoogleFonts.poppins(
+                              fontSize: 18,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500)),
+                      Padding(
+                        padding: const EdgeInsets.all(1.0),
+                        child: Divider(
+                          thickness: 1,
+                          height: 2,
+                          color: Colors.white,
+                          indent: 1,
+                          endIndent: 120,
+                        ),
+                      ),
+                      Text('Todos',
+                          style: GoogleFonts.poppins(
+                              fontSize: 32,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700)),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 0, top: 10),
+                  child: Lottie.asset(
+                    "assets/todo(3).json",
+                    animate: true,
+                    frameRate: FrameRate.max,
+                    width: 200,
+                    height: 200,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 225, top: 95),
+                  child: Lottie.asset(
+                    "assets/miscLottie(11).json",
+                    width: 80,
+                    height: 80,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 145, top: 55),
+                  child: Lottie.asset(
+                    "assets/miscLottie(6).json",
+                    width: 70,
+                    height: 70,
+                  ),
+                ),
+              ]),
+            ),
+            //sport
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Stack(alignment: AlignmentDirectional.topEnd, children: [
+                Container(
+                  padding: EdgeInsets.all(20),
+                  width: MediaQuery.of(context).size.width,
+                  height: 200,
+                  decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.black54,
+                            blurRadius: 2,
+                            offset: Offset(0, 2))
+                      ],
+                      color: Color.fromRGBO(255, 229, 164, 1),
+                      borderRadius: BorderRadius.all(Radius.circular(30))),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text('4/5 tasks',
+                          style: GoogleFonts.poppins(
+                              fontSize: 18,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500)),
+                      Padding(
+                        padding: const EdgeInsets.all(1.0),
+                        child: Divider(
+                          thickness: 1,
+                          height: 2,
+                          color: Colors.black54,
+                          indent: 120,
+                          endIndent: 1,
+                        ),
+                      ),
+                      Expanded(child: SizedBox()),
+                      Text('Sports',
+                          style: GoogleFonts.poppins(
+                              fontSize: 32,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w700)),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 175, top: 0),
+                  child: Lottie.asset(
+                    "assets/sportLottie(1).json",
+                    animate: true,
+                    frameRate: FrameRate.max,
+                    width: 250,
+                    height: 250,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 50, top: 20),
+                  child: Transform.rotate(
+                    angle: -0.35,
+                    child: Lottie.asset(
+                      "assets/sportLottie(2).json",
+                      width: 150,
+                      height: 150,
+                    ),
+                  ),
+                ),
+              ]),
+            ),*/
+            //ici sa
           ]),
         ),
       ),
@@ -573,6 +751,7 @@ class _HomePageState extends State<HomePage> {
             gender = value["Gender"];
             userName = value["userName"];
             level = value["Level"];
+            Coins = value['coins'];
           })
         });
     final mytaskDoc = FirebaseFirestore.instance
@@ -593,6 +772,10 @@ class _HomePageState extends State<HomePage> {
         }
       });
     });
+  }
+
+  static void updateVal(int val) {
+    Coins = val;
   }
 }
 

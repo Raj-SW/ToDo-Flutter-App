@@ -18,5 +18,6 @@ TextStyle styleLittleCalendar = GoogleFonts.poppins(
     color: colorYellowbold, fontWeight: FontWeight.bold, fontSize: 12);
 TextStyle normalStyleLittleCalendar = GoogleFonts.poppins(
     color: Colors.black54, fontWeight: FontWeight.w400, fontSize: 12);
+
 TextStyle calendarLabelMonthlyStyle = GoogleFonts.poppins(
     fontSize: 16, color: Colors.black54, fontWeight: FontWeight.w500);

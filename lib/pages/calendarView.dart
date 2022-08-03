@@ -2,17 +2,14 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:devstack/assets.dart';
-import 'package:devstack/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
@@ -50,7 +47,26 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 20, top: 10),
+          child: IconButton(
+            icon: FaIcon(
+              FontAwesomeIcons.bars,
+              //  color: Color(0xff5d5fef),
+              color: Colors.white,
+            ),
+            onPressed: () {
+              ZoomDrawer.of(context)!.toggle();
+            },
+            iconSize: 32,
+          ),
+        ),
         toolbarHeight: 60,
+
+      /*  //backgroundColor: Colors.white,
+        backgroundColor: Color(0xff5d5fef),
+*/
         backgroundColor: returnCalendarColor(context),
         //backgroundColor: Color.fromRGBO(83, 123, 233, 1),
         shape: RoundedRectangleBorder(
@@ -64,15 +80,20 @@ class _MyHomePageState extends State<MyHomePage> {
             style: GoogleFonts.pacifico(
                 fontWeight: FontWeight.normal,
                 fontSize: 40,
+                // color: Color(0xff5d5fef),
                 color: Colors.white),
           ),
         ),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(40),
+                bottomRight: Radius.circular(40))),
         centerTitle: true,
       ),
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
+            padding: const EdgeInsets.only(left: 10, right: 10, top: 20),
             child: Row(
               children: [
                 SizedBox(
@@ -332,7 +353,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   agendaViewHeight: -1),
               showWeekNumber: false,
               showNavigationArrow: true,
-              view: CalendarView.week,
+              view: CalendarView.month,
               initialSelectedDate: DateTime.now(),
               dataSource: events,
               controller: controllerCalendar,
@@ -406,9 +427,6 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
           )),
-          SizedBox(
-            height: 65,
-          )
         ],
       ),
     );
