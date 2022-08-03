@@ -185,9 +185,9 @@ class _AddToDoPageState extends State<AddToDoPage> {
                     size: 28,
                   ),
                   iconSize: 28,
-                  color: PrimaryColor,
+                  color: primarySwap(context),
                 ),
-                label('Add New Task', PrimaryColor, 25),
+                label('Add New Task', primarySwap(context), 25),
                 SizedBox(
                   width: 50,
                 ),
@@ -195,7 +195,7 @@ class _AddToDoPageState extends State<AddToDoPage> {
                   onTap: () => openDialog(),
                   child: Icon(
                     Icons.image_search_sharp,
-                    color: PrimaryColor,
+                    color: primarySwap(context),
                   ),
                 ),
                 SizedBox(),
@@ -209,7 +209,7 @@ class _AddToDoPageState extends State<AddToDoPage> {
                   SizedBox(
                     height: 15,
                   ),
-                  label('Add Task Title', Colors.black, 16.5),
+                  label('Add Task Title', textCol(context), 16.5),
                   SizedBox(
                     height: 10,
                   ),
@@ -217,7 +217,7 @@ class _AddToDoPageState extends State<AddToDoPage> {
                   SizedBox(
                     height: 25,
                   ),
-                  label('Add Task Description', Colors.black, 16.5),
+                  label('Add Task Description', textCol(context), 16.5),
                   SizedBox(
                     height: 10,
                   ),
@@ -225,7 +225,7 @@ class _AddToDoPageState extends State<AddToDoPage> {
                   SizedBox(
                     height: 25,
                   ),
-                  label('Priority', Colors.black, 16.5),
+                  label('Priority', textCol(context), 16.5),
                   SizedBox(
                     height: 5,
                   ),
@@ -255,9 +255,11 @@ class _AddToDoPageState extends State<AddToDoPage> {
                                   ? Colors.white
                                   : Colors.black),
                         ),
-                        backgroundColor: Color.fromARGB(255, 255, 146, 146),
+                        //backgroundColor: Color.fromARGB(255, 255, 146, 146),
+                        backgroundColor: backgroundCritical(context),
                         shadowColor: Colors.transparent,
-                        selectedColor: Color(0xFFEF5350),
+                        //selectedColor: Color(0xFFEF5350),
+                        selectedColor: selectCritical(context),
                         selectedShadowColor: Colors.red,
                         side: BorderSide(
                             color: isSelected1 == true
@@ -295,9 +297,12 @@ class _AddToDoPageState extends State<AddToDoPage> {
                                   ? Colors.white
                                   : Colors.black),
                         ),
-                        backgroundColor: Color.fromARGB(255, 255, 253, 136),
+
+                       // backgroundColor: Color.fromARGB(255, 255, 253, 136),
+                       backgroundColor: backgroundMild(context),
                         shadowColor: Colors.transparent,
-                        selectedColor: Color.fromARGB(177, 255, 196, 59),
+                       // selectedColor: Color.fromARGB(177, 255, 196, 59),
+                       selectedColor: selectMild(context),
                         selectedShadowColor: Colors.yellow,
                         side: BorderSide(
                             color: Color.fromARGB(54, 255, 196, 59),
@@ -333,9 +338,12 @@ class _AddToDoPageState extends State<AddToDoPage> {
                                   ? Colors.white
                                   : Colors.black),
                         ),
-                        backgroundColor: Color.fromARGB(255, 185, 227, 255),
+
+                        //backgroundColor: Color.fromARGB(255, 185, 227, 255),
+                        backgroundColor: backgroundNormal(context),
                         shadowColor: Colors.transparent,
-                        selectedColor: Colors.blue,
+                        //selectedColor: Colors.blue,
+                        selectedColor: selectNormal(context),
                         selectedShadowColor: Colors.blue,
                         side: BorderSide(
                             color: Colors.blue,
@@ -355,7 +363,7 @@ class _AddToDoPageState extends State<AddToDoPage> {
                           SizedBox(
                             height: 10,
                           ),
-                          label('Choose Date', Colors.black, 16.5),
+                          label('Choose Date', textCol(context), 16.5),
                           SizedBox(
                             height: 12,
                           ),
@@ -371,7 +379,7 @@ class _AddToDoPageState extends State<AddToDoPage> {
                           SizedBox(
                             height: 10,
                           ),
-                          label('Choose Time', Colors.black, 16.5),
+                          label('Choose Time', textCol(context), 16.5),
                           SizedBox(
                             height: 10,
                           ),
@@ -464,7 +472,7 @@ class _AddToDoPageState extends State<AddToDoPage> {
         height: 56,
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
-          color: PrimaryColor,
+          color: buttonSwap(context),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Center(
@@ -489,7 +497,7 @@ class _AddToDoPageState extends State<AddToDoPage> {
       ),
       child: TextFormField(
         controller: _descriptionController,
-        style: TextStyle(color: Color.fromARGB(255, 0, 0, 0), fontSize: 17),
+        style: TextStyle(color: textCol(context), fontSize: 17),
         maxLines: null,
         decoration: InputDecoration(
             border: InputBorder.none,
@@ -514,7 +522,7 @@ class _AddToDoPageState extends State<AddToDoPage> {
       ),
       child: TextFormField(
         controller: _titleController,
-        style: TextStyle(color: Color.fromARGB(255, 0, 0, 0), fontSize: 17),
+        style: TextStyle(color: textCol(context), fontSize: 17),
         decoration: InputDecoration(
             border: InputBorder.none,
             hintText: "Task Title",
@@ -567,7 +575,7 @@ class _AddToDoPageState extends State<AddToDoPage> {
             style: TextStyle(
                 color: mydateTime == null
                     ? Color.fromARGB(255, 96, 96, 96)
-                    : Color.fromARGB(255, 0, 0, 0)),
+                    : textCol(context)),
           )
         ],
       ),
@@ -845,5 +853,105 @@ class _AddToDoPageState extends State<AddToDoPage> {
         fontSize: 18,
         textColor: Colors.white,
         gravity: ToastGravity.BOTTOM);
+  }
+}
+
+//getColors
+
+Color textCol(context){
+  ThemeData currentTheme = Theme.of(context);
+  if(currentTheme.brightness== Brightness.dark){
+  return Colors.white;
+  } else{
+     return Colors.black;
+  }
+ 
+}
+
+//header Add new Task and icons swap color
+
+Color primarySwap(context){
+  ThemeData currentTheme = Theme.of(context);
+  if(currentTheme.brightness== Brightness.dark){
+  return Colors.white;
+  } else{
+     return PrimaryColor;
+  }
+}
+
+//change button Add toDo color
+
+Color buttonSwap(context){
+  ThemeData currentTheme = Theme.of(context);
+  if(currentTheme.brightness== Brightness.dark){
+  return Colors.black;
+  } else{
+     return PrimaryColor;
+  }
+}
+
+//Background mild
+
+Color backgroundMild(context){
+  ThemeData currentTheme = Theme.of(context);
+  if(currentTheme.brightness== Brightness.dark){
+  return Colors.white;
+  } else{
+     return Color.fromARGB(255, 255, 253, 136);
+  }
+}
+
+//Selected mild
+
+Color selectMild(context){
+  ThemeData currentTheme = Theme.of(context);
+  if(currentTheme.brightness== Brightness.dark){
+  return Colors.black;
+  } else{
+     return Colors.yellow;
+  }
+}
+
+//Background normal
+
+Color backgroundNormal(context){
+  ThemeData currentTheme = Theme.of(context);
+  if(currentTheme.brightness== Brightness.dark){
+  return Colors.white;
+  } else{
+     return Color.fromARGB(255, 185, 227, 255);
+  }
+}
+
+//Selected normal
+
+Color selectNormal(context){
+  ThemeData currentTheme = Theme.of(context);
+  if(currentTheme.brightness== Brightness.dark){
+  return Colors.black;
+  } else{
+     return Colors.blue;
+  }
+}
+
+//Background critical
+
+Color backgroundCritical(context){
+  ThemeData currentTheme = Theme.of(context);
+  if(currentTheme.brightness== Brightness.dark){
+  return Colors.white;
+  } else{
+     return Color.fromARGB(255, 255, 146, 146);
+  }
+}
+
+//Selected critical
+
+Color selectCritical(context){
+  ThemeData currentTheme = Theme.of(context);
+  if(currentTheme.brightness== Brightness.dark){
+  return Colors.black;
+  } else{
+     return Color(0xFFEF5350);
   }
 }

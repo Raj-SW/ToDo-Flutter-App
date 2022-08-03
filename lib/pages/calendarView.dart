@@ -39,7 +39,7 @@ class _MyHomePageState extends State<MyHomePage> {
     //getDataFromFirestore();
     getDataFromFirestore().then((results) {
       SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-        setState(() {});
+      setState(() {});
       });
     });
     super.initState();
@@ -51,7 +51,8 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 60,
-        backgroundColor: Color.fromRGBO(83, 123, 233, 1),
+        backgroundColor: returnCalendarColor(context),
+        //backgroundColor: Color.fromRGBO(83, 123, 233, 1),
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(30),
@@ -240,7 +241,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   timeRulerSize: 50,
                   timeTextStyle: GoogleFonts.poppins(
                       fontWeight: FontWeight.w500,
-                      color: Colors.black54,
+                     // color: Colors.black54,
+                     color: textColorAxes(context),
                       fontSize: 11)),
               allowedViews: [
                 CalendarView.day,
@@ -802,3 +804,27 @@ class MeetingDataSource extends CalendarDataSource {
     appointments = source;
   }
 }
+
+//Pomodoro color
+Color returnCalendarColor(BuildContext context){
+  ThemeData currentTheme = Theme.of(context);
+  if(currentTheme.brightness== Brightness.dark){
+  return Color.fromARGB(0, 0, 0, 0);
+  } else{
+     return  Color.fromRGBO(83, 123, 233, 1);
+  }
+ 
+}
+
+//Pomodoro color
+Color textColorAxes(BuildContext context){
+  ThemeData currentTheme = Theme.of(context);
+  if(currentTheme.brightness== Brightness.dark){
+  return Colors.white;
+  } else{
+  
+     return  Colors.black54;
+  }
+ 
+}
+

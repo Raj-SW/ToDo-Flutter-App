@@ -127,9 +127,11 @@ class _MainPageState extends State<MainPage> {
         margin: EdgeInsets.all(10),
         borderRadius: 30,
         itemBorderRadius: 60,
-        backgroundColor: Color.fromARGB(255, 109, 146, 250),
+       // backgroundColor: Color.fromARGB(255, 109, 146, 250),
+         backgroundColor: returnBottomNavColor(context),
         selectedBackgroundColor: Color.fromARGB(255, 247, 247, 247),
-        selectedItemColor: Color.fromARGB(215, 0, 68, 255),
+        //selectedItemColor: Color.fromARGB(215, 0, 68, 255),
+        selectedItemColor: returnSelectedColor(context),
         unselectedItemColor: Color.fromARGB(210, 255, 255, 255),
         currentIndex: currentIndex,
         onTap: (int val) => setState(() => currentIndex = val),
@@ -143,4 +145,26 @@ class _MainPageState extends State<MainPage> {
       body: screens[currentIndex],
     );
   }
+}
+
+//Bottom nav color
+Color returnBottomNavColor(BuildContext context){
+  ThemeData currentTheme = Theme.of(context);
+  if(currentTheme.brightness== Brightness.dark){
+  return Colors.grey;
+  } else{
+     return  Color.fromARGB(255, 109, 146, 250);
+  }
+ 
+}
+
+//Bottom nav color
+Color returnSelectedColor(BuildContext context){
+  ThemeData currentTheme = Theme.of(context);
+  if(currentTheme.brightness== Brightness.dark){
+  return Colors.grey;
+  } else{
+     return Color.fromARGB(215, 0, 68, 255);
+  }
+ 
 }
