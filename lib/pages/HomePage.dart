@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously, prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_if_null_operators
 
+import 'dart:async';
+
 import 'package:alan_voice/alan_voice.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:devstack/Service/Auth_Service.dart';
@@ -37,7 +39,17 @@ class _HomePageState extends State<HomePage> {
       .collection("Todo")
       .orderBy("scheduledTime", descending: false)
       .snapshots();
-
+  final StreamSubscription<DocumentSnapshot<Map<String, dynamic>>> coinStream =
+      FirebaseFirestore.instance
+          .collection("collect2")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection("userModel")
+          .doc("userDetails")
+          .snapshots()
+          .listen((event) {
+    int val = event['coins'];
+    updateVal(val);
+  });
   DateTime now = DateTime.now();
   late DateTime strtWk;
   late DateTime endWk;
@@ -51,6 +63,7 @@ class _HomePageState extends State<HomePage> {
   var completedCount = 0;
   var incompletedCount = 0;
   var totalTasks = 0;
+  static int Coins = 0;
   @override
   void initState() {
     super.initState();
@@ -255,6 +268,12 @@ class _HomePageState extends State<HomePage> {
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return <Widget>[
             SliverAppBar(
+              actions: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text("$Coins"),
+                )
+              ],
               leading: Padding(
                 padding: const EdgeInsets.only(left: 20, top: 10),
                 child: IconButton(
@@ -353,6 +372,7 @@ class _HomePageState extends State<HomePage> {
                             todayCount++;
                             return TodoCard(
                               priority: priority,
+                              coins: Coins,
                               isDone: document["isDone"],
                               check: selected[index].checkValue,
                               time: date(document),
@@ -372,6 +392,7 @@ class _HomePageState extends State<HomePage> {
                               isDone == false) {
                             return TodoCard(
                               priority: priority,
+                              coins: Coins,
                               isDone: document["isDone"],
                               check: selected[index].checkValue,
                               time: date(document),
@@ -388,6 +409,7 @@ class _HomePageState extends State<HomePage> {
                         } else if (selectedItem == "All" && isDone == false) {
                           return TodoCard(
                             priority: priority,
+                            coins: Coins,
                             isDone: isDone,
                             check: selected[index].checkValue,
                             time: date(document),
@@ -404,6 +426,7 @@ class _HomePageState extends State<HomePage> {
                           if (isDone == true) {
                             return TodoCard(
                               priority: priority,
+                              coins: Coins,
                               check: selected[index].checkValue,
                               isDone: document["isDone"],
                               time: date(document),
@@ -424,7 +447,7 @@ class _HomePageState extends State<HomePage> {
                       });
                 }),
             //Education Container
-            Padding(
+            /* Padding(
               padding: const EdgeInsets.all(8.0),
               child: Stack(alignment: AlignmentDirectional.topEnd, children: [
                 Container(
@@ -466,7 +489,7 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                 ),
-                /*  Padding(
+                Padding(
                   padding: const EdgeInsets.only(right: 215, top: 90),
                   child: Transform.rotate(
                     angle: 0.25,
@@ -476,19 +499,21 @@ class _HomePageState extends State<HomePage> {
                       height: 100,
                     ),
                   ),
-                ),*/
+                ),
                 Padding(
                   padding: const EdgeInsets.only(right: 20, top: 30),
                   child: Transform.rotate(
                     angle: 0.25,
                     child: Lottie.asset(
                       "assets/BooksLottie.json",
+                      animate: true,
+                      frameRate: FrameRate.max,
                       width: 180,
                       height: 180,
                     ),
                   ),
                 ),
-                /* Padding(
+                Padding(
                   padding: const EdgeInsets.only(right: 30, top: 0),
                   child: Transform.rotate(
                     angle: 0.3,
@@ -498,7 +523,7 @@ class _HomePageState extends State<HomePage> {
                       height: 70,
                     ),
                   ),
-                ),*/
+                ),
               ]),
             ),
             //Todos
@@ -544,38 +569,32 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                 ),
-                /*Padding(
-                  padding: const EdgeInsets.only(right: 20, top: 15),
-                  child: Image.asset(
-                    "assets/todos.png",
-                    width: 175,
-                    height: 175,
-                  ),
-                ),*/
                 Padding(
                   padding: const EdgeInsets.only(right: 0, top: 10),
                   child: Lottie.asset(
                     "assets/todo(3).json",
+                    animate: true,
+                    frameRate: FrameRate.max,
                     width: 200,
                     height: 200,
                   ),
                 ),
-                /* Padding(
-                  padding: const EdgeInsets.only(right: 225, top: 55),
+                Padding(
+                  padding: const EdgeInsets.only(right: 225, top: 95),
                   child: Lottie.asset(
                     "assets/miscLottie(11).json",
                     width: 80,
                     height: 80,
                   ),
-                ),*/
-                /*   Padding(
+                ),
+                Padding(
                   padding: const EdgeInsets.only(right: 145, top: 55),
                   child: Lottie.asset(
                     "assets/miscLottie(6).json",
                     width: 70,
                     height: 70,
                   ),
-                ),*/
+                ),
               ]),
             ),
             //sport
@@ -626,11 +645,13 @@ class _HomePageState extends State<HomePage> {
                   padding: const EdgeInsets.only(right: 175, top: 0),
                   child: Lottie.asset(
                     "assets/sportLottie(1).json",
+                    animate: true,
+                    frameRate: FrameRate.max,
                     width: 250,
                     height: 250,
                   ),
                 ),
-                /*  Padding(
+                Padding(
                   padding: const EdgeInsets.only(right: 50, top: 20),
                   child: Transform.rotate(
                     angle: -0.35,
@@ -640,9 +661,10 @@ class _HomePageState extends State<HomePage> {
                       height: 150,
                     ),
                   ),
-                ),*/
+                ),
               ]),
-            ),
+            ),*/
+            //ici sa
           ]),
         ),
       ),
@@ -704,6 +726,7 @@ class _HomePageState extends State<HomePage> {
             gender = value["Gender"];
             userName = value["userName"];
             level = value["Level"];
+            Coins = value['coins'];
           })
         });
     final mytaskDoc = FirebaseFirestore.instance
@@ -724,6 +747,10 @@ class _HomePageState extends State<HomePage> {
         }
       });
     });
+  }
+
+  static void updateVal(int val) {
+    Coins = val;
   }
 }
 

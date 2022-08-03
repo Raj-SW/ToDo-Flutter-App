@@ -93,5 +93,5 @@ class _MyAppState extends State<MyApp> {
   }
 
   void onClickedNotification(String? payload) => Navigator.of(context)
-      .push(MaterialPageRoute(builder: (context) => MainPage()));
+      .push(MaterialPageRoute(builder: (context) => zoomDrawer()));
 }

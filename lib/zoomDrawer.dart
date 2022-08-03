@@ -31,14 +31,13 @@ class _zoomDrawerState extends State<zoomDrawer> {
               offset: Offset(2, 2))
         ],
         borderRadius: 30,
-        drawerShadowsBackgroundColor: Colors.black,
-        menuScreenWidth: MediaQuery.of(context).size.width * 0.5,
-        duration: const Duration(milliseconds: 500),
-        slideWidth: MediaQuery.of(context).size.width * 0.25,
+        drawerShadowsBackgroundColor: Color.fromARGB(255, 255, 255, 255),
+        menuScreenWidth: MediaQuery.of(context).size.width * 0.45,
+        slideWidth: MediaQuery.of(context).size.width * 0.6,
         //  menuBackgroundColor: Colors.deepPurple.shade100,
         menuBackgroundColor: Color.fromARGB(255, 133, 135, 237),
         angle: 0,
-        mainScreenScale: 0.15,
+        mainScreenScale: 0.25,
         mainScreen: getScreen(),
         menuScreen: Builder(
             builder: (context) => MenuPage(
@@ -51,7 +50,7 @@ class _zoomDrawerState extends State<zoomDrawer> {
         mainScreenTapClose: true,
         isRtl: false,
         showShadow: true,
-        style: DrawerStyle.style3,
+        style: DrawerStyle.defaultStyle,
       );
   Widget getScreen() {
     switch (currentItem) {

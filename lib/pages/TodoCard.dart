@@ -1,6 +1,7 @@
-// ignore_for_file: sort_child_properties_last, prefer_const_constructors, prefer_typing_uninitialized_variables, prefer_const_literals_to_create_immutables
+// ignore_for_file: sort_child_properties_last, prefer_const_constructors, prefer_typing_uninitialized_variables, prefer_const_literals_to_create_immutables, non_constant_identifier_names
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:devstack/pages/HomePage.dart';
 import 'package:devstack/pages/view_data_updated.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -24,9 +25,11 @@ class TodoCard extends StatefulWidget {
     required this.document,
     required this.id,
     required this.priority,
+    required this.coins,
   }) : super(key: key);
   //we need to assign all value dynamically
   final String title;
+  final int coins;
   final DateTime time;
   final bool check;
   final Function onChange;
@@ -148,12 +151,14 @@ class _TodoCardState extends State<TodoCard> {
                                 await Future.delayed(
                                     Duration(milliseconds: 2000));
                                 Navigator.of(context).pop();
-                                FirebaseFirestore.instance
+                                /*    FirebaseFirestore.instance
                                     .collection("collect2")
                                     .doc(FirebaseAuth.instance.currentUser!.uid)
                                     .collection("Todo")
                                     .doc(widget.id)
-                                    .update({"isDone": true});
+                                    .update({"isDone": true});*/
+                                ExpCoin(widget.document);
+                                setState(() {});
                               },
                               child: Text(
                                 'Mark as done',
@@ -259,4 +264,23 @@ class _TodoCardState extends State<TodoCard> {
           content: Lottie.asset("assets/lottieSuccess.json"),
         ),
       );
+
+  void ExpCoin(document) {
+    int coins2 = 0;
+    if (document['priority'] == 'critical') {
+      setState(() {
+        coins2 = widget.coins;
+        coins2 = coins2 + 10;
+      });
+      FirebaseFirestore.instance
+          .collection("collect2")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection("userModel")
+          .doc("userDetails")
+          .update({"coins": coins2});
+      print(coins2);
+    }
+    if (document['priority'] == 'mild') {}
+    if (document['priority'] == 'normal') {}
+  }
 }

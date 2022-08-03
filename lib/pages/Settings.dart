@@ -39,7 +39,8 @@ class _SettingsState extends State<Settings> {
       criticalCount = 0,
       normalCount = 0,
       overdueCount = 0,
-      totaltaskCount = 0;
+      totaltaskCount = 0,
+      coins = 0;
   late List<pomodoroData> pomodoroChartData;
   late List<taskCat> taskCatChartData;
 
@@ -167,6 +168,13 @@ class _SettingsState extends State<Settings> {
                               userName,
                               style: GoogleFonts.poppins(
                                   fontSize: 22, fontWeight: FontWeight.w600),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              "Coins: $coins",
+                              style: GoogleFonts.poppins(fontSize: 16),
                             ),
                             SizedBox(
                               height: 5,
@@ -461,6 +469,7 @@ class _SettingsState extends State<Settings> {
             userName = value["userName"];
             level = value["Level"];
             experience = value["Experience"];
+            coins = value['coins'];
           })
         });
     var myPomodorodocument = FirebaseFirestore.instance
