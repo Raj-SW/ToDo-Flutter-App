@@ -57,7 +57,7 @@ class _TodoCardState extends State<TodoCard> {
         decoration: BoxDecoration(
             color: findColor(widget.time, widget.isDone, widget.priority),
             border: Border.all(color: Colors.transparent),
-            borderRadius: BorderRadius.all(Radius.circular(20)),
+            borderRadius: BorderRadius.all(Radius.circular(30)),
             boxShadow: [
               BoxShadow(
                 color: Color.fromARGB(255, 115, 115, 115).withOpacity(0.5),

@@ -7,8 +7,10 @@ import 'package:devstack/Service/SoundSystem.dart';
 import 'package:devstack/circle_transition_clipper.dart';
 import 'package:devstack/pages/AddToDo.dart';
 import 'package:devstack/pages/TodoCard.dart';
+import 'package:devstack/zoomDrawer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../Service/Auth_Service.dart';
@@ -73,7 +75,7 @@ class _HomePageState extends State<HomePage> {
         Navigator.of(context).push(_createRoute());
         print("maybe");
       }
-       //List down all this week tasks
+      //List down all this week tasks
       if (commandData["command"] == "weekTasks") {
         String all = "Here is the list of all this weeks tasks: ";
         setState(() {
@@ -88,27 +90,25 @@ class _HomePageState extends State<HomePage> {
             .then((QuerySnapshot querySnapshot) {
           querySnapshot.docs.forEach((doc) {
             bool isDone = doc['isDone'];
-            
-             
+
             if (isDone == false) {
               DateTime theTime = (doc['scheduledTime']).toDate();
               if (theTime.day >= strtWk.day &&
-                              theTime.day <= endWk.day &&
-                              isDone == false) {
-            String formattedDate = DateFormat.MMMMEEEEd().format(theTime);
-                          String formattedTime = DateFormat.Hm().format(theTime);
-                          print(formattedTime);
-                          String thisTask = doc["title"] +
-                              " due " +
-                              formattedDate +
-                              /*" at " +
+                  theTime.day <= endWk.day &&
+                  isDone == false) {
+                String formattedDate = DateFormat.MMMMEEEEd().format(theTime);
+                String formattedTime = DateFormat.Hm().format(theTime);
+                print(formattedTime);
+                String thisTask = doc["title"] +
+                    " due " +
+                    formattedDate +
+                    /*" at " +
                               formattedTime +*/
-                              ", ";
-                          all += thisTask;
-                          print(all);
-                          print(date.toString());
-                              }
-              
+                    ", ";
+                all += thisTask;
+                print(all);
+                print(date.toString());
+              }
             }
           });
           if (all == "Here is the list of all this weeks tasks: ") {
@@ -212,7 +212,7 @@ class _HomePageState extends State<HomePage> {
               print(formattedTime);
               String thisTask = doc["title"] +
                   " was due on " +
-                  formattedDate +/*
+                  formattedDate + /*
                   " at " +
                   formattedTime +*/
                   ", ";
@@ -236,142 +236,59 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     var _selectedValue;
     return Scaffold(
+      backgroundColor: Colors.white,
       extendBodyBehindAppBar: true,
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 70),
-        child: FloatingActionButton(
-          isExtended: true,
-          backgroundColor: Color.fromARGB(255, 233, 116, 80),
-          onPressed: () {
-            SoundSystem().playLocal();
-            Navigator.of(context).push(_createRoute());
-          },
-          child: Icon(
-            Icons.add,
-            size: 50,
-          ),
+      floatingActionButton: FloatingActionButton(
+        isExtended: true,
+        backgroundColor: Color.fromARGB(255, 233, 116, 80),
+        onPressed: () {
+          SoundSystem().playLocal();
+          Navigator.of(context).push(_createRoute());
+        },
+        child: Icon(
+          Icons.add,
+          size: 50,
         ),
       ),
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return <Widget>[
             SliverAppBar(
-              floating: true,
-              pinned: true,
-              elevation: 5,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(40),
-                      bottomRight: Radius.circular(40))),
-              toolbarHeight: 80,
-              centerTitle: true,
-              backgroundColor: Color.fromARGB(255, 106, 139, 228),
-              // Color.fromARGB(255, 102, 133, 218), //Color.fromRGBO(83, 123, 233, 1),
+              leading: Padding(
+                padding: const EdgeInsets.only(left: 20, top: 10),
+                child: IconButton(
+                  icon: FaIcon(
+                    FontAwesomeIcons.bars,
+                    // color: Color(0xff5d5fef),
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    ZoomDrawer.of(context)!.toggle();
+                  },
+                  iconSize: 32,
+                ),
+              ),
+              elevation: 8,
               title: Padding(
                 padding: const EdgeInsets.only(top: 10),
                 child: Text(
                   "Better.Me",
                   style: GoogleFonts.pacifico(
+                    //  color: Color(0xff5d5fef),
                     color: Colors.white,
-                    fontSize: 50,
+                    fontSize: 41,
                   ),
                 ),
               ),
-              expandedHeight: 220,
-              flexibleSpace: FlexibleSpaceBar(
-                stretchModes: [StretchMode.zoomBackground],
-                collapseMode: CollapseMode.parallax,
-                background: Padding(
-                  padding: const EdgeInsets.only(top: 120),
-                  child: Container(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              width: 25,
-                            ),
-                            FirebaseAuth.instance.currentUser?.photoURL != null
-                                ? CircleAvatar(
-                                    maxRadius: 45,
-                                    foregroundImage: NetworkImage(FirebaseAuth
-                                        .instance.currentUser!.photoURL
-                                        .toString()))
-                                : CircleAvatar(
-                                    maxRadius: 45,
-                                    foregroundImage: gender == 0
-                                        ? AssetImage(
-                                            "assets/profileWomen.png",
-                                          )
-                                        : AssetImage("assets/profileMen.png"),
-                                    backgroundColor: Colors.white,
-                                  ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 0),
-                                  child: Text(
-                                    FirebaseAuth.instance.currentUser!
-                                                .displayName !=
-                                            null
-                                        ? "Hi, $userName!"
-                                        : "Hey!\n ${auth.currentUser!.displayName}",
-                                    style: GoogleFonts.roboto(
-                                        color: Colors.white,
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.bold),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 7),
-                                  child: Text(
-                                    "Level $level",
-                                    style: GoogleFonts.roboto(
-                                      color: Colors.white,
-                                      fontSize: 18,
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.only(left: 12, top: 6),
-                                  child: Text(
-                                    "$incompletedCount tasks remaining",
-                                    style: GoogleFonts.roboto(
-                                      color: Colors.white,
-                                      fontSize: 18,
-                                      height: .8,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 30, top: 5),
-                          child: Text(
-                            DateFormat.yMMMEd().format(DateTime.now()),
-                            style: GoogleFonts.roboto(
-                              color: Colors.white,
-                              fontSize: 12,
-                              height: 1.2,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+              toolbarHeight: 70,
+              centerTitle: true,
+              // backgroundColor: Color.fromARGB(255, 255, 255, 255),
+              backgroundColor: Color(0xff5d5fef),
+              // Color.fromARGB(255, 102, 133, 218), //Color.fromRGBO(83, 123, 233, 1),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(40),
+                      bottomRight: Radius.circular(40))),
             ),
           ];
         },
@@ -505,6 +422,33 @@ class _HomePageState extends State<HomePage> {
                         );
                       });
                 }),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                padding: EdgeInsets.all(30),
+                width: MediaQuery.of(context).size.width,
+                height: 200,
+                decoration: BoxDecoration(
+                    color: Color.fromRGBO(181, 138, 229, 1),
+                    borderRadius: BorderRadius.all(Radius.circular(30))),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('5/7 tasks',
+                        style: GoogleFonts.poppins(
+                            fontSize: 18,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500)),
+                    Text('Education',
+                        style: GoogleFonts.poppins(
+                            fontSize: 32,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700)),
+                  ],
+                ),
+              ),
+            ),
           ]),
         ),
       ),

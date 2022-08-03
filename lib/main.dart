@@ -3,6 +3,7 @@
 import 'package:alan_voice/alan_voice.dart';
 import 'package:devstack/Service/Auth_Service.dart';
 import 'package:devstack/pages/mainPage.dart';
+import 'package:devstack/zoomDrawer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -52,7 +53,8 @@ class _MyAppState extends State<MyApp> {
     String? token2 = await authClass.getToken2();
     if (token != null) {
       setState(() {
-        currentPage = MainPage();
+        // currentPage = MainPage();
+        currentPage = zoomDrawer();
       });
     } else {
       String? token2 = await authClass.getTokenForEmailAuth();
@@ -60,14 +62,16 @@ class _MyAppState extends State<MyApp> {
         print("Email token null");
       } else {
         setState(() {
-          currentPage = MainPage();
+          //currentPage = MainPage();
+          currentPage = zoomDrawer();
         });
       }
     }
     if (token == null) {
       if (token2 != null) {
         setState(() {
-          currentPage = MainPage();
+          //currentPage = MainPage();
+          currentPage = zoomDrawer();
         });
       }
     }

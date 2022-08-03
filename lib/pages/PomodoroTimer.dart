@@ -12,6 +12,7 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_alarm_clock/flutter_alarm_clock.dart';
 import 'package:flutter_spinbox/material.dart';
+import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -57,6 +58,18 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
         backgroundColor: Color.fromARGB(255, 255, 255, 255),
         extendBodyBehindAppBar: true,
         appBar: AppBar(
+          leading: Padding(
+            padding: const EdgeInsets.only(left: 20, top: 10),
+            child: IconButton(
+              icon: FaIcon(FontAwesomeIcons.bars,
+                  //color: Color(0xff5d5fef),
+                  color: Colors.white),
+              onPressed: () {
+                ZoomDrawer.of(context)!.toggle();
+              },
+              iconSize: 32,
+            ),
+          ),
           centerTitle: true,
           toolbarHeight: 65,
           shape: RoundedRectangleBorder(
@@ -67,7 +80,7 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
           title: Padding(
             padding: const EdgeInsets.only(top: 0),
             child: Text(
-              "Your Pomodoro",
+              "Focus Timer",
               textAlign: TextAlign.center,
               style: GoogleFonts.pacifico(
                 color: Colors.white,
@@ -75,7 +88,9 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
               ),
             ),
           ),
-          backgroundColor: Color.fromRGBO(83, 123, 233, 1),
+          //backgroundColor: Color.fromRGBO(83, 123, 233, 1),
+          backgroundColor: Color(0xff5d5fef),
+          //  backgroundColor: Colors.white,
         ),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -377,6 +392,16 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
                         ],
                       ),
                       Padding(
+                        padding: const EdgeInsets.only(top: 15),
+                        child: Opacity(
+                          opacity: 0.7,
+                          child: Image.asset(
+                            "assets/pomodoroFill.png",
+                            height: 196,
+                          ),
+                        ),
+                      ),
+                      Padding(
                         padding: const EdgeInsets.only(top: 5),
                         child: Text(
                           "Use your timer to track \nyour focus time",
@@ -385,16 +410,6 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
                               fontWeight: FontWeight.w600,
                               fontSize: 17),
                           textAlign: TextAlign.center,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 0),
-                        child: Opacity(
-                          opacity: 0.7,
-                          child: Image.asset(
-                            "assets/pomodoroFill.png",
-                            height: 150,
-                          ),
                         ),
                       ),
                     ],
