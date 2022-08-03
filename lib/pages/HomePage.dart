@@ -466,7 +466,7 @@ class _HomePageState extends State<HomePage> {
                       });
                 }),
             //Education Container
-            /* Padding(
+            Padding(
               padding: const EdgeInsets.all(8.0),
               child: Stack(alignment: AlignmentDirectional.topEnd, children: [
                 Container(
@@ -682,7 +682,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ]),
-            ),*/
+            ),
             //ici sa
           ]),
         ),
