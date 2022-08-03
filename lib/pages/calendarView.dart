@@ -36,7 +36,7 @@ class _MyHomePageState extends State<MyHomePage> {
     //getDataFromFirestore();
     getDataFromFirestore().then((results) {
       SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-      setState(() {});
+        setState(() {});
       });
     });
     super.initState();
@@ -64,7 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         toolbarHeight: 60,
 
-      /*  //backgroundColor: Colors.white,
+        /*  //backgroundColor: Colors.white,
         backgroundColor: Color(0xff5d5fef),
 */
         backgroundColor: returnCalendarColor(context),
@@ -84,10 +84,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 color: Colors.white),
           ),
         ),
-        shape: RoundedRectangleBorder(
+        /*shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(40),
-                bottomRight: Radius.circular(40))),
+                bottomRight: Radius.circular(40))),*/
         centerTitle: true,
       ),
       body: Column(
@@ -262,8 +262,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   timeRulerSize: 50,
                   timeTextStyle: GoogleFonts.poppins(
                       fontWeight: FontWeight.w500,
-                     // color: Colors.black54,
-                     color: textColorAxes(context),
+                      // color: Colors.black54,
+                      color: textColorAxes(context),
                       fontSize: 11)),
               allowedViews: [
                 CalendarView.day,
@@ -824,25 +824,21 @@ class MeetingDataSource extends CalendarDataSource {
 }
 
 //Pomodoro color
-Color returnCalendarColor(BuildContext context){
+Color returnCalendarColor(BuildContext context) {
   ThemeData currentTheme = Theme.of(context);
-  if(currentTheme.brightness== Brightness.dark){
-  return Color.fromARGB(0, 0, 0, 0);
-  } else{
-     return  Color.fromRGBO(83, 123, 233, 1);
+  if (currentTheme.brightness == Brightness.dark) {
+    return Color.fromARGB(0, 0, 0, 0);
+  } else {
+    return Color.fromRGBO(83, 123, 233, 1);
   }
- 
 }
 
 //Pomodoro color
-Color textColorAxes(BuildContext context){
+Color textColorAxes(BuildContext context) {
   ThemeData currentTheme = Theme.of(context);
-  if(currentTheme.brightness== Brightness.dark){
-  return Colors.white;
-  } else{
-  
-     return  Colors.black54;
+  if (currentTheme.brightness == Brightness.dark) {
+    return Colors.white;
+  } else {
+    return Colors.black54;
   }
- 
 }
-
