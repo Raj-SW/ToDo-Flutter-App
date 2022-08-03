@@ -252,6 +252,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: Colors.white,
       extendBodyBehindAppBar: true,
+
       floatingActionButton: FloatingActionButton(
         isExtended: true,
         backgroundColor: Color.fromARGB(255, 233, 116, 80),
@@ -262,12 +263,17 @@ class _HomePageState extends State<HomePage> {
         child: Icon(
           Icons.add,
           size: 50,
+
+     
+          ),
+
         ),
       ),
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return <Widget>[
             SliverAppBar(
+
               actions: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -289,6 +295,21 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               elevation: 8,
+
+              floating: true,
+              pinned: true,
+              elevation: 5,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(40),
+                      bottomRight: Radius.circular(40))),
+              toolbarHeight: 80,
+              centerTitle: true,
+              backgroundColor: returnBettermeBackgroundColor(context),
+              //color: returnBettermeBackgroundColor(context),
+             // backgroundColor: Color.fromARGB(255, 106, 139, 228),
+              // Color.fromARGB(255, 102, 133, 218), //Color.fromRGBO(83, 123, 233, 1),
+
               title: Padding(
                 padding: const EdgeInsets.only(top: 10),
                 child: Text(
@@ -326,7 +347,8 @@ class _HomePageState extends State<HomePage> {
                     borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(20),
                         bottomRight: Radius.circular(20)),
-                    iconEnabledColor: Color.fromRGBO(83, 123, 233, 1),
+                   // iconEnabledColor: Color.fromRGBO(83, 123, 233, 1),
+                      iconEnabledColor: returnDropDownColor(context),
                     focusColor: Color.fromRGBO(83, 123, 233, 1),
                     value: selectedItem,
                     items: itemList
@@ -337,7 +359,10 @@ class _HomePageState extends State<HomePage> {
                               style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w500,
-                                  color: Color.fromRGBO(83, 123, 233, 1)),
+                                 // color: Color.fromRGBO(83, 123, 233, 1)
+                                 color: returnDropDownColor(context)
+
+                                  ),
                             )))
                         .toList(),
                     onChanged: (item) => setState(() => selectedItem = item),
@@ -758,4 +783,48 @@ class Select {
   String id = '';
   bool checkValue = false;
   Select({required this.id, required this.checkValue});
+}
+
+//Profile pic color
+Color returnBettermeBackgroundColor(BuildContext context){
+  ThemeData currentTheme = Theme.of(context);
+  if(currentTheme.brightness== Brightness.dark){
+  return Color.fromARGB(0, 0, 0, 0);
+  } else{
+     return  Color.fromRGBO(83, 123, 233, 1);
+  }
+ 
+}
+
+//better me color
+Color returnBettermeColor(BuildContext context){
+  ThemeData currentTheme = Theme.of(context);
+  if(currentTheme.brightness== Brightness.dark){
+  return Color.fromARGB(0, 0, 0, 0);
+  } else{
+     return  Color.fromRGBO(83, 123, 233, 1);
+  }
+ 
+}
+
+//floatingcolor
+Color returnFloatingColor(BuildContext context){
+  ThemeData currentTheme = Theme.of(context);
+  if(currentTheme.brightness== Brightness.dark){
+  return Color.fromARGB(255, 255, 255, 255);
+  } else{
+     return  Color.fromARGB(255, 233, 116, 80);
+  }
+ 
+}
+
+//drop down color
+Color returnDropDownColor(BuildContext context){
+  ThemeData currentTheme = Theme.of(context);
+  if(currentTheme.brightness== Brightness.dark){
+  return Color.fromARGB(255, 255, 255, 255);
+  } else{
+     return  Color.fromRGBO(83, 123, 233, 1);
+  }
+ 
 }

@@ -55,7 +55,8 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color.fromARGB(255, 255, 255, 255),
+      
+       // backgroundColor: Color.fromARGB(255, 255, 255, 255),
         extendBodyBehindAppBar: true,
         appBar: AppBar(
           leading: Padding(
@@ -88,9 +89,14 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
               ),
             ),
           ),
+
           //backgroundColor: Color.fromRGBO(83, 123, 233, 1),
-          backgroundColor: Color(0xff5d5fef),
+          //backgroundColor: Color(0xff5d5fef),
           //  backgroundColor: Colors.white,
+
+         // backgroundColor: Color.fromRGBO(83, 123, 233, 1),
+         backgroundColor: returnPomodoroBackgroundColor(context),
+
         ),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -268,7 +274,9 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
                             style: GoogleFonts.poppins(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
-                                color: Colors.black54),
+                                //color: Colors.black54
+                                color: activityTypos(context),
+                                ),
                           )),
                       //Row for chips
                       Row(
@@ -300,9 +308,11 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
                                       ? Colors.white
                                       : Colors.black),
                             ),
-                            backgroundColor: Color.fromARGB(255, 255, 146, 146),
+                            //backgroundColor: Color.fromARGB(255, 255, 146, 146),
+                            backgroundColor: backgroundWork(context),
                             shadowColor: Colors.transparent,
-                            selectedColor: Color(0xFFEF5350),
+                            //selectedColor: Color(0xFFEF5350),
+                            selectedColor: selectWork(context),
                             selectedShadowColor: Colors.red,
                             side: BorderSide(
                                 color: isSelected1 == true
@@ -340,9 +350,11 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
                                       ? Colors.white
                                       : Colors.black),
                             ),
-                            backgroundColor: Color.fromARGB(255, 255, 253, 136),
+                           // backgroundColor: Color.fromARGB(255, 255, 253, 136),
+                           backgroundColor: backgroundStudy(context),
                             shadowColor: Colors.transparent,
-                            selectedColor: Color.fromARGB(177, 255, 196, 59),
+                            //selectedColor: Color.fromARGB(177, 255, 196, 59),
+                            selectedColor: selectStudy(context),
                             selectedShadowColor: Colors.yellow,
                             side: BorderSide(
                                 color: Color.fromARGB(54, 255, 196, 59),
@@ -378,9 +390,11 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
                                       ? Colors.white
                                       : Colors.black),
                             ),
-                            backgroundColor: Color.fromARGB(255, 185, 227, 255),
+                            //backgroundColor: Color.fromARGB(255, 185, 227, 255),
+                            backgroundColor: backgroundRest(context),
                             shadowColor: Colors.transparent,
-                            selectedColor: Colors.blue,
+                            //selectedColor: Colors.blue,
+                            selectedColor: selectRest(context),
                             selectedShadowColor: Colors.blue,
                             side: BorderSide(
                                 color: Colors.blue,
@@ -406,7 +420,8 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
                         child: Text(
                           "Use your timer to track \nyour focus time",
                           style: GoogleFonts.poppins(
-                              color: Colors.black38,
+                              //color: Colors.black38,
+                              color: focusDescription(context),
                               fontWeight: FontWeight.w600,
                               fontSize: 17),
                           textAlign: TextAlign.center,
@@ -533,5 +548,120 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
 
     print("firebase  $activityType");
     print(restCumm);
+  }
+}
+
+//Pomodoro color
+Color returnPomodoroBackgroundColor(BuildContext context){
+  ThemeData currentTheme = Theme.of(context);
+  if(currentTheme.brightness== Brightness.dark){
+  return Color.fromARGB(0, 0, 0, 0);
+  } else{
+     return  Color.fromRGBO(83, 123, 233, 1);
+  }
+ 
+}
+
+//selected Work Border
+Color selectedWorkBorder(BuildContext context){
+  ThemeData currentTheme = Theme.of(context);
+  if(currentTheme.brightness== Brightness.dark){
+
+  return Color.fromARGB(255, 255, 255, 255);
+  } else{
+    if(isSelected1==true){
+      return Color(0xFFEF5350);
+    } else{
+      Color.fromARGB(255, 255, 0, 0);
+    }
+     return  Color.fromRGBO(83, 123, 233, 1);
+  }
+}
+
+//Background study
+
+Color backgroundStudy(context){
+  ThemeData currentTheme = Theme.of(context);
+  if(currentTheme.brightness== Brightness.dark){
+  return Colors.white;
+  } else{
+     return Color.fromARGB(255, 255, 253, 136);
+  }
+}
+
+//Selected study
+
+Color selectStudy(context){
+  ThemeData currentTheme = Theme.of(context);
+  if(currentTheme.brightness== Brightness.dark){
+  return Colors.black;
+  } else{
+     return Colors.yellow;
+  }
+}
+
+//Background Rest
+
+Color backgroundRest(context){
+  ThemeData currentTheme = Theme.of(context);
+  if(currentTheme.brightness== Brightness.dark){
+  return Colors.white;
+  } else{
+     return Color.fromARGB(255, 185, 227, 255);
+  }
+}
+
+//Selected Rest
+
+Color selectRest(context){
+  ThemeData currentTheme = Theme.of(context);
+  if(currentTheme.brightness== Brightness.dark){
+  return Colors.black;
+  } else{
+     return Colors.blue;
+  }
+}
+
+//Background work
+
+Color backgroundWork(context){
+  ThemeData currentTheme = Theme.of(context);
+  if(currentTheme.brightness== Brightness.dark){
+  return Colors.white;
+  } else{
+     return Color.fromARGB(255, 255, 146, 146);
+  }
+}
+
+//Selected work
+
+Color selectWork(context){
+  ThemeData currentTheme = Theme.of(context);
+  if(currentTheme.brightness== Brightness.dark){
+  return Colors.black;
+  } else{
+     return Color(0xFFEF5350);
+  }
+}
+
+//Focus description
+
+Color focusDescription(context){
+  ThemeData currentTheme = Theme.of(context);
+  if(currentTheme.brightness== Brightness.dark){
+  return Colors.white;
+  } else{
+     return Colors.black38;
+  }
+}
+
+//Activity type
+
+Color activityTypos(context){
+  ThemeData currentTheme = Theme.of(context);
+  if(currentTheme.brightness== Brightness.dark){
+  return Colors.white;
+  } else{
+     return Colors.black54;
   }
 }
