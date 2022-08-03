@@ -63,8 +63,9 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
         toolbarHeight: 60,
+        //backgroundColor: Colors.white,
+        /*
 
-        /*  //backgroundColor: Colors.white,
         backgroundColor: Color(0xff5d5fef),
 */
         backgroundColor: returnCalendarColor(context),
@@ -84,10 +85,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 color: Colors.white),
           ),
         ),
-        /*shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(40),
-                bottomRight: Radius.circular(40))),*/
         centerTitle: true,
       ),
       body: Column(
@@ -102,7 +99,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 InkWell(
                   child: FaIcon(
                     FontAwesomeIcons.caretLeft,
-                    color: PrimaryColorlight,
+                    //  color: PrimaryColorlight,
+                    color: switchPrimary(context),
                   ),
                   onTap: () {
                     controllerCalendar.backward!();
@@ -115,7 +113,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   padding: EdgeInsets.all(10),
                   height: 40,
                   decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 255, 238, 208),
+                      color: switchHighlight(context),
+                      //Color.fromARGB(255, 255, 238, 208),
                       borderRadius: BorderRadius.all(Radius.circular(15))),
                   child: Row(
                     children: [
@@ -126,7 +125,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                 ? _HeaderText!
                                 : _monthlyHeader!,
                         style: GoogleFonts.poppins(
-                            color: Color.fromARGB(255, 255, 181, 53),
+                            color: switchHighlightFont(context),
+                            // Color.fromARGB(255, 255, 181, 53),
                             fontWeight: FontWeight.bold,
                             fontSize: 16),
                       )
@@ -138,7 +138,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 InkWell(
                   child: FaIcon(FontAwesomeIcons.caretRight,
-                      color: PrimaryColorlight),
+                      color: switchPrimary(context) //PrimaryColorlight
+                      ),
                   onTap: () {
                     controllerCalendar.forward!();
                   },
@@ -154,7 +155,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     padding: EdgeInsets.all(5),
                     decoration: BoxDecoration(
                         color: controllerCalendar.view == CalendarView.day
-                            ? containerColorYelllowLight
+                            ? switchContainerSelectedHighlight(
+                                context) //containerColorYelllowLight
                             : Colors.white,
                         borderRadius: BorderRadius.all(Radius.circular(15))),
                     child: Column(
@@ -165,13 +167,13 @@ class _MyHomePageState extends State<MyHomePage> {
                           Icons.today_rounded,
                           size: 25,
                           color: controllerCalendar.view == CalendarView.day
-                              ? colorYellowbold
+                              ? switchIconColor(context) //colorYellowbold
                               : Colors.black54,
                         ),
                         Text(
                           "Daily",
                           style: controllerCalendar.view == CalendarView.day
-                              ? styleLittleCalendar
+                              ? switchTextStyle(context) //styleLittleCalendar
                               : normalStyleLittleCalendar,
                         )
                       ],
@@ -188,7 +190,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     padding: EdgeInsets.all(5),
                     decoration: BoxDecoration(
                         color: controllerCalendar.view == CalendarView.week
-                            ? containerColorYelllowLight
+                            ? switchContainerSelectedHighlight(
+                                context) //containerColorYelllowLight
                             : Colors.white,
                         borderRadius: BorderRadius.all(Radius.circular(15))),
                     child: Column(
@@ -197,13 +200,13 @@ class _MyHomePageState extends State<MyHomePage> {
                           Icons.calendar_view_week_rounded,
                           size: 30,
                           color: controllerCalendar.view == CalendarView.week
-                              ? colorYellowbold
+                              ? switchIconColor(context) //colorYellowbold
                               : Colors.black54,
                         ),
                         Text(
                           "Weekly",
                           style: controllerCalendar.view == CalendarView.week
-                              ? styleLittleCalendar
+                              ? switchTextStyle(context) //styleLittleCalendar
                               : normalStyleLittleCalendar,
                         )
                       ],
@@ -220,7 +223,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     padding: EdgeInsets.all(5),
                     decoration: BoxDecoration(
                         color: controllerCalendar.view == CalendarView.month
-                            ? containerColorYelllowLight
+                            ? switchContainerSelectedHighlight(
+                                context) //containerColorYelllowLight
                             : Colors.white,
                         borderRadius: BorderRadius.all(Radius.circular(15))),
                     child: Column(
@@ -229,13 +233,13 @@ class _MyHomePageState extends State<MyHomePage> {
                           Icons.calendar_month_rounded,
                           size: 30,
                           color: controllerCalendar.view == CalendarView.month
-                              ? colorYellowbold
+                              ? switchIconColor(context) //colorYellowbold
                               : Colors.black45,
                         ),
                         Text(
                           "Monthly",
                           style: controllerCalendar.view == CalendarView.month
-                              ? styleLittleCalendar
+                              ? switchTextStyle(context) //styleLittleCalendar
                               : normalStyleLittleCalendar,
                         )
                       ],
@@ -342,10 +346,10 @@ class _MyHomePageState extends State<MyHomePage> {
               showCurrentTimeIndicator: true,
               monthViewSettings: MonthViewSettings(
                   agendaStyle: AgendaStyle(
-                      backgroundColor: Colors.white,
+                      //backgroundColor:// Colors.white,
                       appointmentTextStyle: TextStyle(
-                        color: Colors.white,
-                      )),
+                    color: Colors.white,
+                  )),
                   navigationDirection: MonthNavigationDirection.horizontal,
                   appointmentDisplayMode: MonthAppointmentDisplayMode.indicator,
                   showAgenda: true,
@@ -498,7 +502,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   Text(h1,
                       style: GoogleFonts.poppins(
                           color: checkToday(h1, d1)
-                              ? Colors.white
+                              ? colorYellowbold
                               : Colors.black54,
                           fontWeight: checkToday(h1, d1)
                               ? FontWeight.bold
@@ -600,7 +604,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   Text(h4,
                       style: GoogleFonts.poppins(
                           color: checkToday(h4, d4)
-                              ? colorYellowbold
+                              ? switchHighlightFont(context) //colorYellowbold
                               : Colors.black54,
                           fontSize: 12,
                           fontWeight: checkToday(h4, d4)
@@ -610,7 +614,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     d4,
                     style: GoogleFonts.poppins(
                         color: checkToday(h4, d4)
-                            ? colorYellowbold
+                            ? switchHighlightFont(context) //colorYellowbold
                             : Colors.black54,
                         fontSize: 12,
                         fontWeight: checkToday(h4, d4)
@@ -621,7 +625,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     Icons.circle,
                     size: 5,
                     color: checkToday(h4, d4)
-                        ? colorYellowbold
+                        ? switchHighlightFont(context) //colorYellowbold
                         : Colors.transparent,
                   )
                 ],
@@ -756,34 +760,27 @@ class _MyHomePageState extends State<MyHomePage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Text(
-              "Sun",
-              style: calendarLabelMonthlyStyle,
-            ),
-            Text(
-              "Mon",
-              style: calendarLabelMonthlyStyle,
-            ),
-            Text(
-              "Tue",
-              style: calendarLabelMonthlyStyle,
-            ),
-            Text(
-              "Wed",
-              style: calendarLabelMonthlyStyle,
-            ),
-            Text(
-              "Thur",
-              style: calendarLabelMonthlyStyle,
-            ),
-            Text(
-              "Fri",
-              style: calendarLabelMonthlyStyle,
-            ),
-            Text(
-              "Sat",
-              style: calendarLabelMonthlyStyle,
-            )
+            Text("Sun",
+                style: switchTextStyle(context) //calendarLabelMonthlyStyle,
+                ),
+            Text("Mon",
+                style: switchTextStyle(context) //calendarLabelMonthlyStyle,
+                ),
+            Text("Tue",
+                style: switchTextStyle(context) // calendarLabelMonthlyStyle,
+                ),
+            Text("Wed",
+                style: switchTextStyle(context) //calendarLabelMonthlyStyle,
+                ),
+            Text("Thur",
+                style: switchTextStyle(context) //calendarLabelMonthlyStyle,
+                ),
+            Text("Fri",
+                style: switchTextStyle(context) // calendarLabelMonthlyStyle,
+                ),
+            Text("Sat",
+                style: switchTextStyle(context) // calendarLabelMonthlyStyle,
+                )
           ],
         ),
         SizedBox(
@@ -804,14 +801,17 @@ class _MyHomePageState extends State<MyHomePage> {
               offset: Offset(1, 1), // Shadow position
             ),
           ],
-          color: Color.fromARGB(255, 209, 228, 255).withOpacity(0.9),
+          color: switchMonthCellBuilderColor(
+              context), // Color.fromARGB(255, 209, 228, 255).withOpacity(0.9),
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(17.5),
               bottomRight: Radius.circular(17.5))),
       child: Center(
           child: Text(
         details.date.day.toString(),
-        style: GoogleFonts.poppins(color: Colors.black45),
+        style: GoogleFonts.poppins(
+            color: switchMonthlyCellTextColor(context) //Colors.black45
+            ),
       )),
     );
   }
@@ -827,7 +827,7 @@ class MeetingDataSource extends CalendarDataSource {
 Color returnCalendarColor(BuildContext context) {
   ThemeData currentTheme = Theme.of(context);
   if (currentTheme.brightness == Brightness.dark) {
-    return Color.fromARGB(0, 0, 0, 0);
+    return Color.fromARGB(255, 0, 0, 0);
   } else {
     return Color.fromRGBO(83, 123, 233, 1);
   }
@@ -840,5 +840,81 @@ Color textColorAxes(BuildContext context) {
     return Colors.white;
   } else {
     return Colors.black54;
+  }
+}
+
+Color switchPrimary(BuildContext context) {
+  ThemeData currentTheme = Theme.of(context);
+  if (currentTheme.brightness == Brightness.dark) {
+    return Colors.grey;
+  } else {
+    return PrimaryColorlight;
+  }
+}
+
+Color switchHighlight(BuildContext context) {
+  ThemeData currentTheme = Theme.of(context);
+  if (currentTheme.brightness == Brightness.dark) {
+    return Colors.grey;
+  } else {
+    return containerColorYelllowLight //Color.fromARGB(255, 255, 181, 53)
+        ;
+  }
+}
+
+Color switchHighlightFont(BuildContext context) {
+  ThemeData currentTheme = Theme.of(context);
+  if (currentTheme.brightness == Brightness.dark) {
+    return Colors.white;
+  } else {
+    return Color.fromARGB(255, 255, 181, 53);
+  }
+}
+
+Color switchIconColor(BuildContext context) {
+  ThemeData currentTheme = Theme.of(context);
+  if (currentTheme.brightness == Brightness.dark) {
+    return Color.fromARGB(255, 255, 255, 255);
+  } else {
+    return colorYellowbold;
+  }
+}
+
+TextStyle switchTextStyle(BuildContext context) {
+  ThemeData currentTheme = Theme.of(context);
+  if (currentTheme.brightness == Brightness.dark) {
+    return GoogleFonts.poppins(
+        color: Color.fromARGB(255, 255, 255, 255),
+        fontWeight: FontWeight.w400,
+        fontSize: 14);
+  } else {
+    return normalStyleLittleCalendar;
+  }
+}
+
+Color switchContainerSelectedHighlight(BuildContext context) {
+  ThemeData currentTheme = Theme.of(context);
+  if (currentTheme.brightness == Brightness.dark) {
+    return Colors.grey;
+  } else {
+    return containerColorYelllowLight;
+  }
+}
+
+Color switchMonthCellBuilderColor(BuildContext context) {
+  ThemeData currentTheme = Theme.of(context);
+  if (currentTheme.brightness == Brightness.dark) {
+    return Colors.white60;
+  } else {
+    return Color.fromARGB(255, 209, 228, 255).withOpacity(0.9);
+  }
+}
+
+Color switchMonthlyCellTextColor(BuildContext context) {
+  ThemeData currentTheme = Theme.of(context);
+  if (currentTheme.brightness == Brightness.dark) {
+    return Color.fromARGB(255, 255, 255, 255);
+  } else {
+    return Colors.black45;
   }
 }

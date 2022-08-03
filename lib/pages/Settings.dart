@@ -72,7 +72,7 @@ class _SettingsState extends State<Settings> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color.fromARGB(255, 255, 255, 255),
+        //backgroundColor: Color.fromARGB(255, 255, 255, 255),
         /* appBar: AppBar(
           //backgroundColor: Color.fromRGBO(83, 123, 233, 1),
 
@@ -554,7 +554,6 @@ class _SettingsState extends State<Settings> {
                                     ),
                                   ],
                                   color: returnSettingsColor(context),
-
                                   //color: Color.fromRGBO(254, 218, 191, 1),
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(30))),
@@ -598,23 +597,23 @@ class _SettingsState extends State<Settings> {
                                           Icon(Icons.keyboard_arrow_right),
                                     ),
                                     ListTile(
-                                      leading: FaIcon(
-                                        FontAwesomeIcons.palette,
-                                      ),
-                                      title: Text("Theme",
-                                          style: GoogleFonts.poppins(
-                                            fontSize: 18,
-                                          )),
-                                      trailing:
-                                          Icon(Icons.keyboard_arrow_right),
-                                    ),
-                                    //Dark mode switch
-                                    Switch(
-                                        value: themeManager.themeMode ==
-                                            ThemeMode.dark,
-                                        onChanged: (newvalue) {
-                                          themeManager.toggleTheme(newvalue);
-                                        })
+                                        leading: FaIcon(
+                                          FontAwesomeIcons.palette,
+                                        ),
+                                        title: Text("Dark Mode",
+                                            style: GoogleFonts.poppins(
+                                              fontSize: 18,
+                                            )),
+                                        trailing: //Dark mode switch
+                                            Switch(
+                                                value: themeManager.themeMode ==
+                                                    ThemeMode.dark,
+                                                onChanged: (newvalue) {
+                                                  themeManager
+                                                      .toggleTheme(newvalue);
+                                                })
+                                        //Icon(Icons.keyboard_arrow_right),
+                                        ),
                                   ]),
                             ),
                           ),
@@ -758,7 +757,6 @@ class _SettingsState extends State<Settings> {
                                       offset: Offset(2, 2), // Shadow position
                                     ),
                                   ],
-
                                   //test theme
                                   color: returnSignOutColor(context),
                                   borderRadius:
@@ -989,7 +987,8 @@ Color volumeSliderColor(BuildContext context) {
   if (currentTheme.brightness == Brightness.dark) {
     return Colors.white;
   } else {
-    return Colors.amberAccent;
+    return Color.fromRGBO(83, 123, 233, 1) //Colors.amberAccent
+        ;
   }
 }
 

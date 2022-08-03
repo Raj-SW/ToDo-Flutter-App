@@ -31,11 +31,12 @@ class _zoomDrawerState extends State<zoomDrawer> {
               offset: Offset(2, 2))
         ],
         borderRadius: 30,
-        drawerShadowsBackgroundColor: Color.fromARGB(255, 255, 255, 255),
+        //  drawerShadowsBackgroundColor: Color.fromARGB(255, 255, 255, 255),
         menuScreenWidth: MediaQuery.of(context).size.width * 0.45,
         slideWidth: MediaQuery.of(context).size.width * 0.6,
         //  menuBackgroundColor: Colors.deepPurple.shade100,
-        menuBackgroundColor: Color.fromARGB(255, 133, 135, 237),
+        //menuBackgroundColor: Color.fromARGB(255, 133, 135, 237),
+        menuBackgroundColor: drawerBackground(context),
         angle: 0,
         mainScreenScale: 0.25,
         mainScreen: getScreen(),
@@ -65,5 +66,15 @@ class _zoomDrawerState extends State<zoomDrawer> {
       default:
         return const HomePage();
     }
+  }
+}
+
+//drawer background
+Color drawerBackground(BuildContext context) {
+  ThemeData currentTheme = Theme.of(context);
+  if (currentTheme.brightness == Brightness.dark) {
+    return Colors.black;
+  } else {
+    return Color.fromARGB(255, 133, 135, 237);
   }
 }

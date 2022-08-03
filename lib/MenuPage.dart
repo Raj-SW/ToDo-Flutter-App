@@ -41,8 +41,8 @@ class _MenuPageState extends State<MenuPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:
-          Color.fromARGB(255, 133, 135, 237), // Colors.deepPurple.shade300,
+      backgroundColor: drawerBackground(context),
+      //  Color.fromARGB(255, 133, 135, 237), // Colors.deepPurple.shade300,
       body: SafeArea(
           child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -160,5 +160,15 @@ class _MenuPageState extends State<MenuPage> {
             level = value["Level"];
           })
         });
+  }
+}
+
+//drawer background
+Color drawerBackground(BuildContext context) {
+  ThemeData currentTheme = Theme.of(context);
+  if (currentTheme.brightness == Brightness.dark) {
+    return Colors.grey;
+  } else {
+    return Color.fromARGB(255, 133, 135, 237);
   }
 }
