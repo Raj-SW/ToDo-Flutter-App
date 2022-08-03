@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 import '../Service/Auth_Service.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:devstack/assets.dart';
@@ -422,32 +423,186 @@ class _HomePageState extends State<HomePage> {
                         );
                       });
                 }),
+            //Education Container
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Container(
-                padding: EdgeInsets.all(30),
-                width: MediaQuery.of(context).size.width,
-                height: 200,
-                decoration: BoxDecoration(
-                    color: Color.fromRGBO(181, 138, 229, 1),
-                    borderRadius: BorderRadius.all(Radius.circular(30))),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('5/7 tasks',
-                        style: GoogleFonts.poppins(
-                            fontSize: 18,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500)),
-                    Text('Education',
-                        style: GoogleFonts.poppins(
-                            fontSize: 32,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w700)),
-                  ],
+              child: Stack(alignment: AlignmentDirectional.topEnd, children: [
+                Container(
+                  padding: EdgeInsets.all(20),
+                  width: MediaQuery.of(context).size.width,
+                  height: 200,
+                  decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.black54,
+                            blurRadius: 2,
+                            offset: Offset(0, 2))
+                      ],
+                      color: Color.fromRGBO(245, 119, 185, 0.95),
+                      borderRadius: BorderRadius.all(Radius.circular(30))),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('5/7 tasks',
+                          style: GoogleFonts.poppins(
+                              fontSize: 18,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500)),
+                      Padding(
+                        padding: const EdgeInsets.all(1.0),
+                        child: Divider(
+                          thickness: 1,
+                          height: 2,
+                          color: Colors.white,
+                          indent: 1,
+                          endIndent: 120,
+                        ),
+                      ),
+                      Text('Education',
+                          style: GoogleFonts.poppins(
+                              fontSize: 32,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700)),
+                    ],
+                  ),
                 ),
-              ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 20, top: 15),
+                  child: Image.asset(
+                    "assets/learning.png",
+                    width: 175,
+                    height: 175,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 225, top: 100),
+                  child: Transform.rotate(
+                    angle: 0.25,
+                    child: Lottie.asset(
+                      "assets/educationGlobe.json",
+                      width: 85,
+                      height: 85,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 225, top: 100),
+                  child: Transform.rotate(
+                    angle: 0.25,
+                    child: Lottie.asset(
+                      "assets/BooksLottie.json",
+                      width: 85,
+                      height: 85,
+                    ),
+                  ),
+                ),
+              ]),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Stack(alignment: AlignmentDirectional.topEnd, children: [
+                Container(
+                  padding: EdgeInsets.all(20),
+                  width: MediaQuery.of(context).size.width,
+                  height: 200,
+                  decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.black54,
+                            blurRadius: 2,
+                            offset: Offset(0, 2))
+                      ],
+                      color: Color.fromRGBO(107, 72, 246, 0.75),
+                      borderRadius: BorderRadius.all(Radius.circular(30))),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('2/12 tasks',
+                          style: GoogleFonts.poppins(
+                              fontSize: 18,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500)),
+                      Padding(
+                        padding: const EdgeInsets.all(1.0),
+                        child: Divider(
+                          thickness: 1,
+                          height: 2,
+                          color: Colors.white,
+                          indent: 1,
+                          endIndent: 120,
+                        ),
+                      ),
+                      Expanded(child: SizedBox()),
+                      Text('Todos',
+                          style: GoogleFonts.poppins(
+                              fontSize: 32,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700)),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 20, top: 15),
+                  child: Image.asset(
+                    "assets/todos.png",
+                    width: 175,
+                    height: 175,
+                  ),
+                ),
+              ]),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Stack(alignment: AlignmentDirectional.topEnd, children: [
+                Container(
+                  padding: EdgeInsets.all(20),
+                  width: MediaQuery.of(context).size.width,
+                  height: 200,
+                  decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.black54,
+                            blurRadius: 2,
+                            offset: Offset(0, 2))
+                      ],
+                      color: Color.fromRGBO(255, 229, 164, 1),
+                      borderRadius: BorderRadius.all(Radius.circular(30))),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('2/12 tasks',
+                          style: GoogleFonts.poppins(
+                              fontSize: 18,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500)),
+                      Padding(
+                        padding: const EdgeInsets.all(1.0),
+                        child: Divider(
+                          thickness: 1,
+                          height: 2,
+                          color: Colors.black54,
+                          indent: 1,
+                          endIndent: 120,
+                        ),
+                      ),
+                      Expanded(child: SizedBox()),
+                      Text('Todos',
+                          style: GoogleFonts.poppins(
+                              fontSize: 32,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w700)),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 20, top: 15),
+                  child: Image.asset(
+                    "assets/wishlist2.jpg",
+                    width: 175,
+                    height: 175,
+                  ),
+                ),
+              ]),
             ),
           ]),
         ),
