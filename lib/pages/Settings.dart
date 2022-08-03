@@ -10,6 +10,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import '../main.dart';
 import 'Welcome/welcome_screen.dart';
 import 'package:volume_controller/volume_controller.dart';
 
@@ -69,9 +70,11 @@ class _SettingsState extends State<Settings> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color.fromARGB(255, 255, 255, 255),
+      // backgroundColor: Color.fromARGB(255, 255, 255, 255),
+       //backgroundColor: preferencesBackground(context),
         appBar: AppBar(
-          backgroundColor: Color.fromRGBO(83, 123, 233, 1),
+          //backgroundColor: Color.fromRGBO(83, 123, 233, 1),
+          backgroundColor: preferencesBackground(context),
           elevation: 0,
           toolbarHeight: 60,
           shape: RoundedRectangleBorder(
@@ -82,6 +85,7 @@ class _SettingsState extends State<Settings> {
           foregroundColor: PrimaryColor,
           title: Text("Preferences",
               style: GoogleFonts.pacifico(color: Colors.white, fontSize: 40)),
+            
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -99,7 +103,8 @@ class _SettingsState extends State<Settings> {
                           offset: Offset(2, 2), // Shadow position
                         ),
                       ],
-                      color: Color.fromRGBO(207, 236, 255, 1),
+                      color:returnProfilePicColor(context),
+                     // color: Color.fromRGBO(207, 236, 255, 1),
                       borderRadius: BorderRadius.all(Radius.circular(30))),
                   width: MediaQuery.of(context).size.width,
                   child: Row(
@@ -165,7 +170,9 @@ class _SettingsState extends State<Settings> {
                               offset: Offset(2, 2), // Shadow position
                             ),
                           ],
-                          color: Color.fromRGBO(254, 218, 191, 1),
+                          color: returnSettingsColor(context),
+
+                          //color: Color.fromRGBO(254, 218, 191, 1),
                           borderRadius: BorderRadius.all(Radius.circular(30))),
                       width: MediaQuery.of(context).size.width,
                       child: Column(
@@ -185,6 +192,7 @@ class _SettingsState extends State<Settings> {
                               title: Slider(
                                 max: 1,
                                 min: 0,
+                                activeColor: volumeSliderColor(context),
                                 onChanged: (double value) {
                                   setState(() {
                                     _setVolumeValue = value;
@@ -212,8 +220,13 @@ class _SettingsState extends State<Settings> {
                                     fontSize: 18,
                                   )),
                               trailing: Icon(Icons.keyboard_arrow_right),
-                            )
+                            ),
+                            //Dark mode switch
+                            Switch(value: themeManager.themeMode == ThemeMode.dark,
+              onChanged: (newvalue) {
+                themeManager.toggleTheme(newvalue);})
                           ]),
+                          
                     ),
                   ),
                   Padding(
@@ -241,7 +254,8 @@ class _SettingsState extends State<Settings> {
                               offset: Offset(2, 2), // Shadow position
                             ),
                           ],
-                          color: Color.fromARGB(255, 255, 254, 215),
+                          color:returnYourStatsColor(context),
+                         // color: Color.fromARGB(255, 255, 254, 215),
                           borderRadius: BorderRadius.all(Radius.circular(30))),
                       width: MediaQuery.of(context).size.width,
                       child: Column(
@@ -344,7 +358,10 @@ class _SettingsState extends State<Settings> {
                               offset: Offset(2, 2), // Shadow position
                             ),
                           ],
-                          color: Color.fromARGB(255, 251, 175, 175),
+
+                          
+                         //test theme
+                          color: returnSignOutColor(context),
                           borderRadius: BorderRadius.all(Radius.circular(30))),
                       width: MediaQuery.of(context).size.width,
                       child: InkWell(
@@ -364,13 +381,15 @@ class _SettingsState extends State<Settings> {
                               style: GoogleFonts.poppins(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
-                                  color: Color.fromARGB(194, 255, 0, 0)),
+                                 // color: Color.fromARGB(194, 255, 0, 0)),
+                                  color: returnSignOutFont(context)),
                             ),
                             SizedBox(
                               width: 15,
                             ),
                             FaIcon(FontAwesomeIcons.arrowRightFromBracket,
-                                color: Color.fromARGB(194, 255, 0, 0))
+                               // color: Color.fromARGB(194, 255, 0, 0))
+                               color: returnSignOutFont(context)),
                           ],
                         ),
                       ),
@@ -495,6 +514,9 @@ class _SettingsState extends State<Settings> {
   }
 }
 
+
+
+
 class pomodoroData {
   pomodoroData(this.Priority, this.count);
   String Priority = '';
@@ -505,4 +527,82 @@ class taskCat {
   taskCat(this.priority, this.count);
   String priority = '';
   int count = 0;
+}
+
+//Profile pic color
+Color returnProfilePicColor(BuildContext context){
+  ThemeData currentTheme = Theme.of(context);
+  if(currentTheme.brightness== Brightness.dark){
+  return Color.fromARGB(0, 0, 0, 0);
+  } else{
+     return  Color.fromRGBO(207, 236, 255, 1);
+  }
+ 
+}
+//Sign out color
+Color returnSignOutColor(BuildContext context){
+  ThemeData currentTheme = Theme.of(context);
+  print('currentTheme');
+  print(currentTheme.brightness);
+  if(currentTheme.brightness== Brightness.dark){
+  return Color.fromARGB(0, 0, 0, 0);
+  } else{
+     return Color.fromARGB(255, 251, 175, 175);
+  }
+ 
+}
+//Sign out font color
+Color returnSignOutFont(BuildContext context){
+  ThemeData currentTheme = Theme.of(context);
+  print('currentTheme');
+  print(currentTheme.brightness);
+  if(currentTheme.brightness== Brightness.dark){
+  return Color.fromARGB(255, 255, 255, 255);
+  } else{
+     return Color.fromARGB(194, 255, 0, 0);
+  }
+ 
+}
+
+//Settings color
+Color returnSettingsColor(BuildContext context){
+  ThemeData currentTheme = Theme.of(context);
+  if(currentTheme.brightness== Brightness.dark){
+  return Color.fromARGB(0, 0, 0, 0);
+  } else{
+     return  Color.fromRGBO(254, 218, 191, 1);
+  }
+ 
+}
+
+//Your stats color
+Color returnYourStatsColor(BuildContext context){
+  ThemeData currentTheme = Theme.of(context);
+  if(currentTheme.brightness== Brightness.dark){
+  return Color.fromARGB(0, 0, 0, 0);
+  } else{
+     return  Color.fromARGB(255, 255, 254, 215);
+  }
+ 
+}
+
+//Volume Slider
+Color volumeSliderColor(BuildContext context){
+  ThemeData currentTheme = Theme.of(context);
+  if(currentTheme.brightness== Brightness.dark){
+  return Colors.white;
+  } else{
+     return  Colors.amberAccent;
+  }
+ 
+}
+//Preferences background
+Color preferencesBackground(BuildContext context) {
+  ThemeData currentTheme = Theme.of(context);
+  if(currentTheme.brightness== Brightness.dark){
+  return Colors.black;
+  } else{
+     return  Color.fromRGBO(83, 123, 233, 1);
+  }
+  
 }

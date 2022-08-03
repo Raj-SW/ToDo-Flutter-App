@@ -224,23 +224,27 @@ class _TodoCardState extends State<TodoCard> {
 
     if (isdone == true) {
       setState(() {
-        color = Color.fromRGBO(189, 240, 198, 1);
+        //color = Color.fromRGBO(189, 240, 198, 1);
+        color = returnDoneColor(context);
       });
       return color;
     } else {
       if (priority == "critical") {
         setState(() {
-          color = Color.fromARGB(255, 253, 213, 213);
+          //color = Color.fromARGB(255, 253, 213, 213);
+          color = returnCriticalColor(context);
         });
       }
       if (priority == "mild") {
         setState(() {
-          color = Color.fromARGB(255, 255, 234, 197);
+          //color = Color.fromARGB(255, 255, 234, 197);
+          color=returnMildColor(context);
         });
       }
       if (priority == "normal") {
         setState(() {
-          color = Color.fromRGBO(207, 236, 255, 1);
+          //color = Color.fromRGBO(207, 236, 255, 1);
+          color=returnNormalColor(context);
         });
       }
     }
@@ -259,4 +263,51 @@ class _TodoCardState extends State<TodoCard> {
           content: Lottie.asset("assets/lottieSuccess.json"),
         ),
       );
+      
+}
+
+//mild color
+Color returnMildColor(BuildContext context){
+  ThemeData currentTheme = Theme.of(context);
+  if(currentTheme.brightness== Brightness.dark){
+  return Color.fromARGB(0, 0, 0, 0);
+  } else{
+     return Color.fromARGB(255, 255, 234, 197);
+  }
+ 
+}
+
+//normal color
+
+Color returnNormalColor(BuildContext context){
+  ThemeData currentTheme = Theme.of(context);
+  if(currentTheme.brightness== Brightness.dark){
+  return Color.fromARGB(0, 0, 0, 0);
+  } else{
+     return Color.fromRGBO(207, 236, 255, 1);
+  }
+ 
+}
+//critical color
+
+Color returnCriticalColor(BuildContext context){
+  ThemeData currentTheme = Theme.of(context);
+  if(currentTheme.brightness== Brightness.dark){
+  return Color.fromARGB(0, 0, 0, 0);
+  } else{
+     return  Color.fromARGB(255, 253, 213, 213);
+  }
+ 
+}
+
+//critical color
+
+Color returnDoneColor(BuildContext context){
+  ThemeData currentTheme = Theme.of(context);
+  if(currentTheme.brightness== Brightness.dark){
+  return Color.fromARGB(0, 0, 0, 0);
+  } else{
+     return  Color.fromRGBO(189, 240, 198, 1);
+  }
+ 
 }
