@@ -467,14 +467,6 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(right: 20, top: 15),
-                  child: Image.asset(
-                    "assets/learning.png",
-                    width: 175,
-                    height: 175,
-                  ),
-                ),
-                Padding(
                   padding: const EdgeInsets.only(right: 225, top: 100),
                   child: Transform.rotate(
                     angle: 0.25,
@@ -486,14 +478,22 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(right: 225, top: 100),
+                  padding: const EdgeInsets.only(right: 20, top: 30),
                   child: Transform.rotate(
                     angle: 0.25,
                     child: Lottie.asset(
                       "assets/BooksLottie.json",
-                      width: 85,
-                      height: 85,
+                      width: 175,
+                      height: 175,
                     ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 0, top: 0),
+                  child: Lottie.asset(
+                    "assets/brain2.json",
+                    width: 175,
+                    height: 175,
                   ),
                 ),
               ]),
