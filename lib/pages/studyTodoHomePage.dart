@@ -250,7 +250,7 @@ class _studyTodoHomePageState extends State<studyTodoHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      //backgroundColor: Colors.white,
       extendBodyBehindAppBar: true,
       floatingActionButton: FloatingActionButton(
         isExtended: true,

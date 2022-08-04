@@ -245,7 +245,7 @@ class _groceryTodoHomePageState extends State<groceryTodoHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      //  backgroundColor: Colors.white,
       extendBodyBehindAppBar: true,
       floatingActionButton: FloatingActionButton(
         isExtended: true,

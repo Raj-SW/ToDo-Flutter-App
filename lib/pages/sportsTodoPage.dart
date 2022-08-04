@@ -245,7 +245,7 @@ class _sportsTodoHomePageState extends State<sportsTodoHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      //  backgroundColor: Colors.white,
       extendBodyBehindAppBar: true,
       floatingActionButton: FloatingActionButton(
         isExtended: true,

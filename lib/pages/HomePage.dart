@@ -275,7 +275,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       extendBodyBehindAppBar: true,
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) {
@@ -376,7 +375,8 @@ class _HomePageState extends State<HomePage> {
                               blurRadius: 2,
                               offset: Offset(0, 2))
                         ],
-                        color: Color.fromRGBO(107, 72, 246, 0.75),
+                        color: returnTodoCategoryColor(
+                            context), // Color.fromRGBO(107, 72, 246, 0.75),
                         borderRadius: BorderRadius.all(Radius.circular(30))),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -451,7 +451,8 @@ class _HomePageState extends State<HomePage> {
                               blurRadius: 2,
                               offset: Offset(0, 2))
                         ],
-                        color: Color.fromRGBO(245, 119, 185, 0.95),
+                        color: returnStudyCategoryColor(
+                            context), //Color.fromRGBO(245, 119, 185, 0.95),
                         borderRadius: BorderRadius.all(Radius.circular(30))),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -535,7 +536,8 @@ class _HomePageState extends State<HomePage> {
                               blurRadius: 2,
                               offset: Offset(0, 2))
                         ],
-                        color: Color.fromRGBO(255, 229, 164, 1),
+                        color: returnSportsCategoryColor(
+                            context), //Color.fromRGBO(255, 229, 164, 1),
                         borderRadius: BorderRadius.all(Radius.circular(30))),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
@@ -543,14 +545,16 @@ class _HomePageState extends State<HomePage> {
                         Text('$sportCountDone/$sportCount tasks',
                             style: GoogleFonts.poppins(
                                 fontSize: 18,
-                                color: Colors.black,
+                                color: returnSportFontColor(
+                                    context), //Colors.black,
                                 fontWeight: FontWeight.w500)),
                         Padding(
                           padding: const EdgeInsets.all(1.0),
                           child: Divider(
                             thickness: 1,
                             height: 2,
-                            color: Colors.black54,
+                            color: returnSportFontColor(
+                                context), // Colors.black54,
                             indent: 120,
                             endIndent: 1,
                           ),
@@ -559,7 +563,8 @@ class _HomePageState extends State<HomePage> {
                         Text('Sports',
                             style: GoogleFonts.poppins(
                                 fontSize: 32,
-                                color: Colors.black,
+                                color: returnSportFontColor(
+                                    context), //Colors.black,
                                 fontWeight: FontWeight.w700)),
                       ],
                     ),
@@ -606,7 +611,8 @@ class _HomePageState extends State<HomePage> {
                               blurRadius: 2,
                               offset: Offset(0, 2))
                         ],
-                        color: Color.fromRGBO(218, 174, 159, 1),
+                        color: returnGroceryCategoryColor(
+                            context), //Color.fromRGBO(218, 174, 159, 1),
                         borderRadius: BorderRadius.all(Radius.circular(30))),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -682,6 +688,16 @@ class _HomePageState extends State<HomePage> {
   date(document) {
     DateTime myDateTime = (document['scheduledTime']).toDate();
     return myDateTime;
+  }
+
+  //Settings color
+  Color returnSettingsColor(BuildContext context) {
+    ThemeData currentTheme = Theme.of(context);
+    if (currentTheme.brightness == Brightness.dark) {
+      return Color.fromARGB(0, 0, 0, 0);
+    } else {
+      return Color.fromRGBO(254, 218, 191, 1);
+    }
   }
 
   /*void onChange(int index) {
@@ -800,11 +816,47 @@ Color returnFloatingColor(BuildContext context) {
 }
 
 //drop down color
-Color returnDropDownColor(BuildContext context) {
+Color returnTodoCategoryColor(BuildContext context) {
+  ThemeData currentTheme = Theme.of(context);
+  if (currentTheme.brightness == Brightness.dark) {
+    return Color.fromARGB(255, 0, 0, 0);
+  } else {
+    return Color.fromRGBO(107, 72, 246, 0.75);
+  }
+}
+
+Color returnStudyCategoryColor(BuildContext context) {
+  ThemeData currentTheme = Theme.of(context);
+  if (currentTheme.brightness == Brightness.dark) {
+    return Color.fromARGB(255, 0, 0, 0);
+  } else {
+    return Color.fromRGBO(245, 119, 185, 0.95);
+  }
+}
+
+Color returnSportsCategoryColor(BuildContext context) {
+  ThemeData currentTheme = Theme.of(context);
+  if (currentTheme.brightness == Brightness.dark) {
+    return Color.fromARGB(255, 0, 0, 0);
+  } else {
+    return Color.fromRGBO(255, 229, 164, 1);
+  }
+}
+
+Color returnGroceryCategoryColor(BuildContext context) {
+  ThemeData currentTheme = Theme.of(context);
+  if (currentTheme.brightness == Brightness.dark) {
+    return Color.fromARGB(255, 0, 0, 0);
+  } else {
+    return Color.fromRGBO(255, 229, 164, 1);
+  }
+}
+
+Color returnSportFontColor(BuildContext context) {
   ThemeData currentTheme = Theme.of(context);
   if (currentTheme.brightness == Brightness.dark) {
     return Color.fromARGB(255, 255, 255, 255);
   } else {
-    return Color.fromRGBO(83, 123, 233, 1);
+    return Color.fromARGB(255, 0, 0, 0);
   }
 }
