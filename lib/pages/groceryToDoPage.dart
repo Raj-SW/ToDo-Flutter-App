@@ -484,7 +484,7 @@ class _groceryTodoHomePageState extends State<groceryTodoHomePage> {
   Route _createRoute() {
     return PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) =>
-            AddToDoPage(category: 'todos'),
+            AddToDoPage(category: 'grocery'),
         transitionDuration: Duration(milliseconds: 900),
         reverseTransitionDuration: Duration(milliseconds: 900),
         barrierColor: PrimaryColor,

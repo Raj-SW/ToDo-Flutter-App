@@ -22,12 +22,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  /*final Stream<QuerySnapshot> _stream = FirebaseFirestore.instance
-      .collection("collect2")
-      .doc(FirebaseAuth.instance.currentUser!.uid)
-      .collection("Todo")
-      .orderBy("scheduledTime", descending: false)
-      .snapshots();*/
   static int Coins = 0;
   final document = FirebaseFirestore.instance
       .collection("collect2")

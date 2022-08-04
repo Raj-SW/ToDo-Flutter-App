@@ -489,7 +489,7 @@ class _studyTodoHomePageState extends State<studyTodoHomePage> {
   Route _createRoute() {
     return PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) =>
-            AddToDoPage(category: 'todos'),
+            AddToDoPage(category: 'study'),
         transitionDuration: Duration(milliseconds: 900),
         reverseTransitionDuration: Duration(milliseconds: 900),
         barrierColor: PrimaryColor,

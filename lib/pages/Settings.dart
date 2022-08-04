@@ -1,7 +1,5 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, file_names, non_constant_identifier_names
 
-import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:devstack/Service/Auth_Service.dart';
 import 'package:devstack/Service/Notif_services.dart';

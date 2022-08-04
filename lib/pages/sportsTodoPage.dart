@@ -313,7 +313,7 @@ class _sportsTodoHomePageState extends State<sportsTodoHomePage> {
               title: Padding(
                 padding: const EdgeInsets.only(top: 10),
                 child: Text(
-                  "Study",
+                  "Sports",
                   style: GoogleFonts.pacifico(
                     //  color: Color(0xff5d5fef),
                     color: Colors.white,

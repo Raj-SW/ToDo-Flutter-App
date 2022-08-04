@@ -1,17 +1,10 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_const_declarations, avoid_print, curly_braces_in_flow_control_structures
 
 import 'dart:async';
-import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_alarm_clock/flutter_alarm_clock.dart';
-import 'package:flutter_spinbox/material.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -55,8 +48,8 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
-       // backgroundColor: Color.fromARGB(255, 255, 255, 255),
+
+        // backgroundColor: Color.fromARGB(255, 255, 255, 255),
         extendBodyBehindAppBar: true,
         appBar: AppBar(
           leading: Padding(
@@ -94,9 +87,8 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
           //backgroundColor: Color(0xff5d5fef),
           //  backgroundColor: Colors.white,
 
-         // backgroundColor: Color.fromRGBO(83, 123, 233, 1),
-         backgroundColor: returnPomodoroBackgroundColor(context),
-
+          // backgroundColor: Color.fromRGBO(83, 123, 233, 1),
+          backgroundColor: returnPomodoroBackgroundColor(context),
         ),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -205,32 +197,33 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
                                           duration1 =
                                               Duration(minutes: counterTime);
                                           startTimer();
-                                          /* FlutterAlarmClock.createAlarm(
-                                              DateTime.now().hour +
-                                                  (counterTime / 60)
-                                                      .abs()
-                                                      .toInt(),
-                                              DateTime.now().minute +
-                                                  counterTime % 60
+                                          //FlutterAlarmClock.createAlarm(
+                                          // DateTime.now().hour +
+                                          //(counterTime / 60)
+                                          //     .abs()
+                                          //      .toInt(),
+                                          //DateTime.now().minute +
+                                          //   counterTime % 60
 
-                                              DateTime.now().hour +
-                                                  duration1.inHours,
-                                              DateTime.now().minute +
-                                                  duration1.inMinutes
-                                              ,
-                                              title: "Time'sUp",
-                                              skipUi: true);*/
+                                          //DateTime.now().hour +
+                                          //   duration1.inHours,
+                                          //DateTime.now().minute +
+                                          //   duration1.inMinutes
+                                          // ,
+                                          // title: "Time'sUp",
+                                          //skipUi: true);
 
-                                          FlutterAlarmClock.createTimer(
+                                          /* FlutterAlarmClock.createTimer(
                                               counterTime * 60,
                                               skipUi: true,
-                                              title: "Time is Up");
-                                          /* NotificationService
+                                              title: "Time is Up");*/
+                                          NotificationService
                                               .showScheduledNotification(
                                                   id: 007,
-                                                  title: 'Times Up',
+                                                  title:
+                                                      'Times Up - $activityType',
                                                   scheduledDate: DateTime.now()
-                                                      .add(duration1));*/
+                                                      .add(duration1));
                                           setState(() {
                                             isnotStarted = true;
                                             beginTime = counterTime;
@@ -272,11 +265,11 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
                           child: Text(
                             "Activity Type",
                             style: GoogleFonts.poppins(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                //color: Colors.black54
-                                color: activityTypos(context),
-                                ),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              //color: Colors.black54
+                              color: activityTypos(context),
+                            ),
                           )),
                       //Row for chips
                       Row(
@@ -350,8 +343,8 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
                                       ? Colors.white
                                       : Colors.black),
                             ),
-                           // backgroundColor: Color.fromARGB(255, 255, 253, 136),
-                           backgroundColor: backgroundStudy(context),
+                            // backgroundColor: Color.fromARGB(255, 255, 253, 136),
+                            backgroundColor: backgroundStudy(context),
                             shadowColor: Colors.transparent,
                             //selectedColor: Color.fromARGB(177, 255, 196, 59),
                             selectedColor: selectStudy(context),
@@ -445,7 +438,6 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
 
   void endTimer() {
     //timer?.cancel();
-    writeToFirebase();
     setState(() {
       timer?.cancel();
     });
@@ -465,6 +457,7 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
           title: 'Times Up',
         );*/
         isnotStarted = false;
+        writeToFirebase();
         endTimer();
         counterTime = 5;
       }
@@ -552,116 +545,114 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
 }
 
 //Pomodoro color
-Color returnPomodoroBackgroundColor(BuildContext context){
+Color returnPomodoroBackgroundColor(BuildContext context) {
   ThemeData currentTheme = Theme.of(context);
-  if(currentTheme.brightness== Brightness.dark){
-  return Color.fromARGB(0, 0, 0, 0);
-  } else{
-     return  Color.fromRGBO(83, 123, 233, 1);
+  if (currentTheme.brightness == Brightness.dark) {
+    return Color.fromARGB(0, 0, 0, 0);
+  } else {
+    return Color.fromRGBO(83, 123, 233, 1);
   }
- 
 }
 
 //selected Work Border
-Color selectedWorkBorder(BuildContext context){
+Color selectedWorkBorder(BuildContext context) {
   ThemeData currentTheme = Theme.of(context);
-  if(currentTheme.brightness== Brightness.dark){
-
-  return Color.fromARGB(255, 255, 255, 255);
-  } else{
-    if(isSelected1==true){
+  if (currentTheme.brightness == Brightness.dark) {
+    return Color.fromARGB(255, 255, 255, 255);
+  } else {
+    if (isSelected1 == true) {
       return Color(0xFFEF5350);
-    } else{
+    } else {
       Color.fromARGB(255, 255, 0, 0);
     }
-     return  Color.fromRGBO(83, 123, 233, 1);
+    return Color.fromRGBO(83, 123, 233, 1);
   }
 }
 
 //Background study
 
-Color backgroundStudy(context){
+Color backgroundStudy(context) {
   ThemeData currentTheme = Theme.of(context);
-  if(currentTheme.brightness== Brightness.dark){
-  return Colors.white;
-  } else{
-     return Color.fromARGB(255, 255, 253, 136);
+  if (currentTheme.brightness == Brightness.dark) {
+    return Colors.white;
+  } else {
+    return Color.fromARGB(255, 255, 253, 136);
   }
 }
 
 //Selected study
 
-Color selectStudy(context){
+Color selectStudy(context) {
   ThemeData currentTheme = Theme.of(context);
-  if(currentTheme.brightness== Brightness.dark){
-  return Colors.black;
-  } else{
-     return Colors.yellow;
+  if (currentTheme.brightness == Brightness.dark) {
+    return Colors.black;
+  } else {
+    return Colors.yellow;
   }
 }
 
 //Background Rest
 
-Color backgroundRest(context){
+Color backgroundRest(context) {
   ThemeData currentTheme = Theme.of(context);
-  if(currentTheme.brightness== Brightness.dark){
-  return Colors.white;
-  } else{
-     return Color.fromARGB(255, 185, 227, 255);
+  if (currentTheme.brightness == Brightness.dark) {
+    return Colors.white;
+  } else {
+    return Color.fromARGB(255, 185, 227, 255);
   }
 }
 
 //Selected Rest
 
-Color selectRest(context){
+Color selectRest(context) {
   ThemeData currentTheme = Theme.of(context);
-  if(currentTheme.brightness== Brightness.dark){
-  return Colors.black;
-  } else{
-     return Colors.blue;
+  if (currentTheme.brightness == Brightness.dark) {
+    return Colors.black;
+  } else {
+    return Colors.blue;
   }
 }
 
 //Background work
 
-Color backgroundWork(context){
+Color backgroundWork(context) {
   ThemeData currentTheme = Theme.of(context);
-  if(currentTheme.brightness== Brightness.dark){
-  return Colors.white;
-  } else{
-     return Color.fromARGB(255, 255, 146, 146);
+  if (currentTheme.brightness == Brightness.dark) {
+    return Colors.white;
+  } else {
+    return Color.fromARGB(255, 255, 146, 146);
   }
 }
 
 //Selected work
 
-Color selectWork(context){
+Color selectWork(context) {
   ThemeData currentTheme = Theme.of(context);
-  if(currentTheme.brightness== Brightness.dark){
-  return Colors.black;
-  } else{
-     return Color(0xFFEF5350);
+  if (currentTheme.brightness == Brightness.dark) {
+    return Colors.black;
+  } else {
+    return Color(0xFFEF5350);
   }
 }
 
 //Focus description
 
-Color focusDescription(context){
+Color focusDescription(context) {
   ThemeData currentTheme = Theme.of(context);
-  if(currentTheme.brightness== Brightness.dark){
-  return Colors.white;
-  } else{
-     return Colors.black38;
+  if (currentTheme.brightness == Brightness.dark) {
+    return Colors.white;
+  } else {
+    return Colors.black38;
   }
 }
 
 //Activity type
 
-Color activityTypos(context){
+Color activityTypos(context) {
   ThemeData currentTheme = Theme.of(context);
-  if(currentTheme.brightness== Brightness.dark){
-  return Colors.white;
-  } else{
-     return Colors.black54;
+  if (currentTheme.brightness == Brightness.dark) {
+    return Colors.white;
+  } else {
+    return Colors.black54;
   }
 }
