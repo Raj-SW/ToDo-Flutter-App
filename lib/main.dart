@@ -2,12 +2,8 @@
 
 import 'package:alan_voice/alan_voice.dart';
 import 'package:devstack/Service/Auth_Service.dart';
-import 'package:devstack/pages/mainPage.dart';
-
 import 'package:devstack/zoomDrawer.dart';
-
 import 'package:devstack/theme/theme_constants.dart';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -15,7 +11,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'Service/Notif_services.dart';
 import 'pages/Welcome/welcome_screen.dart';
 import 'theme/theme_manager.dart';
-
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -41,18 +36,15 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-   //dispose listener after use
+  //dispose listener after use
 
-  
   //listen to theme change
-  themeListener(){
-    if(mounted){
-      setState(() {
-
-      });
+  themeListener() {
+    if (mounted) {
+      setState(() {});
     }
   }
-  
+
   _MyAppState() {
     AlanVoice.addButton(
         "78940e6b9b106789ef7fc772c11b89892e956eca572e1d8b807a3e2338fdd0dc/stage");

@@ -1,9 +1,8 @@
-
 // ignore_for_file: prefer_const_constructors, unnecessary_new, prefer_final_fields, use_build_context_synchronously, unused_local_variable
-
 
 import 'package:devstack/Service/Auth_Service.dart';
 import 'package:devstack/pages/mainPage.dart';
+import 'package:devstack/zoomDrawer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/svg.dart';
@@ -269,7 +268,7 @@ class _LoginScreenState extends State<LoginScreen> {
       _authClass.storeTokenAndData2(userCredential);
       Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (builder) => MainPage()),
+          MaterialPageRoute(builder: (builder) => zoomDrawer()),
           (route) => false);
     } on FirebaseAuthException catch (error) {
       switch (error.code) {

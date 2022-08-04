@@ -151,12 +151,12 @@ class _TodoCardState extends State<TodoCard> {
                                 await Future.delayed(
                                     Duration(milliseconds: 2000));
                                 Navigator.of(context).pop();
-                                /*    FirebaseFirestore.instance
+                                FirebaseFirestore.instance
                                     .collection("collect2")
                                     .doc(FirebaseAuth.instance.currentUser!.uid)
                                     .collection("Todo")
                                     .doc(widget.id)
-                                    .update({"isDone": true});*/
+                                    .update({"isDone": true});
                                 ExpCoin(widget.document);
                                 setState(() {});
                               },
@@ -243,13 +243,13 @@ class _TodoCardState extends State<TodoCard> {
       if (priority == "mild") {
         setState(() {
           //color = Color.fromARGB(255, 255, 234, 197);
-          color=returnMildColor(context);
+          color = returnMildColor(context);
         });
       }
       if (priority == "normal") {
         setState(() {
           //color = Color.fromRGBO(207, 236, 255, 1);
-          color=returnNormalColor(context);
+          color = returnNormalColor(context);
         });
       }
     }
@@ -269,7 +269,6 @@ class _TodoCardState extends State<TodoCard> {
         ),
       );
 
-
   void ExpCoin(document) {
     int coins2 = 0;
     if (document['priority'] == 'critical') {
@@ -282,57 +281,52 @@ class _TodoCardState extends State<TodoCard> {
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .collection("userModel")
           .doc("userDetails")
-          .update({"coins": coins2});
+          .update({"coins": coins2, "Experience": FieldValue.increment(50)});
       print(coins2);
     }
     if (document['priority'] == 'mild') {}
     if (document['priority'] == 'normal') {}
   }
-
 }
 
 //mild color
-Color returnMildColor(BuildContext context){
+Color returnMildColor(BuildContext context) {
   ThemeData currentTheme = Theme.of(context);
-  if(currentTheme.brightness== Brightness.dark){
-  return Color.fromARGB(0, 0, 0, 0);
-  } else{
-     return Color.fromARGB(255, 255, 234, 197);
+  if (currentTheme.brightness == Brightness.dark) {
+    return Color.fromARGB(0, 0, 0, 0);
+  } else {
+    return Color.fromARGB(255, 255, 234, 197);
   }
- 
 }
 
 //normal color
 
-Color returnNormalColor(BuildContext context){
+Color returnNormalColor(BuildContext context) {
   ThemeData currentTheme = Theme.of(context);
-  if(currentTheme.brightness== Brightness.dark){
-  return Color.fromARGB(0, 0, 0, 0);
-  } else{
-     return Color.fromRGBO(207, 236, 255, 1);
+  if (currentTheme.brightness == Brightness.dark) {
+    return Color.fromARGB(0, 0, 0, 0);
+  } else {
+    return Color.fromRGBO(207, 236, 255, 1);
   }
- 
 }
 //critical color
 
-Color returnCriticalColor(BuildContext context){
+Color returnCriticalColor(BuildContext context) {
   ThemeData currentTheme = Theme.of(context);
-  if(currentTheme.brightness== Brightness.dark){
-  return Color.fromARGB(0, 0, 0, 0);
-  } else{
-     return  Color.fromARGB(255, 253, 213, 213);
+  if (currentTheme.brightness == Brightness.dark) {
+    return Color.fromARGB(0, 0, 0, 0);
+  } else {
+    return Color.fromARGB(255, 253, 213, 213);
   }
- 
 }
 
 //critical color
 
-Color returnDoneColor(BuildContext context){
+Color returnDoneColor(BuildContext context) {
   ThemeData currentTheme = Theme.of(context);
-  if(currentTheme.brightness== Brightness.dark){
-  return Color.fromARGB(0, 0, 0, 0);
-  } else{
-     return  Color.fromRGBO(189, 240, 198, 1);
+  if (currentTheme.brightness == Brightness.dark) {
+    return Color.fromARGB(0, 0, 0, 0);
+  } else {
+    return Color.fromRGBO(189, 240, 198, 1);
   }
- 
 }

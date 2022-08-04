@@ -1,26 +1,18 @@
 // ignore_for_file: use_build_context_synchronously, prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_if_null_operators
 
-import 'dart:async';
-
-import 'package:alan_voice/alan_voice.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:devstack/Service/Auth_Service.dart';
-import 'package:devstack/Service/SoundSystem.dart';
-import 'package:devstack/circle_transition_clipper.dart';
-import 'package:devstack/pages/AddToDo.dart';
-import 'package:devstack/pages/TodoCard.dart';
-import 'package:devstack/zoomDrawer.dart';
+import 'package:devstack/pages/pagetodo.dart';
+import 'package:devstack/pages/studyTodoHomePage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
-import '../Service/Auth_Service.dart';
 import 'package:timezone/data/latest.dart' as tz;
-import 'package:devstack/assets.dart';
-import 'package:intl/intl.dart';
-import '../model/user_model.dart';
+
+import 'groceryToDoPage.dart';
+import 'sportsTodoPage.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -30,47 +22,79 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  AuthClass authClass = AuthClass();
-  final FirebaseAuth auth = FirebaseAuth.instance;
-
-  final Stream<QuerySnapshot> _stream = FirebaseFirestore.instance
+  /*final Stream<QuerySnapshot> _stream = FirebaseFirestore.instance
       .collection("collect2")
       .doc(FirebaseAuth.instance.currentUser!.uid)
       .collection("Todo")
       .orderBy("scheduledTime", descending: false)
-      .snapshots();
-  final StreamSubscription<DocumentSnapshot<Map<String, dynamic>>> coinStream =
-      FirebaseFirestore.instance
-          .collection("collect2")
-          .doc(FirebaseAuth.instance.currentUser!.uid)
-          .collection("userModel")
-          .doc("userDetails")
-          .snapshots()
-          .listen((event) {
-    int val = event['coins'];
-    updateVal(val);
-  });
-  DateTime now = DateTime.now();
-  late DateTime strtWk;
-  late DateTime endWk;
-  int todayCount = 0;
-  List<Select> selected = [];
-  User? user = FirebaseAuth.instance.currentUser;
-  UserModel loggedInUser = UserModel();
-  var level = 0;
-  int gender = 3;
-  String userName = "";
-  var completedCount = 0;
-  var incompletedCount = 0;
-  var totalTasks = 0;
+      .snapshots();*/
   static int Coins = 0;
+  final document = FirebaseFirestore.instance
+      .collection("collect2")
+      .doc(FirebaseAuth.instance.currentUser!.uid)
+      .collection('Todo')
+      .get();
+  int todoCountDone = 0,
+      todoCount = 0,
+      studyCount = 0,
+      studyCountDone = 0,
+      sportCount = 0,
+      sportCountDone = 0,
+      groceryCount = 0,
+      groceryCountDone = 0;
+
   @override
   void initState() {
     super.initState();
     tz.initializeTimeZones();
-    strtWk = now.subtract(Duration(days: now.weekday - 1));
-    endWk = now.add(Duration(days: DateTime.daysPerWeek - now.weekday));
-    initialiseNameetc();
+    FirebaseFirestore.instance
+        .collection('collect2')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection("userModel")
+        .doc("userDetails")
+        .snapshots()
+        .listen((DocumentSnapshot documentSnapshot) {
+      Map? firestoreInfo = documentSnapshot.data() as Map?;
+      setState(() {
+        Coins = firestoreInfo!['coins'];
+      });
+    });
+    document.then((value) {
+      value.docs.forEach((element) {
+        if (element['category'] == 'todos') {
+          setState(() {
+            todoCount++;
+            if (element['isDone'] == true) {
+              todoCountDone++;
+            }
+          });
+        }
+        if (element['category'] == 'study') {
+          setState(() {
+            studyCount++;
+            if (element['isDone'] == true) {
+              studyCountDone++;
+            }
+          });
+        }
+        if (element['category'] == 'sports') {
+          setState(() {
+            sportCount++;
+            if (element['isDone'] == true) {
+              sportCountDone++;
+            }
+          });
+        }
+        if (element['category'] == 'grocery') {
+          setState(() {
+            groceryCount++;
+            if (element['isDone'] == true) {
+              groceryCountDone++;
+            }
+          });
+        }
+      });
+    });
   }
 
   List<String> itemList = [
@@ -81,7 +105,7 @@ class _HomePageState extends State<HomePage> {
   ];
   String? selectedItem = 'Today';
   _HomePageState() {
-    AlanVoice.onCommand.add((command) {
+    /*  AlanVoice.onCommand.add((command) {
       Map<String, dynamic> commandData = command.data;
       //Add a new task-- voice command: Add a new task
       if (commandData["command"] == "addTask") {
@@ -243,38 +267,44 @@ class _HomePageState extends State<HomePage> {
           }
         });
       }
-    });
+    }
+    );
+    */
   }
 
   @override
   Widget build(BuildContext context) {
-    var _selectedValue;
     return Scaffold(
       backgroundColor: Colors.white,
       extendBodyBehindAppBar: true,
-      floatingActionButton: FloatingActionButton(
-        isExtended: true,
-        backgroundColor: Color.fromARGB(255, 233, 116, 80),
-        onPressed: () {
-          SoundSystem().playLocal();
-          Navigator.of(context).push(_createRoute());
-        },
-        child: Icon(
-          Icons.add,
-          size: 50,
-        ),
-      ),
-
-      //),
-      // ),
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return <Widget>[
             SliverAppBar(
               actions: [
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text("$Coins"),
+                  padding: const EdgeInsets.only(top: 15.0, right: 20),
+                  child: Row(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                            color: Colors.white38,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15))),
+                        child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Text(
+                            "$Coins",
+                            style: GoogleFonts.poppins(fontSize: 18),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      FaIcon(FontAwesomeIcons.coins)
+                    ],
+                  ),
                 )
               ],
               leading: Padding(
@@ -288,7 +318,7 @@ class _HomePageState extends State<HomePage> {
                   onPressed: () {
                     ZoomDrawer.of(context)!.toggle();
                   },
-                  iconSize: 32,
+                  iconSize: 26,
                 ),
               ),
               elevation: 8,
@@ -300,7 +330,7 @@ class _HomePageState extends State<HomePage> {
                       bottomLeft: Radius.circular(40),
                       bottomRight: Radius.circular(40))),
               toolbarHeight: 80,
-              centerTitle: true,
+              centerTitle: false,
               backgroundColor: returnBettermeBackgroundColor(context),
               //color: returnBettermeBackgroundColor(context),
               // backgroundColor: Color.fromARGB(255, 106, 139, 228),
@@ -308,380 +338,339 @@ class _HomePageState extends State<HomePage> {
 
               title: Padding(
                 padding: const EdgeInsets.only(top: 10),
-                child: Text(
-                  "Better.Me",
-                  style: GoogleFonts.pacifico(
-                    //  color: Color(0xff5d5fef),
-                    color: Colors.white,
-                    fontSize: 41,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 10),
+                  child: Text(
+                    "Better.Me",
+                    style: GoogleFonts.pacifico(
+                      //  color: Color(0xff5d5fef),
+                      color: Colors.white,
+                      fontSize: 36,
+                    ),
                   ),
                 ),
               ),
-              /*  toolbarHeight: 70,
-                  centerTitle: true,
-                  // backgroundColor: Color.fromARGB(255, 255, 255, 255),
-                  backgroundColor: Color(0xff5d5fef),
-                  // Color.fromARGB(255, 102, 133, 218), //Color.fromRGBO(83, 123, 233, 1),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(40),
-                          bottomRight: Radius.circular(40))),*/
             ),
           ];
         },
         body: SingleChildScrollView(
           child: Column(children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(right: 60, top: 0),
-                  child: DropdownButton<String>(
-                    icon: FaIcon(FontAwesomeIcons.angleDown),
-                    isDense: false,
-                    elevation: 3,
-                    borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(20),
-                        bottomRight: Radius.circular(20)),
-                    // iconEnabledColor: Color.fromRGBO(83, 123, 233, 1),
-                    iconEnabledColor: returnDropDownColor(context),
-                    focusColor: Color.fromRGBO(83, 123, 233, 1),
-                    value: selectedItem,
-                    items: itemList
-                        .map((item) => DropdownMenuItem<String>(
-                            value: item,
-                            child: Text(
-                              item,
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w500,
-                                  // color: Color.fromRGBO(83, 123, 233, 1)
-                                  color: returnDropDownColor(context)),
-                            )))
-                        .toList(),
-                    onChanged: (item) => setState(() => selectedItem = item),
-                  ),
-                ),
-              ],
+            //Todos
+            SizedBox(
+              height: 15,
             ),
-            StreamBuilder(
-                stream: _stream,
-                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  if (!snapshot.hasData) {
-                    return Center(child: CircularProgressIndicator());
-                  }
-                  return ListView.builder(
-                      primary: false,
-                      shrinkWrap: true,
-                      itemCount: snapshot.data.docs.length,
-                      itemBuilder: (context, index) {
-                        Map<String, dynamic> document =
-                            snapshot.data.docs[index].data()
-                                as Map<String, dynamic>;
-                        selected.add(Select(
-                            id: snapshot.data.docs[index].id,
-                            checkValue: false));
-                        DateTime time = date(document);
-                        bool isDone = document["isDone"];
-                        String priority = document["priority"];
-
-                        if (selectedItem == "Today") {
-                          if (time.day == DateTime.now().day &&
-                              isDone == false) {
-                            todayCount++;
-                            return TodoCard(
-                              priority: priority,
-                              coins: Coins,
-                              isDone: document["isDone"],
-                              check: selected[index].checkValue,
-                              time: date(document),
-                              title: document["title"] == null
-                                  ? "Add your tasks"
-                                  : document["title"],
-                              description: document["description"],
-                              index: index,
-                              document: document,
-                              id: snapshot.data.docs[index].id,
-                              onChange: onChange,
-                            );
-                          }
-                        } else if (selectedItem == "This Week") {
-                          if (time.day >= strtWk.day &&
-                              time.day <= endWk.day &&
-                              isDone == false) {
-                            return TodoCard(
-                              priority: priority,
-                              coins: Coins,
-                              isDone: document["isDone"],
-                              check: selected[index].checkValue,
-                              time: date(document),
-                              title: document["title"] == null
-                                  ? "Add your tasks"
-                                  : document["title"],
-                              description: document["description"],
-                              index: index,
-                              document: document,
-                              id: snapshot.data.docs[index].id,
-                              onChange: onChange,
-                            );
-                          }
-                        } else if (selectedItem == "All" && isDone == false) {
-                          return TodoCard(
-                            priority: priority,
-                            coins: Coins,
-                            isDone: isDone,
-                            check: selected[index].checkValue,
-                            time: date(document),
-                            title: document["title"] == null
-                                ? "Add your tasks"
-                                : document["title"],
-                            description: document["description"],
-                            index: index,
-                            document: document,
-                            id: snapshot.data.docs[index].id,
-                            onChange: onChange,
-                          );
-                        } else if (selectedItem == "Done") {
-                          if (isDone == true) {
-                            return TodoCard(
-                              priority: priority,
-                              coins: Coins,
-                              check: selected[index].checkValue,
-                              isDone: document["isDone"],
-                              time: date(document),
-                              title: document["title"] == null
-                                  ? "Add your tasks"
-                                  : document["title"],
-                              description: document["description"],
-                              index: index,
-                              document: document,
-                              id: snapshot.data.docs[index].id,
-                              onChange: onChange,
-                            );
-                          }
-                        }
-                        return Container(
-                          height: 2,
-                        );
-                      });
-                }),
-            //Education Container
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Stack(alignment: AlignmentDirectional.topEnd, children: [
-                Container(
-                  padding: EdgeInsets.all(20),
-                  width: MediaQuery.of(context).size.width,
-                  height: 200,
-                  decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.black54,
-                            blurRadius: 2,
-                            offset: Offset(0, 2))
-                      ],
-                      color: Color.fromRGBO(245, 119, 185, 0.95),
-                      borderRadius: BorderRadius.all(Radius.circular(30))),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('5/7 tasks',
-                          style: GoogleFonts.poppins(
-                              fontSize: 18,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500)),
-                      Padding(
-                        padding: const EdgeInsets.all(1.0),
-                        child: Divider(
-                          thickness: 1,
-                          height: 2,
-                          color: Colors.white,
-                          indent: 1,
-                          endIndent: 120,
+            InkWell(
+              onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => AddTodoHomePage())),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Stack(alignment: AlignmentDirectional.topEnd, children: [
+                  Container(
+                    padding: EdgeInsets.all(20),
+                    width: MediaQuery.of(context).size.width,
+                    height: 200,
+                    decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.black54,
+                              blurRadius: 2,
+                              offset: Offset(0, 2))
+                        ],
+                        color: Color.fromRGBO(107, 72, 246, 0.75),
+                        borderRadius: BorderRadius.all(Radius.circular(30))),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('$todoCountDone/$todoCount tasks',
+                            style: GoogleFonts.poppins(
+                                fontSize: 18,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500)),
+                        Padding(
+                          padding: const EdgeInsets.all(1.0),
+                          child: Divider(
+                            thickness: 1,
+                            height: 2,
+                            color: Colors.white,
+                            indent: 1,
+                            endIndent: 120,
+                          ),
                         ),
-                      ),
-                      Text('Study',
-                          style: GoogleFonts.poppins(
-                              fontSize: 32,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w700)),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 215, top: 90),
-                  child: Transform.rotate(
-                    angle: 0.25,
-                    child: Lottie.asset(
-                      "assets/educationGlobe.json",
-                      width: 100,
-                      height: 100,
+                        Text('Todos',
+                            style: GoogleFonts.poppins(
+                                fontSize: 32,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w700)),
+                      ],
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 20, top: 30),
-                  child: Transform.rotate(
-                    angle: 0.25,
+                  Padding(
+                    padding: const EdgeInsets.only(right: 0, top: 10),
                     child: Lottie.asset(
-                      "assets/BooksLottie.json",
+                      "assets/todo(3).json",
                       animate: true,
                       frameRate: FrameRate.max,
-                      width: 180,
-                      height: 180,
+                      width: 200,
+                      height: 200,
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 30, top: 0),
-                  child: Transform.rotate(
-                    angle: 0.3,
+                  Padding(
+                    padding: const EdgeInsets.only(right: 225, top: 95),
                     child: Lottie.asset(
-                      "assets/miscLottie(5).json", //"assets/educBrainLottie.json",
+                      "assets/miscLottie(11).json",
+                      width: 80,
+                      height: 80,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 145, top: 55),
+                    child: Lottie.asset(
+                      "assets/miscLottie(6).json",
                       width: 70,
                       height: 70,
                     ),
                   ),
-                ),
-              ]),
+                ]),
+              ),
             ),
-            //Todos
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Stack(alignment: AlignmentDirectional.topEnd, children: [
-                Container(
-                  padding: EdgeInsets.all(20),
-                  width: MediaQuery.of(context).size.width,
-                  height: 200,
-                  decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.black54,
-                            blurRadius: 2,
-                            offset: Offset(0, 2))
-                      ],
-                      color: Color.fromRGBO(107, 72, 246, 0.75),
-                      borderRadius: BorderRadius.all(Radius.circular(30))),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('2/12 tasks',
-                          style: GoogleFonts.poppins(
-                              fontSize: 18,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500)),
-                      Padding(
-                        padding: const EdgeInsets.all(1.0),
-                        child: Divider(
-                          thickness: 1,
-                          height: 2,
-                          color: Colors.white,
-                          indent: 1,
-                          endIndent: 120,
-                        ),
-                      ),
-                      Text('Todos',
-                          style: GoogleFonts.poppins(
-                              fontSize: 32,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w700)),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 0, top: 10),
-                  child: Lottie.asset(
-                    "assets/todo(3).json",
-                    animate: true,
-                    frameRate: FrameRate.max,
-                    width: 200,
+            //Education Container
+            InkWell(
+              onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => studyTodoHomePage())),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Stack(alignment: AlignmentDirectional.topEnd, children: [
+                  Container(
+                    padding: EdgeInsets.all(20),
+                    width: MediaQuery.of(context).size.width,
                     height: 200,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 225, top: 95),
-                  child: Lottie.asset(
-                    "assets/miscLottie(11).json",
-                    width: 80,
-                    height: 80,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 145, top: 55),
-                  child: Lottie.asset(
-                    "assets/miscLottie(6).json",
-                    width: 70,
-                    height: 70,
-                  ),
-                ),
-              ]),
-            ),
-            //sport
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Stack(alignment: AlignmentDirectional.topEnd, children: [
-                Container(
-                  padding: EdgeInsets.all(20),
-                  width: MediaQuery.of(context).size.width,
-                  height: 200,
-                  decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.black54,
-                            blurRadius: 2,
-                            offset: Offset(0, 2))
-                      ],
-                      color: Color.fromRGBO(255, 229, 164, 1),
-                      borderRadius: BorderRadius.all(Radius.circular(30))),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text('4/5 tasks',
-                          style: GoogleFonts.poppins(
-                              fontSize: 18,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500)),
-                      Padding(
-                        padding: const EdgeInsets.all(1.0),
-                        child: Divider(
-                          thickness: 1,
-                          height: 2,
-                          color: Colors.black54,
-                          indent: 120,
-                          endIndent: 1,
+                    decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.black54,
+                              blurRadius: 2,
+                              offset: Offset(0, 2))
+                        ],
+                        color: Color.fromRGBO(245, 119, 185, 0.95),
+                        borderRadius: BorderRadius.all(Radius.circular(30))),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('$studyCountDone/$studyCount tasks',
+                            style: GoogleFonts.poppins(
+                                fontSize: 18,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500)),
+                        Padding(
+                          padding: const EdgeInsets.all(1.0),
+                          child: Divider(
+                            thickness: 1,
+                            height: 2,
+                            color: Colors.white,
+                            indent: 1,
+                            endIndent: 120,
+                          ),
                         ),
-                      ),
-                      Expanded(child: SizedBox()),
-                      Text('Sports',
-                          style: GoogleFonts.poppins(
-                              fontSize: 32,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w700)),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 175, top: 0),
-                  child: Lottie.asset(
-                    "assets/sportLottie(1).json",
-                    animate: true,
-                    frameRate: FrameRate.max,
-                    width: 250,
-                    height: 250,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 50, top: 20),
-                  child: Transform.rotate(
-                    angle: -0.35,
-                    child: Lottie.asset(
-                      "assets/sportLottie(2).json",
-                      width: 150,
-                      height: 150,
+                        Text('Study',
+                            style: GoogleFonts.poppins(
+                                fontSize: 32,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w700)),
+                      ],
                     ),
                   ),
-                ),
-              ]),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 215, top: 90),
+                    child: Transform.rotate(
+                      angle: 0.25,
+                      child: Lottie.asset(
+                        "assets/educationGlobe.json",
+                        width: 100,
+                        height: 100,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 20, top: 30),
+                    child: Transform.rotate(
+                      angle: 0.25,
+                      child: Lottie.asset(
+                        "assets/BooksLottie.json",
+                        animate: true,
+                        frameRate: FrameRate.max,
+                        width: 180,
+                        height: 180,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 30, top: 0),
+                    child: Transform.rotate(
+                      angle: 0.3,
+                      child: Lottie.asset(
+                        "assets/miscLottie(5).json", //"assets/educBrainLottie.json",
+                        width: 70,
+                        height: 70,
+                      ),
+                    ),
+                  ),
+                ]),
+              ),
+            ),
+            //sport
+            InkWell(
+              onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => sportsTodoHomePage())),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Stack(alignment: AlignmentDirectional.topEnd, children: [
+                  Container(
+                    padding: EdgeInsets.all(20),
+                    width: MediaQuery.of(context).size.width,
+                    height: 200,
+                    decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.black54,
+                              blurRadius: 2,
+                              offset: Offset(0, 2))
+                        ],
+                        color: Color.fromRGBO(255, 229, 164, 1),
+                        borderRadius: BorderRadius.all(Radius.circular(30))),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text('$sportCountDone/$sportCount tasks',
+                            style: GoogleFonts.poppins(
+                                fontSize: 18,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500)),
+                        Padding(
+                          padding: const EdgeInsets.all(1.0),
+                          child: Divider(
+                            thickness: 1,
+                            height: 2,
+                            color: Colors.black54,
+                            indent: 120,
+                            endIndent: 1,
+                          ),
+                        ),
+                        Expanded(child: SizedBox()),
+                        Text('Sports',
+                            style: GoogleFonts.poppins(
+                                fontSize: 32,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w700)),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 150, top: 20),
+                    child: Lottie.asset(
+                      "assets/sportLottie(1).json",
+                      animate: true,
+                      frameRate: FrameRate.max,
+                      //width: 250,
+                      height: 200,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 50, top: 20),
+                    child: Transform.rotate(
+                      angle: -0.35,
+                      child: Lottie.asset(
+                        "assets/sportLottie(2).json",
+                        width: 150,
+                        height: 150,
+                      ),
+                    ),
+                  ),
+                ]),
+              ),
+            ),
+            //grocery shopping
+            InkWell(
+              onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => groceryTodoHomePage())),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Stack(alignment: AlignmentDirectional.topEnd, children: [
+                  Container(
+                    padding: EdgeInsets.all(20),
+                    width: MediaQuery.of(context).size.width,
+                    height: 200,
+                    decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.black54,
+                              blurRadius: 2,
+                              offset: Offset(0, 2))
+                        ],
+                        color: Color.fromRGBO(218, 174, 159, 1),
+                        borderRadius: BorderRadius.all(Radius.circular(30))),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('$groceryCountDone/$groceryCount tasks',
+                            style: GoogleFonts.poppins(
+                                fontSize: 18,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500)),
+                        Padding(
+                          padding: const EdgeInsets.all(1.0),
+                          child: Divider(
+                            thickness: 1,
+                            height: 2,
+                            color: Colors.white,
+                            indent: 1,
+                            endIndent: 120,
+                          ),
+                        ),
+                        Text('Grocery &\nShopping',
+                            style: GoogleFonts.poppins(
+                                fontSize: 28,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w700)),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 190, top: 60),
+                    child: Transform.rotate(
+                      angle: -0.2,
+                      child: Lottie.asset(
+                        "assets/grocery3.json",
+                        width: 175,
+                        height: 175,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 5, top: 30),
+                    child: Transform.rotate(
+                      angle: 0.0,
+                      child: Lottie.asset(
+                        "assets/grocery4.json",
+                        animate: true,
+                        frameRate: FrameRate.max,
+                        width: 200,
+                        height: 200,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 30, top: 0),
+                    child: Transform.rotate(
+                      angle: 0.3,
+                      child: Lottie.asset(
+                        "assets/miscLottie(3).json", //"assets/educBrainLottie.json",
+                        width: 70,
+                        height: 70,
+                      ),
+                    ),
+                  ),
+                ]),
+              ),
             ),
             //ici sa
           ]),
@@ -695,13 +684,14 @@ class _HomePageState extends State<HomePage> {
     return myDateTime;
   }
 
-  void onChange(int index) {
+  /*void onChange(int index) {
     setState(() {
       selected[index].checkValue = !selected[index].checkValue;
     });
   }
+  */
 
-  Route _createRoute() {
+  /*Route _createRoute() {
     return PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) => AddToDoPage(),
         transitionDuration: Duration(milliseconds: 900),
@@ -730,10 +720,10 @@ class _HomePageState extends State<HomePage> {
           );
         });
   }
-
-  Future openDialog() =>
-      showDialog(context: context, builder: (context) => AddToDoPage());
-
+*/
+  /* Future openDialog() =>
+      showDialog(context: context, builder: (context) => AddToDoPage());*/
+/*
   Future<void> initialiseNameetc() async {
     var mydocument = FirebaseFirestore.instance
         .collection("collect2")
@@ -767,7 +757,7 @@ class _HomePageState extends State<HomePage> {
       });
     });
   }
-
+*/
   static void updateVal(int val) {
     Coins = val;
   }

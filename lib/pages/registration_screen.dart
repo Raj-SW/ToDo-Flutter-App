@@ -2,6 +2,7 @@
 
 import 'package:devstack/pages/Backgrounds/backgroundSignUp.dart';
 import 'package:devstack/pages/mainPage.dart';
+import 'package:devstack/zoomDrawer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:devstack/Service/Auth_Service.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -542,7 +543,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         initialiseDB();
         Navigator.pushAndRemoveUntil(
             (context),
-            MaterialPageRoute(builder: (context) => MainPage()),
+            MaterialPageRoute(builder: (context) => zoomDrawer()),
             (route) => false);
       } on FirebaseAuthException catch (error) {
         switch (error.code) {
