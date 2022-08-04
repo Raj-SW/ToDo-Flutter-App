@@ -2,6 +2,7 @@
 
 import 'package:alan_voice/alan_voice.dart';
 import 'package:devstack/Service/Auth_Service.dart';
+import 'package:devstack/pages/splashScreen.dart';
 import 'package:devstack/zoomDrawer.dart';
 import 'package:devstack/theme/theme_constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -50,7 +51,7 @@ class _MyAppState extends State<MyApp> {
         "78940e6b9b106789ef7fc772c11b89892e956eca572e1d8b807a3e2338fdd0dc/stage");
   }*/
   //Widget currentPage = SignUpPage();
-  Widget currentPage = WelcomeScreen();
+  Widget currentPage = splashScreen();
   AuthClass authClass = AuthClass();
   User? user;
   @override
