@@ -1,11 +1,12 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, file_names, non_constant_identifier_names
 
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:devstack/Service/Auth_Service.dart';
 import 'package:devstack/Service/Notif_services.dart';
 import 'package:devstack/assets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -44,11 +45,16 @@ class _SettingsState extends State<Settings> {
       overdueCount = 0,
       totaltaskCount = 0,
       coins = 0;
+
   bool lockedDarkmode = false;
 
   late List<pomodoroData> pomodoroChartData;
   late List<taskCat> taskCatChartData;
   int sounder = 0;
+//Testing avatars
+  int selectedImage = 0;
+  bool firstProfileUnlocked = false;
+  bool secondProfileUnlocked = false;
 
   @override
   void initState() {
@@ -126,66 +132,223 @@ class _SettingsState extends State<Settings> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      padding: EdgeInsets.all(15),
-                      decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black12,
-                              blurRadius: 1,
-                              offset: Offset(2, 2), // Shadow position
-                            ),
-                          ],
-                          color: returnProfilePicColor(context),
-                          // color: Color.fromRGBO(207, 236, 255, 1),
-                          borderRadius: BorderRadius.all(Radius.circular(30))),
-                      width: MediaQuery.of(context).size.width,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          CircleAvatar(
-                            maxRadius: 30,
-                            foregroundImage: AssetImage(
-                              "assets/profileMen.png",
-                            ),
-                            backgroundColor: Colors.white,
-                          ),
-                          SizedBox(
-                            width: 15,
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    child: Column(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(15),
+                          decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black12,
+                                  blurRadius: 1,
+                                  offset: Offset(2, 2), // Shadow position
+                                ),
+                              ],
+                              color: returnProfilePicColor(context),
+                              // color: Color.fromRGBO(207, 236, 255, 1),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(30))),
+                          width: MediaQuery.of(context).size.width,
+                          child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                userName,
-                                style: GoogleFonts.poppins(
-                                    fontSize: 22, fontWeight: FontWeight.w600),
+                              CircleAvatar(
+                                maxRadius: 30,
+                                foregroundImage: AssetImage(
+                                  profilePicture(selectedImage),
+                                ),
+                                backgroundColor: Colors.white,
                               ),
                               SizedBox(
-                                height: 5,
+                                width: 15,
                               ),
-                              Row(
+                              Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text("Lv. " + getLevel(),
-                                      style: GoogleFonts.poppins(fontSize: 16)),
-                                  LinearPercentIndicator(
-                                    animationDuration: 1000,
-                                    animation: true,
-                                    barRadius: Radius.circular(30),
-                                    width: 160,
-                                    lineHeight: 10,
-                                    percent: getExpPer(),
-                                    progressColor: PrimaryColor,
+                                  Text(
+                                    userName,
+                                    style: GoogleFonts.poppins(
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.w600),
                                   ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text("Lv. " + getLevel(),
+                                          style: GoogleFonts.poppins(
+                                              fontSize: 16)),
+                                      LinearPercentIndicator(
+                                        animationDuration: 1000,
+                                        animation: true,
+                                        barRadius: Radius.circular(30),
+                                        width: 160,
+                                        lineHeight: 10,
+                                        percent: getExpPer(),
+                                        progressColor: PrimaryColor,
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 15,
+                                  ),
+                                  Text(
+                                    "Change Avatar",
+                                    style: GoogleFonts.poppins(fontSize: 14),
+                                  ),
+                                  Row(
+                                    children: [
+                                      //First choice
+                                      Material(
+                                        shape: CircleBorder(),
+                                        color: Colors.white,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: Colors.transparent,
+                                            shape: BoxShape.circle,
+                                            border: Border.all(
+                                                color: Colors.white, width: 3),
+                                          ),
+                                          child: InkWell(
+                                              splashColor: Colors.black26,
+                                              onTap: () {
+                                                print(coins);
+                                                if (firstProfileUnlocked ==
+                                                    true) {
+                                                  setState(() {
+                                                    selectedImage = 1;
+                                                    FirebaseFirestore.instance
+                                                        .collection("collect2")
+                                                        .doc(FirebaseAuth
+                                                            .instance
+                                                            .currentUser!
+                                                            .uid)
+                                                        .collection('userModel')
+                                                        .doc('userDetails')
+                                                        .update({
+                                                      'selectedImage': 1,
+                                                    });
+                                                  });
+                                                } else {
+                                                  if (coins >= 15) {
+                                                    coins -= 15;
+                                                    setState(() {
+                                                      selectedImage = 1;
+                                                      firstProfileUnlocked =
+                                                          true;
+                                                      FirebaseFirestore.instance
+                                                          .collection(
+                                                              "collect2")
+                                                          .doc(FirebaseAuth
+                                                              .instance
+                                                              .currentUser!
+                                                              .uid)
+                                                          .collection(
+                                                              'userModel')
+                                                          .doc('userDetails')
+                                                          .update({
+                                                        'coins': coins,
+                                                        'selectedImage': 1,
+                                                        'pic1': true,
+                                                      });
+                                                    });
+                                                  }
+                                                }
+                                              },
+                                              child: Ink.image(
+                                                image: AssetImage(
+                                                    "assets/profileWomen.png"),
+                                                height: 60,
+                                                width: 60,
+                                                fit: BoxFit.cover,
+                                              )),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 15,
+                                      ),
+                                      //Second choice
+                                      Material(
+                                        shape: CircleBorder(),
+                                        color: Colors.white,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: Colors.transparent,
+                                            shape: BoxShape.circle,
+                                            border: Border.all(
+                                                color: Colors.white, width: 3),
+                                          ),
+                                          child: InkWell(
+                                              splashColor: Colors.black26,
+                                              onTap: () {
+                                                print(coins);
+                                                if (secondProfileUnlocked ==
+                                                    true) {
+                                                  setState(() {
+                                                    selectedImage = 2;
+                                                    FirebaseFirestore.instance
+                                                        .collection("collect2")
+                                                        .doc(FirebaseAuth
+                                                            .instance
+                                                            .currentUser!
+                                                            .uid)
+                                                        .collection('userModel')
+                                                        .doc('userDetails')
+                                                        .update({
+                                                      'selectedImage': 2,
+                                                    });
+                                                  });
+                                                } else {
+                                                  if (coins >= 15) {
+                                                    coins -= 15;
+                                                    setState(() {
+                                                      selectedImage = 2;
+                                                      secondProfileUnlocked =
+                                                          true;
+                                                      FirebaseFirestore.instance
+                                                          .collection(
+                                                              "collect2")
+                                                          .doc(FirebaseAuth
+                                                              .instance
+                                                              .currentUser!
+                                                              .uid)
+                                                          .collection(
+                                                              'userModel')
+                                                          .doc('userDetails')
+                                                          .update({
+                                                        'coins': coins,
+                                                        'selectedImage': 2,
+                                                        'pic2': true,
+                                                      });
+                                                    });
+                                                  }
+                                                }
+                                              },
+                                              child: Ink.image(
+                                                image: AssetImage(
+                                                    "assets/pomodoroFill.png"),
+                                                height: 60,
+                                                width: 60,
+                                                fit: BoxFit.cover,
+                                              )),
+                                        ),
+                                      ),
+                                    ],
+                                  )
                                 ],
+                              ),
+                              // Expanded(child: SizedBox()),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 50),
+                                child: Icon(Icons.keyboard_arrow_right),
                               )
                             ],
                           ),
-                          Expanded(child: SizedBox()),
-                          Icon(Icons.keyboard_arrow_right)
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                   Padding(
@@ -494,6 +657,9 @@ class _SettingsState extends State<Settings> {
             experience = value["Experience"];
             coins = value['coins'];
             lockedDarkmode = value['darkModeUnlocked'];
+            selectedImage = value['selectedImage'];
+            firstProfileUnlocked = value['pic1'];
+            secondProfileUnlocked = value['pic2'];
           })
         });
     var myPomodorodocument = FirebaseFirestore.instance
@@ -677,6 +843,16 @@ class _SettingsState extends State<Settings> {
                   ],
                 )),
           ));
+
+  String profilePicture(int x) {
+    if (x == 1) {
+      return "assets/profileWomen.png";
+    } else if (x == 2) {
+      return "assets/pomodoroFill.png";
+    } else {
+      return "assets/profileMen.png";
+    }
+  }
 }
 
 class pomodoroData {
