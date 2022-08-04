@@ -70,6 +70,10 @@ dependencies:
   line_icons: ^2.0.1
   syncfusion_flutter_charts: ^20.2.40
   volume_controller: ^2.0.3
+  introduction_screen: ^3.0.2
+  animated_splash_screen: ^1.3.0
+  # animated_splash_screen: ^1.3.0
+  # introduction_screen: ^3.0.2
 
 
 dev_dependencies:

@@ -13,6 +13,8 @@ import '../pages/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'onBoardingPage.dart';
 //import '../model/user_model.dart';
 
 class RegistrationScreen extends StatefulWidget {
@@ -80,7 +82,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     Widget textItem1() {
       return Container(
         width: MediaQuery.of(context).size.width - 70,
-        height: 50,
+        height: 80,
         child: TextFormField(
           autofocus: false,
           controller: nameEditingController,
@@ -136,7 +138,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     Widget textItem2() {
       return Container(
         width: MediaQuery.of(context).size.width - 70,
-        height: 50,
+        height: 80,
         child: TextFormField(
           autofocus: false,
           controller: emailEditingController,
@@ -193,7 +195,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     Widget textItem3() {
       return Container(
           width: MediaQuery.of(context).size.width - 70,
-          height: 50,
+          height: 80,
           child: TextFormField(
             obscureText: true,
             autofocus: false,
@@ -387,9 +389,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   ),
                   SizedBox(height: 10.2),
                   textItem1(),
-                  SizedBox(height: 20),
+                  // SizedBox(height: 2),
                   Container(
-                    height: 35,
+                    padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
+                    height: 40,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -423,15 +426,15 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: 0),
                   //emailField,
                   textItem2(),
-                  SizedBox(height: 20),
+                  SizedBox(height: 2),
                   //passwordField,
                   textItem3(),
-                  SizedBox(height: 20),
+                  SizedBox(height: 2),
                   signUpButton,
-                  SizedBox(height: 12),
+                  SizedBox(height: 8),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -485,14 +488,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     ),
                   ]),
                   SizedBox(
-                    height: 10,
+                    height: 8,
                   ),
 
                   Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         SizedBox(
-                          width: 20,
+                          width: 35,
                         ),
                         SizedBox(
                           child: buttonItem(
@@ -522,7 +525,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           }),
                         ),
                         SizedBox(
-                          width: 20,
+                          width: 5,
                         ),
                       ]),
                 ],
@@ -543,8 +546,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         initialiseDB();
         Navigator.pushAndRemoveUntil(
             (context),
-            MaterialPageRoute(builder: (context) => zoomDrawer()),
+            MaterialPageRoute(builder: (context) => OnBoardingPage()),
             (route) => false);
+        Fluttertoast.showToast(
+            gravity: ToastGravity.CENTER,
+            msg: "Welcome " + nameEditingController.text,
+            backgroundColor: Color(0xff01010a));
       } on FirebaseAuthException catch (error) {
         switch (error.code) {
           case "invalid-email":
@@ -566,9 +573,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             errorMessage = "Signing in with Email and Password is not enabled.";
             break;
           default:
-            errorMessage = "An undefined Error happened.";
+            errorMessage = "Network problem.";
         }
         Fluttertoast.showToast(msg: errorMessage!);
+        Fluttertoast.showToast(
+            gravity: ToastGravity.CENTER,
+            msg: errorMessage!,
+            backgroundColor: Color.fromARGB(255, 198, 55, 55));
         print(error.code);
       }
     }

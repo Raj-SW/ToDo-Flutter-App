@@ -45,7 +45,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     Widget textItem5() {
       return Container(
         width: MediaQuery.of(context).size.width - 70,
@@ -175,7 +174,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
           )),
     );
-
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: SingleChildScrollView(
         child: Background3(
@@ -270,6 +269,11 @@ class _LoginScreenState extends State<LoginScreen> {
           context,
           MaterialPageRoute(builder: (builder) => zoomDrawer()),
           (route) => false);
+      Fluttertoast.showToast(
+        gravity: ToastGravity.CENTER,
+        msg: "Login successfully",
+        backgroundColor: Color(0xff0c0101),
+      );
     } on FirebaseAuthException catch (error) {
       switch (error.code) {
         case "invalid-email":
@@ -292,9 +296,13 @@ class _LoginScreenState extends State<LoginScreen> {
           errorMessage = "Signing in with Email and Password is not enabled.";
           break;
         default:
-          errorMessage = "An undefined Error happened.";
+          errorMessage = "Network Problem";
       }
       Fluttertoast.showToast(msg: errorMessage!);
+      Fluttertoast.showToast(
+          gravity: ToastGravity.CENTER,
+          msg: errorMessage!,
+          backgroundColor: Color.fromARGB(255, 198, 55, 55));
       print(error.code);
     }
   }
