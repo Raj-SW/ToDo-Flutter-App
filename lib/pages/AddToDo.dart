@@ -15,7 +15,9 @@ import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AddToDoPage extends StatefulWidget {
-  const AddToDoPage({Key? key}) : super(key: key);
+  const AddToDoPage({Key? key, required this.category}) : super(key: key);
+
+  final String category;
 
   @override
   State<AddToDoPage> createState() => _AddToDoPageState();
@@ -116,7 +118,7 @@ class _AddToDoPageState extends State<AddToDoPage> {
             "description": _descriptionController.text,
             "scheduledTime": finalDateTime,
             "isDone": false,
-            "priority": priority
+            "priority": priority,
           },
         );
 
@@ -298,11 +300,11 @@ class _AddToDoPageState extends State<AddToDoPage> {
                                   : Colors.black),
                         ),
 
-                       // backgroundColor: Color.fromARGB(255, 255, 253, 136),
-                       backgroundColor: backgroundMild(context),
+                        // backgroundColor: Color.fromARGB(255, 255, 253, 136),
+                        backgroundColor: backgroundMild(context),
                         shadowColor: Colors.transparent,
-                       // selectedColor: Color.fromARGB(177, 255, 196, 59),
-                       selectedColor: selectMild(context),
+                        // selectedColor: Color.fromARGB(177, 255, 196, 59),
+                        selectedColor: selectMild(context),
                         selectedShadowColor: Colors.yellow,
                         side: BorderSide(
                             color: Color.fromARGB(54, 255, 196, 59),
@@ -454,7 +456,8 @@ class _AddToDoPageState extends State<AddToDoPage> {
               "description": _descriptionController.text,
               "scheduledTime": finalDateTime,
               "isDone": false,
-              "priority": priority
+              "priority": priority,
+              "category": widget.category,
             },
           );
 
@@ -858,100 +861,99 @@ class _AddToDoPageState extends State<AddToDoPage> {
 
 //getColors
 
-Color textCol(context){
+Color textCol(context) {
   ThemeData currentTheme = Theme.of(context);
-  if(currentTheme.brightness== Brightness.dark){
-  return Colors.white;
-  } else{
-     return Colors.black;
+  if (currentTheme.brightness == Brightness.dark) {
+    return Colors.white;
+  } else {
+    return Colors.black;
   }
- 
 }
 
 //header Add new Task and icons swap color
 
-Color primarySwap(context){
+Color primarySwap(context) {
   ThemeData currentTheme = Theme.of(context);
-  if(currentTheme.brightness== Brightness.dark){
-  return Colors.white;
-  } else{
-     return PrimaryColor;
+  if (currentTheme.brightness == Brightness.dark) {
+    return Colors.white;
+  } else {
+    return PrimaryColor;
   }
 }
 
 //change button Add toDo color
 
-Color buttonSwap(context){
+Color buttonSwap(context) {
   ThemeData currentTheme = Theme.of(context);
-  if(currentTheme.brightness== Brightness.dark){
-  return Colors.black;
-  } else{
-     return PrimaryColor;
+  if (currentTheme.brightness == Brightness.dark) {
+    return Colors.black;
+  } else {
+    return PrimaryColor;
   }
 }
 
 //Background mild
 
-Color backgroundMild(context){
+Color backgroundMild(context) {
   ThemeData currentTheme = Theme.of(context);
-  if(currentTheme.brightness== Brightness.dark){
-  return Colors.white;
-  } else{
-     return Color.fromARGB(255, 255, 253, 136);
+  if (currentTheme.brightness == Brightness.dark) {
+    return Colors.white;
+  } else {
+    return Color.fromARGB(255, 255, 253, 136);
   }
 }
 
 //Selected mild
 
-Color selectMild(context){
+Color selectMild(context) {
   ThemeData currentTheme = Theme.of(context);
-  if(currentTheme.brightness== Brightness.dark){
-  return Colors.black;
-  } else{
-     return Colors.yellow;
+  if (currentTheme.brightness == Brightness.dark) {
+    return Colors.black;
+  } else {
+    return Colors.yellow;
   }
 }
 
 //Background normal
 
-Color backgroundNormal(context){
+Color backgroundNormal(context) {
   ThemeData currentTheme = Theme.of(context);
-  if(currentTheme.brightness== Brightness.dark){
-  return Colors.white;
-  } else{
-     return Color.fromARGB(255, 185, 227, 255);
+  if (currentTheme.brightness == Brightness.dark) {
+    return Colors.white;
+  } else {
+    return Color.fromARGB(255, 185, 227, 255);
   }
 }
 
 //Selected normal
 
-Color selectNormal(context){
+Color selectNormal(context) {
   ThemeData currentTheme = Theme.of(context);
-  if(currentTheme.brightness== Brightness.dark){
-  return Colors.black;
-  } else{
-     return Colors.blue;
+  if (currentTheme.brightness == Brightness.dark) {
+    return Colors.black;
+  } else {
+    return Colors.blue;
   }
 }
 
 //Background critical
 
-Color backgroundCritical(context){
+Color backgroundCritical(context) {
   ThemeData currentTheme = Theme.of(context);
-  if(currentTheme.brightness== Brightness.dark){
-  return Colors.white;
-  } else{
-     return Color.fromARGB(255, 255, 146, 146);
+  if (currentTheme.brightness == Brightness.dark) {
+    return Colors.white;
+  } else {
+    return Color.fromARGB(255, 255, 146, 146);
   }
 }
 
 //Selected critical
 
-Color selectCritical(context){
+Color selectCritical(context) {
   ThemeData currentTheme = Theme.of(context);
-  if(currentTheme.brightness== Brightness.dark){
-  return Colors.black;
-  } else{
-     return Color(0xFFEF5350);
+  if (currentTheme.brightness == Brightness.dark) {
+    return Colors.black;
+  } else {
+    return Color(0xFFEF5350);
   }
 }

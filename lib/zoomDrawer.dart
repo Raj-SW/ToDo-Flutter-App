@@ -22,6 +22,12 @@ class _zoomDrawerState extends State<zoomDrawer> {
   MenuItema currentItem = MenuItems.homePage;
   @override
   Widget build(BuildContext context) => ZoomDrawer(
+        duration: const Duration(milliseconds: 1300),
+        reverseDuration: const Duration(milliseconds: 1300),
+
+        openCurve: const Interval(0, 1, curve: Curves.easeInOut),
+        closeCurve: const Interval(0, 1, curve: Curves.easeInOut),
+
         boxShadow: const [
           BoxShadow(
               //spreadRadius: 5,
