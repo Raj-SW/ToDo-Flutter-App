@@ -36,14 +36,15 @@ class _MenuPageState extends State<MenuPage> {
     super.initState();
     initialiseNameetc();
     FirebaseFirestore.instance
-        .collection("collect2")
+        .collection('collect2')
         .doc(FirebaseAuth.instance.currentUser!.uid)
-        .collection("userModels")
+        .collection("userModel")
         .doc("userDetails")
         .snapshots()
-        .listen((event) {
+        .listen((DocumentSnapshot documentSnapshot) {
+      Map? firestoreInfo = documentSnapshot.data() as Map?;
       setState(() {
-        selectedImage = event['selectedImage'];
+        selectedImage = firestoreInfo!['selectedImage'];
       });
     });
     /* FirebaseFirestore.instance
