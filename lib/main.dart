@@ -70,7 +70,8 @@ class _MyAppState extends State<MyApp> {
     if (token != null) {
       setState(() {
         // currentPage = MainPage();
-        currentPage = zoomDrawer();
+        currentPage = splashScreen();
+        ;
       });
     } else {
       String? token2 = await authClass.getTokenForEmailAuth();
@@ -79,7 +80,8 @@ class _MyAppState extends State<MyApp> {
       } else {
         setState(() {
           //currentPage = MainPage();
-          currentPage = zoomDrawer();
+          currentPage = splashScreen();
+          ;
         });
       }
     }
@@ -87,7 +89,8 @@ class _MyAppState extends State<MyApp> {
       if (token2 != null) {
         setState(() {
           //currentPage = MainPage();
-          currentPage = zoomDrawer();
+          currentPage = splashScreen();
+          ;
         });
       }
     }
