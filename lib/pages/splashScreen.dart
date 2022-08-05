@@ -49,17 +49,10 @@ class _splashScreenState extends State<splashScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              "Loading ",
-                              style: GoogleFonts.actor(
-                                fontWeight: FontWeight.normal,
-                                fontSize: 30,
-                              ),
-                            ),
-                            Text(
                               "Better.Me ",
                               style: GoogleFonts.pacifico(
                                   fontWeight: FontWeight.normal,
-                                  fontSize: 35,
+                                  fontSize: 45,
                                   color: Color(0xFF5D5FEF)),
                             ),
                             Container(
@@ -68,8 +61,8 @@ class _splashScreenState extends State<splashScreen> {
                                   height: 20,
                                 ),
                                 SizedBox(
-                                    height: 40,
-                                    width: 40,
+                                    height: 50,
+                                    width: 50,
                                     child: Lottie.asset(
                                         'assets/98196-loading-teal-dots.json')),
                               ]),

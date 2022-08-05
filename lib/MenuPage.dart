@@ -26,7 +26,7 @@ class MenuPage extends StatefulWidget {
   State<MenuPage> createState() => _MenuPageState();
 }
 
-int gender = 0;
+int gender = 0, selectedImage = 0;
 String userName = "";
 int level = 0;
 
@@ -35,6 +35,30 @@ class _MenuPageState extends State<MenuPage> {
   void initState() {
     super.initState();
     initialiseNameetc();
+    FirebaseFirestore.instance
+        .collection("collect2")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection("userModels")
+        .doc("userDetails")
+        .snapshots()
+        .listen((event) {
+      setState(() {
+        selectedImage = event['selectedImage'];
+      });
+    });
+    /* FirebaseFirestore.instance
+        .collection("collect2")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection("userModels")
+        .doc("userDetails")
+        .snapshots()
+        .listen((event) {
+      setState(() {
+        level = event['Level'];
+        selectedImage = event['selectedImage'];
+        userName = event['userName'];
+      });
+    });*/
   }
 
   bool selected = false;
@@ -49,23 +73,14 @@ class _MenuPageState extends State<MenuPage> {
         children: <Widget>[
           Spacer(),
           CircleAvatar(
-            foregroundImage: gender == 1
-                ? AssetImage("assets/profileMen.png")
-                : AssetImage("assets/profileWomen.png"),
+            foregroundImage: AssetImage(profilePicture(selectedImage)),
             radius: 35,
           ),
           SizedBox(
             height: 10,
           ),
           Text(
-            "$userName",
-            style: GoogleFonts.poppins(
-                fontSize: 22,
-                fontWeight: FontWeight.normal,
-                color: Colors.white),
-          ),
-          Text(
-            "Lv. $level",
+            "Hey! $userName",
             style: GoogleFonts.poppins(
                 fontSize: 22,
                 fontWeight: FontWeight.normal,
@@ -158,8 +173,19 @@ class _MenuPageState extends State<MenuPage> {
             gender = value["Gender"];
             userName = value["userName"];
             level = value["Level"];
+            selectedImage = value['selectedImage'];
           })
         });
+  }
+}
+
+String profilePicture(int x) {
+  if (x == 1) {
+    return "assets/profileWomen.png";
+  } else if (x == 2) {
+    return "assets/pomodoroFill.png";
+  } else {
+    return "assets/profileMen.png";
   }
 }
 

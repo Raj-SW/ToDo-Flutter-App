@@ -89,6 +89,7 @@ class _HomePageState extends State<HomePage> {
         }
       });
     });
+    setState(() {});
   }
 
   List<String> itemList = [
@@ -288,7 +289,7 @@ class _HomePageState extends State<HomePage> {
                           padding: const EdgeInsets.all(5.0),
                           child: Text(
                             "$Coins",
-                            style: GoogleFonts.poppins(fontSize: 18),
+                            style: GoogleFonts.poppins(fontSize: 14),
                           ),
                         ),
                       ),
@@ -338,7 +339,7 @@ class _HomePageState extends State<HomePage> {
                     style: GoogleFonts.pacifico(
                       //  color: Color(0xff5d5fef),
                       color: Colors.white,
-                      fontSize: 36,
+                      fontSize: 34,
                     ),
                   ),
                 ),
@@ -693,84 +694,6 @@ class _HomePageState extends State<HomePage> {
       return Color.fromRGBO(254, 218, 191, 1);
     }
   }
-
-  /*void onChange(int index) {
-    setState(() {
-      selected[index].checkValue = !selected[index].checkValue;
-    });
-  }
-  */
-
-  /*Route _createRoute() {
-    return PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => AddToDoPage(),
-        transitionDuration: Duration(milliseconds: 900),
-        reverseTransitionDuration: Duration(milliseconds: 900),
-        barrierColor: PrimaryColor,
-        barrierDismissible: true,
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          var screenSize = MediaQuery.of(context).size;
-          var centerCircleClipper =
-              Offset(screenSize.width - 0, screenSize.height - 0);
-
-          double beginRadius = 0.1;
-          double endRadius = screenSize.height * 1 * 2;
-
-          var radiusTween = Tween(begin: beginRadius, end: endRadius);
-          var radiusTweenAnimation = animation
-              .drive(CurveTween(curve: Curves.easeInToLinear))
-              .drive(radiusTween);
-
-          return ClipPath(
-            child: child,
-            clipper: CircleTransitionClipper(
-              centerCircleClipper,
-              radiusTweenAnimation.value,
-            ),
-          );
-        });
-  }
-*/
-  /* Future openDialog() =>
-      showDialog(context: context, builder: (context) => AddToDoPage());*/
-/*
-  Future<void> initialiseNameetc() async {
-    var mydocument = FirebaseFirestore.instance
-        .collection("collect2")
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .collection("userModel")
-        .doc("userDetails");
-    mydocument.get().then((value) => {
-          setState(() {
-            gender = value["Gender"];
-            userName = value["userName"];
-            level = value["Level"];
-            Coins = value['coins'];
-          })
-        });
-    final mytaskDoc = FirebaseFirestore.instance
-        .collection("collect2")
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .collection("Todo");
-    mytaskDoc.get().then((value) {
-      value.docs.forEach((element) {
-        if (element['isDone'] == false) {
-          setState(() {
-            incompletedCount++;
-          });
-        }
-        if (element['isDone'] == true) {
-          setState(() {
-            completedCount++;
-          });
-        }
-      });
-    });
-  }
-*/
-  static void updateVal(int val) {
-    Coins = val;
-  }
 }
 
 class Select {
@@ -842,7 +765,7 @@ Color returnGroceryCategoryColor(BuildContext context) {
   if (currentTheme.brightness == Brightness.dark) {
     return Color.fromARGB(255, 0, 0, 0);
   } else {
-    return Color.fromRGBO(255, 229, 164, 1);
+    return Color.fromARGB(246, 252, 212, 109);
   }
 }
 
