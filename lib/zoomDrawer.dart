@@ -81,6 +81,7 @@ Color drawerBackground(BuildContext context) {
   if (currentTheme.brightness == Brightness.dark) {
     return Colors.black;
   } else {
-    return Color.fromARGB(255, 133, 135, 237);
+    return Color.fromARGB(
+        255, 141, 142, 255); // Color.fromARGB(255, 133, 135, 237);
   }
 }

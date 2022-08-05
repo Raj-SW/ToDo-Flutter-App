@@ -194,8 +194,8 @@ String profilePicture(int x) {
 Color drawerBackground(BuildContext context) {
   ThemeData currentTheme = Theme.of(context);
   if (currentTheme.brightness == Brightness.dark) {
-    return Colors.grey;
+    return Color.fromARGB(255, 0, 0, 0);
   } else {
-    return Color.fromARGB(255, 133, 135, 237);
+    return Color.fromARGB(255, 141, 142, 255);
   }
 }
