@@ -72,6 +72,7 @@ dependencies:
   volume_controller: ^2.0.3
   introduction_screen: ^3.0.2
   animated_splash_screen: ^1.3.0
+  flutter_slidable: ^2.0.0
   # animated_splash_screen: ^1.3.0
   # introduction_screen: ^3.0.2
 

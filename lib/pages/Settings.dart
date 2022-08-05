@@ -624,7 +624,7 @@ class _SettingsState extends State<Settings> {
                                                 MajorGridLines(width: 0)),
                                         primaryYAxis: NumericAxis(
                                             title: AxisTitle(
-                                                text: "Hours",
+                                                text: "Minutes",
                                                 textStyle: GoogleFonts.poppins(
                                                   fontSize: 16,
                                                 )),

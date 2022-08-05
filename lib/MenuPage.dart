@@ -184,9 +184,9 @@ String profilePicture(int x) {
   if (x == 1) {
     return "assets/profileWomen.png";
   } else if (x == 2) {
-    return "assets/pomodoroFill.png";
+    return "assets/boyMask.png";
   } else {
-    return "assets/profileMen.png";
+    return "assets/girlMask.png";
   }
 }
 
