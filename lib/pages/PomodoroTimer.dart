@@ -36,11 +36,15 @@ int counterTime = 10;
 Timer? timer;
 Duration duration1 = Duration();
 bool isnotStarted = false;
+var document11;
 
 class _PomodoroTimerState extends State<PomodoroTimer> {
   @override
   void initState() {
     // TODO: implement initState
+
+    checkDb();
+
     super.initState();
   }
 
@@ -424,7 +428,14 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
                 : Container(
                     padding:
                         EdgeInsets.only(top: 0, left: 10, right: 10, bottom: 0),
-                    child: Lottie.asset("assets/lottie5.json"),
+                    child: activityType.compareTo("Study") == 0
+                        ? Lottie.asset("assets/lottie5.json")
+                        : activityType.compareTo("Work") == 0
+                            ? Lottie.asset("assets/work2.json")
+                            : Padding(
+                                padding: const EdgeInsets.all(15.0),
+                                child: Lottie.asset("assets/rest.json"),
+                              ),
                   ),
           ],
         ));
@@ -540,6 +551,23 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
 
     print("firebase  $activityType");
     print(restCumm);
+  }
+
+  Future<void> checkDb() async {
+    final document12 = await FirebaseFirestore.instance
+        .collection("collect2")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection("userModel")
+        .doc("pomodoroCummulative")
+        .get();
+    if (!document12.exists) {
+      FirebaseFirestore.instance
+          .collection("collect2")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection("userModel")
+          .doc("pomodoroCummulative")
+          .set({'study': 0, 'work': 0, 'rest': 0});
+    }
   }
 }
 

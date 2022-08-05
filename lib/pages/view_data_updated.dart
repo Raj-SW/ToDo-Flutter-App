@@ -2,6 +2,8 @@
 
 import 'package:devstack/assets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import '../Service/Notif_services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -88,8 +90,8 @@ class _ViewDataState extends State<ViewData> {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  icon: Icon(
-                    Icons.arrow_back,
+                  icon: FaIcon(
+                    FontAwesomeIcons.angleLeft,
                     color: PrimaryColor,
                     size: 28,
                   ),
@@ -113,9 +115,21 @@ class _ViewDataState extends State<ViewData> {
                                       context: context,
                                       builder: (context) {
                                         return AlertDialog(
-                                          title: Text("Delete Task?"),
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(32.0))),
+                                          title: Text(
+                                            "Delete Task?",
+                                            style: GoogleFonts.poppins(
+                                                fontSize: 26,
+                                                fontWeight: FontWeight.bold),
+                                          ),
                                           content: Text(
-                                              "Are you sure to delete Task!"),
+                                              "Are you sure to delete Task!",
+                                              style: GoogleFonts.poppins(
+                                                  fontSize: 18,
+                                                  fontWeight:
+                                                      FontWeight.normal)),
                                           actions: <Widget>[
                                             InkWell(
                                                 onTap: () {
@@ -143,9 +157,10 @@ class _ViewDataState extends State<ViewData> {
                                                   padding: EdgeInsets.all(15),
                                                   child: Text(
                                                     "Yes",
-                                                    style: TextStyle(
-                                                      fontSize: 18,
-                                                    ),
+                                                    style: GoogleFonts.poppins(
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.w600),
                                                   ),
                                                 )),
                                             InkWell(
@@ -159,9 +174,10 @@ class _ViewDataState extends State<ViewData> {
                                                   padding: EdgeInsets.all(15),
                                                   child: Text(
                                                     "No",
-                                                    style: TextStyle(
-                                                      fontSize: 18,
-                                                    ),
+                                                    style: GoogleFonts.poppins(
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.w600),
                                                   ),
                                                 ))
                                           ],
@@ -169,12 +185,12 @@ class _ViewDataState extends State<ViewData> {
                                       });
                                 }
                               : null,
-                          icon: Icon(
-                            Icons.delete,
+                          icon: FaIcon(
+                            FontAwesomeIcons.trash,
                             color: edit
                                 ? Color.fromARGB(255, 232, 87, 87)
                                 : Color.fromARGB(141, 119, 121, 226),
-                            size: 28,
+                            size: 26,
                           )),
                       //icon for update
                       !edit
@@ -187,9 +203,20 @@ class _ViewDataState extends State<ViewData> {
                                     context: context,
                                     builder: (context) {
                                       return AlertDialog(
-                                        title: Text("Edit Task?"),
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(32.0))),
+                                        title: Text(
+                                          "Edit Task?",
+                                          style: GoogleFonts.poppins(
+                                              fontSize: 26,
+                                              fontWeight: FontWeight.bold),
+                                        ),
                                         content: Text(
-                                            "You might lose previous information!"),
+                                            "You might lose previous information!",
+                                            style: GoogleFonts.poppins(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.normal)),
                                         actions: <Widget>[
                                           InkWell(
                                               onTap: (() {
@@ -203,9 +230,10 @@ class _ViewDataState extends State<ViewData> {
                                                 padding: EdgeInsets.all(15),
                                                 child: Text(
                                                   "Yes",
-                                                  style: TextStyle(
-                                                    fontSize: 18,
-                                                  ),
+                                                  style: GoogleFonts.poppins(
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.w600),
                                                 ),
                                               )),
                                           InkWell(
@@ -216,21 +244,22 @@ class _ViewDataState extends State<ViewData> {
                                                 Navigator.pop(context);
                                               }),
                                               child: Padding(
-                                                padding: EdgeInsets.all(15),
-                                                child: Text(
-                                                  "No",
-                                                  style: TextStyle(
-                                                    fontSize: 18,
-                                                  ),
-                                                ),
-                                              ))
+                                                  padding: EdgeInsets.all(15),
+                                                  child: Text(
+                                                    "No",
+                                                    style: GoogleFonts.poppins(
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.w600),
+                                                  )))
                                         ],
                                       );
                                     });
                               },
-                              icon: Icon(
-                                Icons.edit,
+                              icon: FaIcon(
+                                FontAwesomeIcons.penToSquare,
                                 color: PrimaryColor,
+                                size: 25,
                               ))
                           : InkWell(
                               onTap: () {
@@ -459,8 +488,16 @@ class _ViewDataState extends State<ViewData> {
               context: context,
               builder: (context) {
                 return AlertDialog(
-                  title: Text("You left a field empty"),
-                  content: Text("Please fill all fields!"),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(32.0))),
+                  title: Text(
+                    "You left a field empty!",
+                    style: GoogleFonts.poppins(
+                        fontSize: 22, fontWeight: FontWeight.bold),
+                  ),
+                  content: Text("Please fill all fields!",
+                      style: GoogleFonts.poppins(
+                          fontSize: 18, fontWeight: FontWeight.w500)),
                   actions: <Widget>[
                     InkWell(
                         onTap: (() {
@@ -468,12 +505,9 @@ class _ViewDataState extends State<ViewData> {
                         }),
                         child: Padding(
                           padding: EdgeInsets.all(15),
-                          child: Text(
-                            "Okay!",
-                            style: TextStyle(
-                              fontSize: 18,
-                            ),
-                          ),
+                          child: Text("Ok",
+                              style: GoogleFonts.poppins(
+                                  fontSize: 18, fontWeight: FontWeight.w400)),
                         ))
                   ],
                 );
@@ -519,8 +553,8 @@ class _ViewDataState extends State<ViewData> {
         ),
         child: Center(
             child: Text(
-          "Update ToDo",
-          style: TextStyle(
+          "Update Task",
+          style: GoogleFonts.poppins(
               color: Color.fromARGB(255, 255, 255, 255),
               fontSize: 18,
               fontWeight: FontWeight.bold),
@@ -581,7 +615,7 @@ class _ViewDataState extends State<ViewData> {
 
   Widget label(String label, Color color, double fontsize) {
     return (Text(label,
-        style: TextStyle(
+        style: GoogleFonts.poppins(
           color: color,
           fontWeight: FontWeight.w600,
           fontSize: fontsize,
@@ -657,11 +691,12 @@ class _ViewDataState extends State<ViewData> {
 
   showToast(String txt) {
     return Fluttertoast.showToast(
+        backgroundColor: Colors.red[300],
         toastLength: Toast.LENGTH_SHORT,
         msg: "Task $txt",
-        fontSize: 18,
+        fontSize: 24,
         textColor: Colors.white,
-        gravity: ToastGravity.BOTTOM);
+        gravity: ToastGravity.TOP);
   }
 
   void prioritySetter(String priority) {
