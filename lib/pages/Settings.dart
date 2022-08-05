@@ -57,6 +57,18 @@ class _SettingsState extends State<Settings> {
   @override
   void initState() {
     fetchUserDetails();
+    FirebaseFirestore.instance
+        .collection('collect2')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection("userModel")
+        .doc("userDetails")
+        .snapshots()
+        .listen((DocumentSnapshot documentSnapshot) {
+      Map? firestoreInfo = documentSnapshot.data() as Map?;
+      setState(() {
+        selectedImage = firestoreInfo!['selectedImage'];
+      });
+    });
     pomodoroChartData = getPomodoroData();
     taskCatChartData = getTaskCatData();
     setState(() {});
