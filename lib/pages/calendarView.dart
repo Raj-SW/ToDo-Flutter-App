@@ -38,8 +38,8 @@ class _MyHomePageState extends State<MyHomePage> {
       SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
         setState(() {});
       });
+      super.initState();
     });
-    super.initState();
   }
 
   CalendarController controllerCalendar = CalendarController();
@@ -110,7 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   width: 10,
                 ),
                 Container(
-                  padding: EdgeInsets.all(10),
+                  padding: EdgeInsets.all(8),
                   height: 40,
                   decoration: BoxDecoration(
                       color: switchHighlight(context),
@@ -465,14 +465,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 .toDate()
                 .add(Duration(minutes: 30)),
             subject: e["title"],
-            color: e["priority"] == "critical"
+            color: e["priority"] == "critical" && e['isDone'] == false
                 ? Color.fromARGB(255, 253, 142, 142)
-                : e["priority"] == "normal"
+                : e["priority"] == "normal" && e['isDone'] == false
                     ? Color.fromARGB(255, 115, 199, 255)
-                    : e["priority"] == "mild"
+                    : e["priority"] == "mild" && e['isDone'] == false
                         ? Color.fromARGB(255, 255, 204, 116)
                         : e['isDone'] == true
-                            ? Color.fromARGB(255, 133, 239, 153)
+                            ? Color.fromARGB(255, 158, 224, 170)
                             : Color.fromARGB(255, 250, 155, 155)))
         .toList();
     setState(() {
@@ -761,25 +761,25 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Text("Sun",
-                style: switchTextStyle(context) //calendarLabelMonthlyStyle,
+                style: switchTextStyle2(context) //calendarLabelMonthlyStyle,
                 ),
             Text("Mon",
-                style: switchTextStyle(context) //calendarLabelMonthlyStyle,
+                style: switchTextStyle2(context) //calendarLabelMonthlyStyle,
                 ),
             Text("Tue",
-                style: switchTextStyle(context) // calendarLabelMonthlyStyle,
+                style: switchTextStyle2(context) // calendarLabelMonthlyStyle,
                 ),
             Text("Wed",
-                style: switchTextStyle(context) //calendarLabelMonthlyStyle,
+                style: switchTextStyle2(context) //calendarLabelMonthlyStyle,
                 ),
             Text("Thur",
-                style: switchTextStyle(context) //calendarLabelMonthlyStyle,
+                style: switchTextStyle2(context) //calendarLabelMonthlyStyle,
                 ),
             Text("Fri",
-                style: switchTextStyle(context) // calendarLabelMonthlyStyle,
+                style: switchTextStyle2(context) // calendarLabelMonthlyStyle,
                 ),
             Text("Sat",
-                style: switchTextStyle(context) // calendarLabelMonthlyStyle,
+                style: switchTextStyle2(context) // calendarLabelMonthlyStyle,
                 )
           ],
         ),
@@ -885,10 +885,24 @@ TextStyle switchTextStyle(BuildContext context) {
   if (currentTheme.brightness == Brightness.dark) {
     return GoogleFonts.poppins(
         color: Color.fromARGB(255, 255, 255, 255),
-        fontWeight: FontWeight.w400,
-        fontSize: 14);
+        fontWeight: FontWeight.w500,
+        fontSize: 18);
   } else {
-    return normalStyleLittleCalendar;
+    return GoogleFonts.poppins(
+        color: colorYellowbold, fontWeight: FontWeight.w500, fontSize: 14);
+  }
+}
+
+TextStyle switchTextStyle2(BuildContext context) {
+  ThemeData currentTheme = Theme.of(context);
+  if (currentTheme.brightness == Brightness.dark) {
+    return GoogleFonts.poppins(
+        color: Color.fromARGB(255, 255, 255, 255),
+        fontWeight: FontWeight.w500,
+        fontSize: 18);
+  } else {
+    return GoogleFonts.poppins(
+        color: Colors.black54, fontWeight: FontWeight.w500, fontSize: 14);
   }
 }
 

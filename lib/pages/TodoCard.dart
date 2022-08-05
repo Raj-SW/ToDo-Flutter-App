@@ -55,7 +55,7 @@ class _TodoCardState extends State<TodoCard> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 15, left: 25, right: 25, bottom: 5),
+      padding: const EdgeInsets.only(top: 15, left: 10, right: 10, bottom: 0),
       child: Container(
         decoration: BoxDecoration(
             color: findColor(widget.time, widget.isDone, widget.priority),
@@ -75,10 +75,11 @@ class _TodoCardState extends State<TodoCard> {
           children: <Widget>[
             Text(
               widget.title,
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: GoogleFonts.poppins(
+                  fontWeight: FontWeight.w500, fontSize: 18),
             ),
             SizedBox(
-              height: 5,
+              height: 2,
             ),
             widget.isDone == false
                 ? countDown(widget.time, widget.isDone)
@@ -87,18 +88,15 @@ class _TodoCardState extends State<TodoCard> {
                     height: 0,
                   ),
             SizedBox(
-              height: 5,
-            ),
-            // Text("Description:", style: TextStyle(fontWeight: FontWeight.bold)),
-            SizedBox(
-              height: 5,
+              height: 6,
             ),
             Text(
               widget.description,
               overflow: TextOverflow.ellipsis,
+              style: GoogleFonts.poppins(),
             ),
             SizedBox(
-              height: 10,
+              height: 8,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -109,16 +107,20 @@ class _TodoCardState extends State<TodoCard> {
                   children: [
                     Text(
                       'Date due:',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
                     ),
                     SizedBox(
                       height: 5,
                     ),
-                    Text(DateFormat.yMMMEd().format(widget.time)),
+                    Text(DateFormat.yMMMEd().format(widget.time),
+                        style:
+                            GoogleFonts.poppins(fontWeight: FontWeight.normal)),
                     SizedBox(
                       height: 5,
                     ),
-                    Text(DateFormat.j().format(widget.time)),
+                    Text(DateFormat.j().format(widget.time),
+                        style:
+                            GoogleFonts.poppins(fontWeight: FontWeight.normal)),
                   ],
                 ),
                 widget.isDone == false
@@ -140,7 +142,8 @@ class _TodoCardState extends State<TodoCard> {
                               },
                               child: Text(
                                 'Edit',
-                                style: TextStyle(fontWeight: FontWeight.bold),
+                                style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w600),
                               )),
                           SizedBox(
                             width: 15,
@@ -162,7 +165,8 @@ class _TodoCardState extends State<TodoCard> {
                               },
                               child: Text(
                                 'Mark as done',
-                                style: TextStyle(fontWeight: FontWeight.bold),
+                                style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w600),
                               )),
                         ],
                       )
@@ -192,7 +196,10 @@ class _TodoCardState extends State<TodoCard> {
       });
     }
     return overdue == false
-        ? Text(daysLeft != 0 ? "$daysLeftAbs day(s) left" : "Due today!")
+        ? Text(
+            daysLeft != 0 ? "$daysLeftAbs day(s) left" : "Due today!",
+            style: GoogleFonts.poppins(),
+          )
         : Text(
             "Overdue!!",
             style: GoogleFonts.poppins(
@@ -272,20 +279,38 @@ class _TodoCardState extends State<TodoCard> {
   void ExpCoin(document) {
     int coins2 = 0;
     if (document['priority'] == 'critical') {
-      setState(() {
-        coins2 = widget.coins;
-        coins2 = coins2 + 10;
-      });
       FirebaseFirestore.instance
           .collection("collect2")
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .collection("userModel")
           .doc("userDetails")
-          .update({"coins": coins2, "Experience": FieldValue.increment(50)});
-      print(coins2);
+          .update({
+        "coins": FieldValue.increment(20),
+        "Experience": FieldValue.increment(50)
+      });
     }
-    if (document['priority'] == 'mild') {}
-    if (document['priority'] == 'normal') {}
+    if (document['priority'] == 'mild') {
+      FirebaseFirestore.instance
+          .collection("collect2")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection("userModel")
+          .doc("userDetails")
+          .update({
+        "coins": FieldValue.increment(25),
+        "Experience": FieldValue.increment(25)
+      });
+    }
+    if (document['priority'] == 'normal') {
+      FirebaseFirestore.instance
+          .collection("collect2")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection("userModel")
+          .doc("userDetails")
+          .update({
+        "coins": FieldValue.increment(10),
+        "Experience": FieldValue.increment(15)
+      });
+    }
   }
 }
 
