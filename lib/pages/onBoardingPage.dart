@@ -31,7 +31,7 @@ class OnBoardingPage extends StatelessWidget {
               decoration: getPageDecoration(),
             ),
             PageViewModel(
-              title: 'TIMED YOUR WORK USING OUR POMODORO\n',
+              title: 'TIME YOUR WORK USING OUR FOCUS TIMER\n',
               body:
                   '"Give me six hours to chop down a tree and I will spend the first four sharpening the axe"'
                   '~'

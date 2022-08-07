@@ -8,8 +8,8 @@ import 'package:google_fonts/google_fonts.dart';
 class MenuItems {
   static const homePage = MenuItema('To-Dos', Icons.add_task_rounded);
   static const calendar = MenuItema('Calendar', Icons.calendar_month);
-  static const pomodoro = MenuItema('Pomodoro', Icons.alarm);
-  static const Settings = MenuItema('Settings', Icons.settings);
+  static const pomodoro = MenuItema('Focus Timer', Icons.alarm);
+  static const Settings = MenuItema('Preferences', Icons.settings);
   static const all = <MenuItema>[homePage, calendar, pomodoro, Settings];
 }
 

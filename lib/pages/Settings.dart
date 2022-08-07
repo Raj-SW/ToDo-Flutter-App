@@ -210,8 +210,6 @@ class _SettingsState extends State<Settings> {
                                     ],
                                   ),
                                   // Expanded(child: SizedBox()),
-
-                                  Icon(Icons.edit),
                                 ],
                               ),
                               SizedBox(
@@ -507,7 +505,7 @@ class _SettingsState extends State<Settings> {
                                         value: _setVolumeValue,
                                       ),
                                     ),
-                                    ListTile(
+                                    /* ListTile(
                                       leading: FaIcon(FontAwesomeIcons.bell),
                                       title: Text("Notifications",
                                           style: GoogleFonts.poppins(
@@ -517,7 +515,7 @@ class _SettingsState extends State<Settings> {
                                           onTap: () => showSoundpickerdialog(),
                                           child:
                                               Icon(Icons.keyboard_arrow_right)),
-                                    ),
+                                    ),*/
                                     ListTile(
                                         leading: FaIcon(
                                           FontAwesomeIcons.palette,
