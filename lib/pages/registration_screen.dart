@@ -549,7 +549,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             MaterialPageRoute(builder: (context) => OnBoardingPage()),
             (route) => false);
         Fluttertoast.showToast(
-            gravity: ToastGravity.CENTER,
+            gravity: ToastGravity.TOP,
             msg: "Welcome " + nameEditingController.text,
             backgroundColor: Color(0xff01010a));
       } on FirebaseAuthException catch (error) {
