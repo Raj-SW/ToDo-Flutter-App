@@ -14,7 +14,7 @@ ThemeData lightTheme = ThemeData(
    )
   ),
     textTheme: const TextTheme(
-     headline4: TextStyle(color:Colors.black),
+     headlineMedium: TextStyle(color:Colors.black),
 ),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       backgroundColor: Colors.amber,

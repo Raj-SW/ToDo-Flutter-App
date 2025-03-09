@@ -1,9 +1,6 @@
 import 'package:devstack/zoomDrawer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-import 'package:devstack/pages/mainPage.dart';
 import 'package:devstack/Custom/button_widget.dart';
 import 'package:lottie/lottie.dart';
 

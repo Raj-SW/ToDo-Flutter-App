@@ -1,6 +1,5 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unnecessary_null_comparison, prefer_final_fields, prefer_interpolation_to_compose_strings
 
-import 'package:alan_voice/alan_voice.dart';
 import 'package:devstack/assets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
@@ -11,8 +10,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:timezone/data/latest.dart' as tz;
-import 'package:google_ml_kit/google_ml_kit.dart';
-import 'package:image_picker/image_picker.dart';
 
 class AddToDoPage extends StatefulWidget {
   const AddToDoPage({Key? key, required this.category}) : super(key: key);
@@ -29,124 +26,6 @@ class _AddToDoPageState extends State<AddToDoPage> {
   DateTime? mydateTime;
   TimeOfDay _timePicked = TimeOfDay.now();
   DateTime? finalDateTime;
-  _AddToDoPageState() {
-    AlanVoice.onCommand.add((command) {
-      Map<String, dynamic> commandData = command.data;
-      if (commandData["command"] == "cancelTask") {
-        Navigator.pop(context);
-        print("yes I am here");
-      }
-      if (commandData["command"] == "getTitle") {
-        _titleController.text = commandData['text'];
-        print("aight");
-      }
-      if (commandData["command"] == "getDescription") {
-        _descriptionController.text = commandData['text'];
-        print("wow");
-      }
-      if (commandData["command"] == "getDate") {
-        print("olala");
-
-        print(commandData["text"]);
-        print("******");
-
-        mydateTime = DateTime.parse(commandData["text"]);
-        DateTime due = DateTime.parse(commandData["text"]);
-        DateTime today = DateTime.now();
-        int a = due.compareTo(today);
-        print(a);
-
-        if (a < 0) {
-          AlanVoice.playText("Date cannot be before today");
-        } else {
-          setState(() {
-            mydateTime = DateTime.parse(commandData["text"]);
-            AlanVoice.playText("Date has been set successfully");
-          });
-        }
-
-        // mydateTime = DateTime.parse(commandData["text"]);
-        print(mydateTime);
-      }
-      //set priority
-      if (commandData["command"] == "criticalPriority") {
-        print("criticalPriority");
-        setState(() {
-          priority = "critical";
-          isSelected1 = true;
-          isSelected2 = false;
-          isSelected3 = false;
-        });
-      }
-      if (commandData["command"] == "mildPriority") {
-        print("mildPriority");
-        setState(() {
-          priority = "mild";
-
-          isSelected1 = false;
-          isSelected2 = true;
-          isSelected3 = false;
-        });
-      }
-      if (commandData["command"] == "normalPriority") {
-        print("normalPriority");
-        setState(() {
-          priority = "normal";
-          isSelected1 = false;
-          isSelected2 = false;
-          isSelected3 = true;
-        });
-      }
-
-      if (commandData["command"] == "saveTask") {
-        print("olala");
-        //final date time declaration and initialisation
-        finalDateTime = DateTime(mydateTime!.year, mydateTime!.month,
-            mydateTime!.day, _timePicked.hour, _timePicked.minute);
-
-        print("final date and time");
-        print(finalDateTime);
-
-        //writing instance on firebase
-        FirebaseFirestore.instance
-            .collection("collect2")
-            .doc(FirebaseAuth.instance.currentUser!.uid)
-            .collection("Todo")
-            .add(
-          {
-            "title": _titleController.text,
-            "description": _descriptionController.text,
-            "scheduledTime": finalDateTime,
-            "isDone": false,
-            "priority": priority,
-          },
-        );
-
-        //calling on notification
-        NotificationService.showScheduledNotification(
-            title: _titleController.text,
-            body: _descriptionController.text,
-            payload: 'HomePage',
-            scheduledDate: finalDateTime!);
-        Navigator.pop(context);
-        showToast();
-      }
-
-      if (commandData["command"] == "getTime") {
-        String number = commandData["text"].toString();
-        num seconds = num.parse(number);
-        num hours;
-        num minutes;
-        hours = seconds / 3600;
-        minutes = (seconds % 3600) / 60;
-        int numHours = hours.floor();
-        int numMinutes = minutes.floor();
-        setState(() {
-          _timePicked = TimeOfDay(hour: numHours, minute: numMinutes);
-        });
-      }
-    });
-  }
 
   @override
   void initState() {

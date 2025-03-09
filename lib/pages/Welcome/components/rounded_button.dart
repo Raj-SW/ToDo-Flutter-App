@@ -42,7 +42,7 @@ class _RoundedButtonState extends State<RoundedButton> {
       ),
       onPressed: widget.press,
       style: ElevatedButton.styleFrom(
-          primary: widget.color,
+          backgroundColor: widget.color,
           padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
           textStyle: TextStyle(
               color: widget.textColor,

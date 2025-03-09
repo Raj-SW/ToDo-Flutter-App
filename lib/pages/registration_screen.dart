@@ -1,8 +1,6 @@
 // ignore_for_file: unnecessary_new, prefer_const_constructors, use_build_context_synchronously
 
 import 'package:devstack/pages/Backgrounds/backgroundSignUp.dart';
-import 'package:devstack/pages/mainPage.dart';
-import 'package:devstack/zoomDrawer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:devstack/Service/Auth_Service.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -209,6 +207,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               if (!regex.hasMatch(value)) {
                 return ("Enter Valid Password(Min. 6 Character)");
               }
+              return null;
             },
             onSaved: (value) {
               nameEditingController.text = value!;

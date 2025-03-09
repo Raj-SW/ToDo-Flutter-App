@@ -1,7 +1,5 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'dart:ui';
-import 'package:devstack/main.dart';
 import 'package:devstack/pages/mainPage.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:devstack/api/local_auth_api.dart';
@@ -11,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'Backgrounds/backgroundSignIn.dart';
 //import 'package:signup_login/pages/HomePage.dart';
 
-import 'HomePage.dart';
 
 class FacePage extends StatefulWidget {
   @override
@@ -136,7 +133,7 @@ class _FacePageState extends State<FacePage> {
   }) =>
       ElevatedButton.icon(
         style: ElevatedButton.styleFrom(
-          primary: Color(0xff5d5fef),
+          backgroundColor: Color(0xff5d5fef),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
           minimumSize: Size(300, 60),

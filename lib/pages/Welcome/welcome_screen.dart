@@ -1,8 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:devstack/pages/HomePage.dart';
 import 'package:devstack/pages/Welcome/components/body.dart';
-import 'package:devstack/pages/mainPage.dart';
 import 'package:flutter/material.dart';
 
 import '../../Service/Auth_Service.dart';

@@ -1,6 +1,5 @@
 // ignore_for_file: prefer_const_constructors, non_constant_identifier_names
 
-import 'package:alan_voice/alan_voice.dart';
 import 'package:devstack/Service/Auth_Service.dart';
 import 'package:devstack/pages/splashScreen.dart';
 import 'package:devstack/zoomDrawer.dart';
@@ -10,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'Service/Notif_services.dart';
-import 'pages/Welcome/welcome_screen.dart';
 import 'theme/theme_manager.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -46,10 +44,6 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  /*   _MyAppState() {
-    AlanVoice.addButton(
-        "78940e6b9b106789ef7fc772c11b89892e956eca572e1d8b807a3e2338fdd0dc/stage");
-  }*/
   //Widget currentPage = SignUpPage();
   Widget currentPage = splashScreen();
   AuthClass authClass = AuthClass();

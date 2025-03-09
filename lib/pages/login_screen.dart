@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors, unnecessary_new, prefer_final_fields, use_build_context_synchronously, unused_local_variable
 
 import 'package:devstack/Service/Auth_Service.dart';
-import 'package:devstack/pages/mainPage.dart';
 import 'package:devstack/zoomDrawer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -9,11 +8,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:devstack/pages/Backgrounds/backgroundSignIn.dart';
 //import 'package:signup_login/pages/Backgrounds/backgroundSignIn.dart';
 //import 'package:signup_login/pages/HomePage.dart';
-import 'HomePage.dart';
 //import 'HomePage.dart';
 import '../pages/registration_screen.dart';
 //import 'package:signup_login/pages/registration_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -118,6 +115,7 @@ class _LoginScreenState extends State<LoginScreen> {
             if (!regex.hasMatch(value)) {
               return ("Enter Valid Password(Min. 6 Character)");
             }
+            return null;
           },
           onSaved: (value) {
             emailController.text = value!;
